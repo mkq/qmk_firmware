@@ -46,22 +46,25 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 	// Similar to [https://github.com/qmk/qmk_firmware/issues/2782]:
 	// Layer _Y2 is selected via LM(.., MOD_LSFT). To get unshifted symbols, we need to clear shift.
 	// (Replacing MO(_LS) with LM(_LS, 0) in base layer did not help.)
-	if (IS_LAYER_ON_STATE(state, _Y2)) { del_mods(MOD_LSFT); }
+	if (IS_LAYER_ON_STATE(state, _Y2)) { del_mods(MOD_MASK_SHIFT); }
 
 	return state;
 }
 
 enum custom_keycodes {
-    CK_NEQ = SAFE_RANGE,
+	CK_NEQ = SAFE_RANGE,
 };
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-    switch (keycode) {
-    case CK_NEQ:
-        if (record->event.pressed) { SEND_STRING("!="); }
-        break;
-    }
-    return true;
+	switch (keycode) {
+	case DE_BSLS: // DE backslash: release shift (for layouts where that would give a capital sharp s)
+		del_mods(MOD_MASK_SHIFT);
+		return true;
+	case CK_NEQ:
+		if (record->event.pressed) { SEND_STRING("!="); return false; }
+		break;
+	}
+	return true;
 };
 
 #define SPC       KC_SPC
