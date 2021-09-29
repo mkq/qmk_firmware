@@ -31,34 +31,74 @@
 #define _CF	15	//keyboard config
 
 layer_state_t layer_state_set_user(layer_state_t state) {
-	// double shift layer
-	// Works, but can also be achieved with MO(_Y2) in layer _LS, etc., without any noticeable
-	// difference.
-	// state = update_tri_layer_state(state, _LS, _RS, _Y2);
-
-	// Similar to [https://github.com/qmk/qmk_firmware/issues/2782]:
-	// Layer _Y2 is selected via LM(.., MOD_LSFT). To get unshifted symbols, we need to clear shift.
-	// (Replacing MO(_LS) with LM(_LS, 0) in base layer did not help.)
-	if (IS_LAYER_ON_STATE(state, _Y2)) { del_mods(MOD_MASK_SHIFT); }
+	// shift + layer _Y1 => layer _Y3
+	// TODO This does not work.
+	// TODO When fixed, remove the two MO(_Y3) from _Y1. They are only a
+	// workaround to activate _Y3 with the drawback that it requires TT(_Y1)
+	// to be pressed before shift, while the layer_state_set_user impl should
+	// support any order.
+	if (get_highest_layer(state) == _Y1 && (get_mods() & MOD_MASK_SHIFT)) {
+		layer_off(_Y1);
+		layer_on(_Y3);
+	}
 
 	return state;
 }
 
 enum custom_keycodes {
 	CK_NEQ = SAFE_RANGE,
+	CK_DE_SLBS,
+	CK_DE_QEX,
 };
+
+static uint8_t shiftCount;
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 	switch (keycode) {
-	case DE_BSLS: // DE backslash: release shift (for layouts where that would give a capital sharp s)
-		del_mods(MOD_MASK_SHIFT);
-		return true;
+//	case DE_BSLS:	// modify standard DE backslash: release shift (for layouts where that would give a capital sharp s)
+//		del_mods(MOD_MASK_SHIFT);
+//		return true;
+	case CK_DE_SLBS:	// DE slash; with shift: DE backslash (but without shift (for layouts where that would give a capital sharp s))
+		if (record->event.pressed) {
+			if (!(get_mods() & MOD_MASK_SHIFT)) {
+				tap_code16(DE_SLSH);
+			} else {
+				del_mods(MOD_MASK_SHIFT);
+				tap_code16(RALT(DE_BSLS));
+			}
+		}
+		return false;
+	case CK_DE_QEX:	// DE question mark; with shift: DE exclamation mark
+		if (record->event.pressed) {
+			tap_code16(!(get_mods() & MOD_MASK_SHIFT) ? S(DE_QUES) : DE_EXLM);
+		}
+		return false;
 	case CK_NEQ:
-		if (record->event.pressed) { SEND_STRING("!="); return false; }
-		break;
+		if (record->event.pressed) { SEND_STRING("!="); }
+		return false;
+	case KC_LSFT:	// double shift => release shift, activate layer _Y2
+	case KC_RSFT:
+		shiftCount += record->event.pressed ? 1 : -1;
+		switch (shiftCount) {
+		case 0:
+			del_mods(MOD_MASK_SHIFT);
+			return true;
+		case 1:
+			if (record->event.pressed) {	// previous shiftCount was 0 => normal shift behavior
+				return true;
+			} else {	// previous shiftCount was 2 => switch back from layer _Y2 to shift
+				add_mods(MOD_MASK_SHIFT);
+				layer_off(_Y2);
+				return false;
+			}
+		default:	// double shift => release shift, activate layer _Y2
+			del_mods(MOD_MASK_SHIFT);
+			layer_on(_Y2);
+			return false;
+		}
 	}
 	return true;
-};
+}
 
 #define SPC       KC_SPC
 #define KM_CUT    LSFT(KC_DEL)
@@ -108,9 +148,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  KC_PAUS      ,KC_1         ,KC_2         ,KC_3         ,KC_4         ,KC_5         ,KC_6         ,KC_7       ,KC_8         ,KC_9         ,KC_0         ,KC_PSCR      ,KM_CUT       ,(       KM_COPY     )      ,(      KM_PAST      )
 ,KC_F1        ,KC_F2        ,KC_F3        ,KC_F4        ,KC_F5        ,KC_F6                                  ,KC_F7        ,KC_F8        ,KC_F9        ,KC_F10       ,KC_F11       ,KC_F12       ,KC_DEL       ,(      KC_INS       )
 ,DE_CIRC      ,LT(_FD,KC_X) ,LT(_FS,KC_V) ,LT(_AD,SPC)  ,LT(_AS,KC_C) ,KC_W                                   ,KC_K         ,KC_H         ,KC_G         ,KC_F         ,DE_Y         ,KC_CAPS      ,KC_HOME      ,KC_END       ,KC_PGUP
-,TT(_Y1)      ,LWIN_T(KC_U) ,LALT_T(KC_I) ,LCTL_T(KC_A) ,LT(_NV,KC_E) ,KC_O               ,DE_QUES            ,KC_S         ,LT(_NV,KC_N) ,RCTL_T(KC_R) ,LALT_T(KC_T) ,RWIN_T(KC_D) ,TT(_Y1)     ,(      KC_SPC       )       ,KC_PGDN
-,KC_ESC       ,DE_MINS      ,DE_SLSH      ,KC_L         ,KC_P         ,DE_Z               ,DE_SECT            ,KC_B         ,KC_M         ,DE_COMM      ,DE_DOT       ,KC_J         ,KC_Q                       ,KC_UP
-,KC_APP       ,KC_LWIN      ,(      KC_BSPC      )      ,(  LM(_LS,MOD_LSFT) )      ,KC_TAB       ,KC_ENTER   ,( LM(_RS,MOD_LSFT)  )      ,(      TT(_NV)       )     ,KC_LALT      ,KC_LCTL      ,KC_LEFT      ,KC_DOWN      ,KC_RGHT
+,TT(_Y1)      ,LWIN_T(KC_U) ,LALT_T(KC_I) ,LCTL_T(KC_A) ,LT(_NV,KC_E) ,KC_O               ,CK_DE_QEX          ,KC_S         ,LT(_NV,KC_N) ,RCTL_T(KC_R) ,LALT_T(KC_T) ,RWIN_T(KC_D) ,TT(_Y1)     ,(      KC_SPC       )       ,KC_PGDN
+,KC_ESC       ,DE_MINS      ,CK_DE_SLBS   ,KC_L         ,KC_P         ,DE_Z               ,DE_SECT            ,KC_B         ,KC_M         ,DE_COMM      ,DE_DOT       ,KC_J         ,KC_Q                       ,KC_UP
+,KC_APP       ,KC_LWIN      ,(      KC_BSPC      )      ,(      KC_LSFT      )      ,KC_TAB       ,KC_ENTER   ,(      KC_RSFT      )      ,(      TT(_NV)       )     ,KC_LALT      ,KC_LCTL      ,KC_LEFT      ,KC_DOWN      ,KC_RGHT
 ), [_Y1] = LAYOUT( //symbols 1 ***************************************************************|************************************************************************************************|**************************************
  _______      ,X(SUP1)      ,X(SUP2)      ,X(SUP3)      ,X(SUP4)      ,X(SUP5)      ,X(SUP6)      ,X(SUP7)    ,X(SUP8)      ,X(SUP9)      ,X(SUP0)      ,X(SUPN)      ,_______      ,(      _______      )      ,(      _______      )
 ,_______      ,_______      ,_______      ,_______      ,_______      ,_______                                ,_______      ,_______      ,_______      ,_______      ,_______      ,_______      ,_______      ,(      _______      )
@@ -132,20 +172,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 ,_______      ,_______      ,_______      ,_______      ,_______      ,X(DDEGR)           ,_______            ,_______      ,X(NOT)       ,_______      ,_______      ,_______      ,_______      ,(      _______      )      ,_______
 ,_______      ,_______      ,_______      ,_______      ,_______      ,_______            ,_______            ,_______      ,_______      ,X(DCEDI)     ,_______      ,_______      ,_______                    ,_______
 ,_______      ,_______      ,(      _______      )      ,(      _______      )      ,_______      ,_______    ,(      _______      )      ,(      _______      )      ,_______      ,_______      ,_______      ,_______      ,_______
-), [_LS] = LAYOUT( //left shift **************************************************************|************************************************************************************************|**************************************
- _______      ,_______      ,_______      ,_______      ,_______      ,_______      ,_______      ,_______    ,_______      ,_______      ,_______      ,_______      ,_______      ,(      _______      )      ,(      _______      )
-,_______      ,_______      ,_______      ,_______      ,_______      ,_______                                ,_______      ,_______      ,_______      ,_______      ,_______      ,_______      ,_______      ,(      _______      )
-,_______      ,_______      ,_______      ,_______      ,_______      ,_______                                ,_______      ,_______      ,_______      ,_______      ,_______      ,_______      ,_______      ,_______      ,_______
-,MO(_Y3)      ,_______      ,_______      ,_______      ,_______      ,_______            ,DE_EXLM            ,_______      ,_______      ,_______      ,_______      ,_______      ,MO(_Y3)      ,(      _______      )      ,_______
-,_______      ,DE_UNDS      ,DE_BSLS      ,_______      ,_______      ,_______            ,_______            ,_______      ,_______      ,_______      ,_______      ,_______      ,_______                    ,_______
-,_______      ,_______      ,(      _______      )      ,(      _______      )      ,_______      ,_______    ,(      MO(_Y2)      )      ,(      _______      )      ,_______      ,_______      ,_______      ,_______      ,_______
-), [_RS] = LAYOUT( //right shift *************************************************************|************************************************************************************************|**************************************
- _______      ,_______      ,_______      ,_______      ,_______      ,_______      ,_______      ,_______    ,_______      ,_______      ,_______      ,_______      ,_______      ,(      _______      )      ,(      _______      )
-,_______      ,_______      ,_______      ,_______      ,_______      ,_______                                ,_______      ,_______      ,_______      ,_______      ,_______      ,_______      ,_______      ,(      _______      )
-,_______      ,_______      ,_______      ,_______      ,_______      ,_______                                ,_______      ,_______      ,_______      ,_______      ,_______      ,_______      ,_______      ,_______      ,_______
-,MO(_Y3)      ,_______      ,_______      ,_______      ,_______      ,_______            ,DE_EXLM            ,_______      ,_______      ,_______      ,_______      ,_______      ,MO(_Y3)      ,(      _______      )      ,_______
-,_______      ,DE_UNDS      ,DE_BSLS      ,_______      ,_______      ,_______            ,_______            ,_______      ,_______      ,_______      ,_______      ,_______      ,_______                    ,_______
-,_______      ,_______      ,(      _______      )      ,(      MO(_Y2)      )      ,_______      ,_______    ,(      _______      )      ,(      _______      )      ,_______      ,_______      ,_______      ,_______      ,_______
 ), [_AS] = LAYOUT( //arrows ******************************************************************|************************************************************************************************|**************************************
  _______      ,_______      ,_______      ,_______      ,_______      ,_______      ,_______      ,_______    ,_______      ,_______      ,_______      ,_______      ,_______      ,(      _______      )      ,(      _______      )
 ,_______      ,_______      ,_______      ,_______      ,_______      ,_______                                ,_______      ,_______      ,_______      ,_______      ,_______      ,_______      ,_______      ,(      _______      )
