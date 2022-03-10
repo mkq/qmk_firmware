@@ -71,13 +71,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 //	case LWIN_T(CK_SB):	// hold tap 8 bit workaround
 //		if (! layer_state_is(_BA)) { return true; }
 		if (record->event.pressed) {
-			uint32_t mods = get_mods();
-			if (!(mods & MOD_MASK_SHIFT)) {	// without Shift
+			if (!(get_mods() & MOD_MASK_SHIFT)) {	// without Shift
 				tap_code16(DE_SLSH);
 			} else {	// with Shift
 				del_mods(MOD_MASK_SHIFT);
 				tap_code16(RALT(DE_BSLS));
-				add_mods(MOD_MASK_SHIFT);
+//				add_mods(MOD_MASK_SHIFT);
 			}
 		}
 		return false;
