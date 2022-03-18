@@ -51,12 +51,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 	switch (keycode) {
 	case CK_SB:	// DE slash; with shift: DE backslash (but without shift (for layouts where that would give a capital sharp s))
 		if (record->event.pressed) {
-			if (!(get_mods() & MOD_MASK_SHIFT)) {	// without Shift
+			uint16_t mods = get_mods();
+			if (!(mods & MOD_MASK_SHIFT)) {	// without Shift
 				tap_code16(DE_SLSH);
 			} else {	// with Shift
 				del_mods(MOD_MASK_SHIFT);
 				tap_code16(RALT(DE_BSLS));
-				add_mods(MOD_MASK_SHIFT);
+				set_mods(mods);
 			}
 		}
 		return false;
@@ -91,61 +92,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 	}
 	return true;
 }
-
-// tap dance [https://docs.qmk.fm/#/feature_tap_dance?id=example-5] <<<
-enum td_keycodes { TD_SB_SFT, TD_QX_SFT };
-typedef enum { TD_NONE, TD_UNKNOWN, TD_SINGLE_TAP, TD_SINGLE_HOLD } td_state_t;
-static td_state_t td_state;
-td_state_t cur_dance(qk_tap_dance_state_t *state);
-void td_sb_sft_finished(qk_tap_dance_state_t *state, void *user_data);
-void td_sb_sft_reset(qk_tap_dance_state_t *state, void *user_data);
-void td_qx_sft_finished(qk_tap_dance_state_t *state, void *user_data);
-void td_qx_sft_reset(qk_tap_dance_state_t *state, void *user_data);
-
-td_state_t cur_dance(qk_tap_dance_state_t *state) {
-	if (state->count == 1) {
-		return (state->interrupted || !state->pressed) ? TD_SINGLE_TAP : TD_SINGLE_HOLD;
-	}
-	return TD_UNKNOWN;
-}
-
-void td_sb_sft_finished(qk_tap_dance_state_t *state, void *user_data) {
-	td_state = cur_dance(state);
-	switch (td_state) {
-		case TD_SINGLE_TAP:  register_code16(CK_QX); break;
-		case TD_SINGLE_HOLD: register_mods(MOD_BIT(KC_LSFT)); break;
-		default: break;
-	}
-}
-void td_sb_sft_reset(qk_tap_dance_state_t *state, void *user_data) {
-	switch (td_state) {
-		case TD_SINGLE_TAP:  unregister_code16(CK_QX); break;
-		case TD_SINGLE_HOLD: unregister_mods(MOD_BIT(KC_LSFT)); break;
-		default: break;
-	}
-}
-
-void td_qx_sft_finished(qk_tap_dance_state_t *state, void *user_data) {
-	td_state = cur_dance(state);
-	switch (td_state) {
-		case TD_SINGLE_TAP:  register_code16(CK_QX); break;
-		case TD_SINGLE_HOLD: register_mods(MOD_BIT(KC_RSFT)); break;
-		default: break;
-	}
-}
-void td_qx_sft_reset(qk_tap_dance_state_t *state, void *user_data) {
-	switch (td_state) {
-		case TD_SINGLE_TAP:  unregister_code16(CK_QX); break;
-		case TD_SINGLE_HOLD: unregister_mods(MOD_BIT(KC_RSFT)); break;
-		default: break;
-	}
-}
-
-qk_tap_dance_action_t tap_dance_actions[] = {
-	[TD_SB_SFT] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_sb_sft_finished, td_sb_sft_reset),
-	[TD_QX_SFT] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_qx_sft_finished, td_qx_sft_reset)
-};
-// >>> tap dance
 
 enum unicode_names {
 	  NOT
@@ -185,16 +131,21 @@ const uint32_t PROGMEM unicode_map[] = {
 	,[FRM_W2]	= 0x2560, [FRM_N2] = 0x2566, [FRM_E2] = 0x2563, [FRM_S2] = 0x2569, [FRM_NW2] = 0x2554, [FRM_NE2] = 0x2557, [FRM_SE2] = 0x255d, [FRM_SW2] = 0x255a, [FRM_CR2] = 0x256c, [FRM_HL2] = 0x2550, [FRM_VL2] = 0x2551
 };
 
-#define SPC       KC_SPC
+#define TAB       KC_TAB
 #define DE_PL     DE_PLUS
+#define DE_MI     DE_MINS
+#define DE_CC     DE_CIRC
+#define KC_CAP    KC_CAPS
+#define LW_T(x)   LWIN_T(x)
+#define RW_T(x)   RWIN_T(x)
 #define KM_CUT    LSFT(KC_DEL)
 #define KM_COPY   LCTL(KC_INS)
 #define KM_PAST   LSFT(KC_INS)
 
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
 	switch (keycode) {
-		case TD(TD_SB_SFT):
-		case TD(TD_QX_SFT):
+		case LSFT(KC_BSPC):
+		case RSFT(KC_SPC):
 			return (uint16_t)(TAPPING_TERM / 2.5);
 		default:
 			return TAPPING_TERM;
@@ -204,14 +155,13 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
 // ____________________ layers ____________________
 // Row label comments: N = numbers; F = function keys; H = home; T = thumb
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-//---|-------------|-U-----------|-I-----------|-A-----------|-E-----------|-------------
 [_BA] = LAYOUT( //base **********| I **********| A **********| E **********| O **********|*********|***************| S **********| N **********| R **********| T **********| D **********|**********|****************|********************|
 /*N*/ KC_PAUS      ,KC_1         ,KC_2         ,KC_3         ,KC_4         ,KC_5         ,KC_6         ,KC_7       ,KC_8         ,KC_9         ,KC_0         ,KC_PSCR      ,KM_CUT       ,(       KM_COPY     )      ,(      KM_PAST      )
 /*F*/,KC_F1        ,KC_F2        ,KC_F3        ,KC_F4        ,KC_F5        ,KC_F6                                  ,KC_F7        ,KC_F8        ,KC_F9        ,KC_F10       ,KC_F11       ,KC_F12       ,KC_DEL       ,(      KC_INS       )
-/* */,DE_CIRC      ,KC_X         ,LT(_FD,KC_V) ,LT(_AD,SPC)  ,LT(_L5,KC_C) ,KC_W                                   ,KC_K         ,LT(_L5,KC_H) ,KC_G         ,KC_F         ,DE_Y        ,SFT_T(KC_CAPS),KC_HOME      ,KC_END       ,KC_PGUP
-/*H*/,WIN_T(KC_ESC),LALT_T(KC_U) ,LCTL_T(KC_I) ,LT(_NV,KC_A) ,LT(_L3,KC_E) ,KC_O               ,LCAG_T(KC_APP)     ,KC_S         ,LT(_L3,KC_N) ,LT(_NV,KC_R) ,RCTL_T(KC_T) ,LALT_T(KC_D) ,RWIN_T(KC_BSPC),(    KC_SPC       )      ,KC_PGDN
-/* */,KC_LEFT      ,DE_MINS      ,LT(_FS,DE_PL),LT(_AS,KC_L) ,LT(_L4,KC_P) ,DE_Z               ,DE_SECT            ,KC_B         ,LT(_L4,KC_M) ,DE_COMM      ,DE_DOT       ,KC_J         ,KC_Q                       ,KC_UP
-/*T*/,KC_RGHT      ,KC_DEL       ,(      KC_BSPC      )      ,(   TD(TD_SB_SFT)   )      ,KC_TAB       ,KC_ENTER   ,(  TD(TD_QX_SFT)    )      ,(      MO(_NV)       )     ,KC_LALT      ,KC_LCTL      ,KC_LEFT      ,KC_DOWN      ,KC_RGHT
+/* */,LT(_FS,DE_CC),LT(_FD,KC_X) ,LT(_AD,KC_V) ,LT(_AS,KC_L) ,LT(_L5,KC_C) ,KC_W                                   ,KC_K         ,LT(_L5,KC_H) ,KC_G         ,KC_F         ,DE_Y         ,SFT_T(KC_CAP),KC_HOME      ,KC_END       ,KC_PGUP
+/*H*/,LW_T(KC_TAB) ,LALT_T(KC_U) ,LCTL_T(KC_I) ,LT(_NV,KC_A) ,LT(_L3,KC_E) ,KC_O               ,LCAG_T(KC_APP)     ,KC_S         ,LT(_L3,KC_N) ,LT(_NV,KC_R) ,RCTL_T(KC_T) ,LALT_T(KC_D) ,RW_T(DE_PL)  ,(      KC_SPC       )      ,KC_PGDN
+/* */,DE_PLUS      ,DE_MINS      ,CK_SB        ,CK_QX        ,LT(_L4,KC_P) ,DE_Z               ,DE_SECT            ,KC_B         ,LT(_L4,KC_M) ,DE_COMM      ,DE_DOT       ,KC_J         ,KC_Q                       ,KC_UP
+/*T*/,KC_SPC       ,KC_DEL       ,(      KC_BSPC      )      ,(  LSFT_T(KC_BSPC)  )      ,KC_ESC       ,KC_ENTER   ,(  RSFT_T(KC_SPC)   )      ,(      MO(_NV)       )     ,KC_LALT      ,KC_LCTL      ,KC_LEFT      ,KC_DOWN      ,KC_RGHT
 
 ), [_L3] = LAYOUT( //layer 3 ****| I **********| A **********| E **********| O **********|*********|***************| S **********| N **********| R **********| T **********| D **********|**********|****************|********************|
 /*N*/ _______      ,X(SUP1)      ,X(SUP2)      ,X(SUP3)      ,X(SUP4)      ,X(SUP5)      ,X(SUP6)      ,X(SUP7)    ,X(SUP8)      ,X(SUP9)      ,X(SUP0)      ,X(SUPN)      ,_______      ,(      _______      )      ,(      _______      )
