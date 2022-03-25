@@ -18,9 +18,11 @@
 
 // layers
 #define _BA	 0	//base
-#define _L3	 1	//layer 3 (counting base as 1 and shift as 2)
-#define _L4	 2	//layer 4
-#define _L5	 3	//layer 5
+#define _BT	 1	//like base, but tap only (no tap-hold) => hold can be used to repeat, when
+                //TAPPING_FORCE_HOLD disables (tap, hold) repetition
+#define _L3	 3	//layer 3 (counting base as 1 and shift as 2)
+#define _L4	 4	//layer 4
+#define _L5	 5	//layer 5
 #define _FS	10	//frames
 #define _FD	11	//double frames
 #define _AS	12	//arrows
@@ -134,6 +136,7 @@ const uint32_t PROGMEM unicode_map[] = {
 // abbreviations
 #define SPC       KC_SPC
 #define TAB       KC_TAB
+#define ESC       KC_ESC
 #define DE_PL     DE_PLUS
 #define DE_MI     DE_MINS
 #define DE_CC     DE_CIRC
@@ -167,7 +170,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /* */,LT(_FS,DE_CC),LT(_FD,KC_X) ,LT(_AD,KC_V) ,LT(_AS,SPC)  ,LT(_L5,KC_C) ,KC_W                                   ,KC_K         ,LT(_L5,KC_H) ,KC_G         ,KC_F         ,DE_Y         ,SFT_T(KC_CAP),KC_HOME      ,KC_END       ,KC_PGUP
 /*H*/,LW_T(KC_TAB) ,LALT_T(KC_U) ,LCTL_T(KC_I) ,LT(_NV,KC_A) ,LT(_L3,KC_E) ,KC_O               ,LCAG_T(KC_APP)     ,KC_S         ,LT(_L3,KC_N) ,LT(_NV,KC_R) ,RCTL_T(KC_T) ,LALT_T(KC_D) ,RW_T(DE_MI)  ,(      KC_SPC       )      ,KC_PGDN
 /* */,DE_PLUS      ,CK_QX        ,CK_SB        ,KC_L         ,LT(_L4,KC_P) ,DE_Z               ,DE_SECT            ,KC_B         ,LT(_L4,KC_M) ,DE_COMM      ,DE_DOT       ,KC_J         ,KC_Q                       ,KC_UP
-/*T*/,KC_SPC       ,KC_DEL       ,(      KC_BSPC      )      ,(      CK_LSFT      )      ,KC_ESC       ,KC_ENTER   ,(     CK_RSFT      )      ,(      MO(_NV)       )     ,KC_LALT      ,KC_LCTL      ,KC_LEFT      ,KC_DOWN      ,KC_RGHT
+/*T*/,KC_SPC       ,KC_DEL       ,(      KC_BSPC      )      ,(      CK_LSFT      )      ,LT(_BT,ESC)  ,KC_ENTER   ,(     CK_RSFT      )       ,(      MO(_NV)       )     ,KC_LALT      ,KC_LCTL      ,KC_LEFT      ,KC_DOWN      ,KC_RGHT
+), [_BT] = LAYOUT( //base, tap only | I **********| A **********| E **********| O **********|*********|***************| S **********| N **********| R **********| T **********| D **********|**********|****************|********************|
+/*N*/ _______      ,_______      ,_______      ,_______      ,_______      ,_______      ,_______      ,_______    ,_______      ,_______      ,_______      ,_______      ,_______      ,(       _______     )      ,(      _______      )
+/*F*/,_______      ,_______      ,_______      ,_______      ,_______      ,_______                                ,_______      ,_______      ,_______      ,_______      ,_______      ,_______      ,_______      ,(      _______      )
+/* */,DE_CC        ,KC_X         ,KC_V         ,SPC          ,KC_C         ,_______                                ,_______      ,KC_H         ,_______      ,_______      ,_______      ,KC_CAP       ,_______      ,_______      ,_______
+/*H*/,KC_TAB       ,KC_U         ,KC_I         ,KC_A         ,KC_E         ,_______            ,KC_APP             ,_______      ,KC_N         ,KC_R         ,KC_T         ,KC_D         ,DE_MI        ,(      _______      )      ,_______
+/* */,_______      ,_______      ,_______      ,_______      ,KC_P         ,_______            ,_______            ,_______      ,KC_M         ,_______      ,_______      ,_______      ,_______                    ,_______
+/*T*/,_______      ,_______      ,(      _______      )      ,(      KC_BSPC      )      ,KC_ESC       ,_______    ,(      KC_DEL      )       ,(      _______       )     ,_______      ,_______      ,_______      ,_______      ,_______
 
 ), [_L3] = LAYOUT( //layer 3 ****| I **********| A **********| E **********| O **********|*********|***************| S **********| N **********| R **********| T **********| D **********|**********|****************|********************|
 /*N*/ _______      ,X(SUP1)      ,X(SUP2)      ,X(SUP3)      ,X(SUP4)      ,X(SUP5)      ,X(SUP6)      ,X(SUP7)    ,X(SUP8)      ,X(SUP9)      ,X(SUP0)      ,X(SUPN)      ,_______      ,(      _______      )      ,(      _______      )
