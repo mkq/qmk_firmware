@@ -17,18 +17,19 @@
 #include "sendstring_german.h"
 
 // layers
-#define _BA	 0	//base
-#define _BT	 1	//like base, but tap only (no tap-hold) => hold can be used to repeat, when
-                //TAPPING_FORCE_HOLD disables (tap, hold) repetition
-#define _L3	 3	//layer 3 (counting base as 1 and shift as 2)
-#define _L4	 4	//layer 4
-#define _L5	 5	//layer 5
-#define _DS	_L3	//double shift = _L3
-#define _FS	10	//frames
-#define _FD	11	//double frames
-#define _AS	12	//arrows
-#define _AD	13	//double arrows
-#define _NV	14	//navigation
+#define _BA   0	//base
+#define _BT   1	//like base, but tap only (no tap-hold) => hold can be used to repeat, when
+               	//TAPPING_FORCE_HOLD disables (tap, hold) repetition
+#define _L3   3	//layer 3 (counting base as 1 and shift as 2; activation: both shift keys)
+#define _L4   4	//layer 4
+#define _L5   5	//layer 5 (activation: shift + layer 4)
+#define _FS   10	//frames
+#define _FD   11	//double frames
+#define _AS   12	//arrows
+#define _AD   13	//double arrows
+#define _NV   14	//navigation
+#define _DS   _L3	//double shift = _L3
+#define _S_L4 _L5	//shift + layer 4 = layer 5
 
 enum custom_keycodes {
 	CK_NEQ = SAFE_RANGE,
@@ -37,7 +38,7 @@ enum custom_keycodes {
 };
 
 static uint8_t shiftCount;
-bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+bool process_record_user_impl(uint16_t keycode, keyrecord_t *record) {
 	switch (keycode) {
 	case CK_SB:	// DE slash; with shift: DE backslash (but without shift (for layouts where that would give a capital sharp s))
 		if (record->event.pressed) {
@@ -79,9 +80,49 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 			layer_on(_DS);
 			return false;
 		}
+/* shift + layer _L4 => layer _S_L4 (attempt 3, TODO):
+	case LT(_L4,KC_SPC):
+		if (shiftCount > 0) { tap_code16(LT(_L5,KC_SPC)); return false; }
+		break;
+	case LT(_L4,KC_G):
+		if (shiftCount > 0) { tap_code16(LT(_L5,KC_G)); return false; }
+		break;		
+*/
 	}
 	return true;
 }
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+	bool result = process_record_user_impl(keycode, record);
+
+/* shift + layer _L4 => layer _S_L4 (attempt 2, TODO):
+	if (biton32(layer_state) == _L4 && shiftCount > 0) {
+		layer_off(_L4);
+		layer_on(_S_L4);
+	} else if (biton32(layer_state) == _S_L4 && shiftCount <= 0) {
+		layer_off(_S_L4);
+		layer_on(_L4);
+	}
+*/
+	return result;
+}
+
+/*
+layer_state_t layer_state_set_user(layer_state_t state) {
+	// shift + layer _L4 => layer _S_L4
+	// TODO This does not work.
+	// TODO When fixed, remove the two MO(_L5) from layer _L4. They are only a
+	// workaround to activate _L5 with the drawback that it requires TT(_L4)
+	// to be pressed before shift, while the layer_state_set_user impl should
+	// support any order.
+	if (get_highest_layer(state) == _L4 && shiftCount > 0) {
+//	if (IS_LAYER_ON_STATE(state, _L4) && (get_mods() & MOD_MASK_SHIFT)) {
+		layer_off(_L4);
+		layer_on(_S_L4);
+	}
+
+	return state;
+}
+*/
 
 enum unicode_names {
 	  NOT
@@ -123,7 +164,6 @@ const uint32_t PROGMEM unicode_map[] = {
 
 // abbreviations
 #define SPC       KC_SPC
-#define TAB       KC_TAB
 #define ESC       KC_ESC
 #define DE_PL     DE_PLUS
 #define DE_MI     DE_MINS
@@ -135,22 +175,28 @@ const uint32_t PROGMEM unicode_map[] = {
 #define KM_COPY   LCTL(KC_INS)
 #define KM_PAST   LSFT(KC_INS)
 
+// temporary key codes for testing
+#define TEST_1    KC_A
+#define TEST_2    KC_B
+#define TEST_3    KC_C
+#define TEST_4    KC_D
+
 // ____________________ layers ____________________
 // Row label comments: N = numbers; F = function keys; H = home; T = thumb
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [_BA] = LAYOUT( //base **********| I **********| A **********| E **********| O **********|*********|***************| S **********| N **********| R **********| T **********| D **********|**********|****************|********************|
-/*N*/ KC_PAUS      ,KC_1         ,KC_2         ,KC_3         ,KC_4         ,KC_5         ,KC_6         ,KC_7       ,KC_8         ,KC_9         ,KC_0         ,KC_PSCR      ,KM_CUT       ,(       KM_COPY     )      ,(      KM_PAST      )
-/*F*/,KC_F1        ,KC_F2        ,KC_F3        ,KC_F4        ,KC_F5        ,KC_F6                                  ,KC_F7        ,KC_F8        ,KC_F9        ,KC_F10       ,KC_F11       ,KC_F12       ,KC_DEL       ,(      KC_INS       )
-/* */,LT(_FS,DE_CC),LT(_FD,KC_X) ,LT(_AD,KC_V) ,LT(_AS,SPC)  ,LT(_L5,KC_C) ,KC_W                                   ,KC_K         ,LT(_L5,KC_H) ,KC_G         ,KC_F         ,DE_Y         ,SFT_T(KC_CAP),KC_HOME      ,KC_END       ,KC_PGUP
-/*H*/,LW_T(KC_TAB) ,LALT_T(KC_U) ,LCTL_T(KC_I) ,LT(_NV,KC_A) ,LT(_L3,KC_E) ,KC_O               ,LCAG_T(KC_APP)     ,KC_S         ,LT(_L3,KC_N) ,LT(_NV,KC_R) ,RCTL_T(KC_T) ,LALT_T(KC_D) ,RW_T(DE_MI)  ,(      KC_SPC       )      ,KC_PGDN
-/* */,DE_PLUS      ,CK_QX        ,CK_SB        ,KC_L         ,LT(_L4,KC_P) ,DE_Z               ,DE_SECT            ,KC_B         ,LT(_L4,KC_M) ,DE_COMM      ,DE_DOT       ,KC_J         ,KC_Q                       ,KC_UP
-/*T*/,KC_SPC       ,KC_DEL       ,(      KC_BSPC      )      ,(      KC_LSFT      )      ,LT(_BT,ESC)  ,KC_ENTER   ,(     KC_RSFT      )       ,(      MO(_NV)       )     ,KC_LALT      ,KC_LCTL      ,KC_LEFT      ,KC_DOWN      ,KC_RGHT
-), [_BT] = LAYOUT( //base, tap only | I **********| A **********| E **********| O **********|*********|***************| S **********| N **********| R **********| T **********| D **********|**********|****************|********************|
+/*N*/ RESET        ,KC_1         ,KC_2         ,KC_3         ,KC_4         ,KC_5         ,KC_6         ,KC_7       ,KC_8         ,KC_9         ,KC_0         ,KC_PSCR      ,KM_CUT       ,(       KM_COPY     )      ,(      KM_PAST      )
+/*F*/,KC_F1        ,LT(_FS,KC_F2),LT(_FD,KC_F3),LT(_AS,KC_F4),LT(_AD,KC_F5),KC_F6                                  ,KC_F7        ,KC_F8        ,KC_F9        ,KC_F10       ,KC_F11       ,KC_F12       ,KC_DEL       ,(      KC_INS       )
+/* */,DE_CC        ,KC_X         ,KC_V         ,LT(_L4,SPC)  ,KC_C         ,KC_W                                   ,KC_K         ,KC_H         ,LT(_L4,KC_G) ,KC_F         ,DE_Y         ,SFT_T(KC_CAP),KC_HOME      ,KC_END       ,KC_PGUP
+/*H*/,KC_TAB       ,LWIN_T(KC_U) ,LALT_T(KC_I) ,LCTL_T(KC_A) ,LT(_NV,KC_E) ,KC_O               ,LCAG_T(KC_APP)     ,KC_S         ,LT(_NV,KC_N) ,RCTL_T(KC_R) ,LALT_T(KC_T) ,RWIN_T(KC_D) ,CK_SB        ,(      KC_SPC       )      ,KC_PGDN
+/* */,DE_PLUS      ,DE_MINS      ,CK_QX        ,KC_L         ,KC_P         ,DE_Z               ,DE_SECT            ,KC_B         ,KC_M         ,DE_COMM      ,DE_DOT       ,KC_J         ,KC_Q                       ,KC_UP
+/*T*/,KC_LWIN      ,KC_DEL       ,(      KC_BSPC      )      ,(      KC_LSFT      )      ,LT(_BT,ESC)  ,KC_ENTER   ,(     KC_RSFT      )       ,(      MO(_NV)       )     ,KC_LALT      ,KC_LCTL      ,KC_LEFT      ,KC_DOWN      ,KC_RGHT
+), [_BT] = LAYOUT( //base, tap only ***********| A **********| E **********| O **********|*********|***************| S **********| N **********| R **********| T **********| D **********|**********|****************|********************|
 /*N*/ _______      ,_______      ,_______      ,_______      ,_______      ,_______      ,_______      ,_______    ,_______      ,_______      ,_______      ,_______      ,_______      ,(       _______     )      ,(      _______      )
-/*F*/,_______      ,_______      ,_______      ,_______      ,_______      ,_______                                ,_______      ,_______      ,_______      ,_______      ,_______      ,_______      ,_______      ,(      _______      )
-/* */,DE_CC        ,KC_X         ,KC_V         ,SPC          ,KC_C         ,_______                                ,_______      ,KC_H         ,_______      ,_______      ,_______      ,KC_CAP       ,_______      ,_______      ,_______
+/*F*/,_______      ,KC_F2        ,KC_F3        ,KC_F4        ,KC_F5        ,_______                                ,_______      ,_______      ,_______      ,_______      ,_______      ,_______      ,_______      ,(      _______      )
+/* */,_______      ,_______      ,_______      ,_______      ,_______      ,_______                                ,_______      ,KC_H         ,_______      ,_______      ,_______      ,KC_CAP       ,_______      ,_______      ,_______
 /*H*/,KC_TAB       ,KC_U         ,KC_I         ,KC_A         ,KC_E         ,_______            ,KC_APP             ,_______      ,KC_N         ,KC_R         ,KC_T         ,KC_D         ,DE_MI        ,(      _______      )      ,_______
-/* */,_______      ,_______      ,_______      ,_______      ,KC_P         ,_______            ,_______            ,_______      ,KC_M         ,_______      ,_______      ,_______      ,_______                    ,_______
+/* */,_______      ,_______      ,_______      ,_______      ,_______      ,_______            ,_______            ,_______      ,_______      ,_______      ,_______      ,_______      ,_______                    ,_______
 /*T*/,_______      ,_______      ,(      _______      )      ,(      KC_LSFT      )      ,KC_ESC       ,_______    ,(     KC_RSFT      )       ,(      _______       )     ,_______      ,_______      ,_______      ,_______      ,_______
 
 ), [_L3] = LAYOUT( //layer 3 ****| I **********| A **********| E **********| O **********|*********|***************| S **********| N **********| R **********| T **********| D **********|**********|****************|********************|
@@ -165,14 +211,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /*F*/,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX                                ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,_______      ,(      _______      )
 /* */,_______      ,_______      ,_______      ,_______      ,DE_ACUT      ,_______                                ,KC_PSLS      ,KC_7         ,KC_8         ,KC_9         ,DE_COLN      ,_______      ,_______      ,_______      ,_______
 /*H*/,_______      ,DE_UDIA      ,CK_NEQ       ,DE_ADIA      ,_______      ,DE_ODIA            ,_______            ,KC_PAST      ,KC_4         ,KC_5         ,KC_6         ,DE_DOT       ,_______      ,(      _______      )      ,_______
-/* */,DE_PERC      ,KC_PMNS      ,KC_PPLS      ,DE_EQL       ,_______      ,DE_SS              ,_______            ,KC_0         ,KC_1         ,KC_2         ,KC_3         ,DE_COMM      ,_______                    ,_______
-/*T*/,_______      ,_______      ,(      _______      )      ,(      _______      )      ,_______      ,_______    ,(      _______      )      ,(      _______      )      ,_______      ,_______      ,_______      ,_______      ,_______
+/* */,DE_PERC      ,KC_PMNS      ,KC_PPLS      ,DE_EQL       ,TEST_1       ,DE_SS              ,_______            ,KC_0         ,KC_1         ,KC_2         ,KC_3         ,DE_COMM      ,_______                    ,_______
+/*T*/,_______      ,_______      ,(      _______      )      ,(      MO(_L5)      )      ,_______      ,_______    ,(      MO(_L5)      )      ,(      _______      )      ,_______      ,_______      ,_______      ,_______      ,_______
 ), [_L5] = LAYOUT( //layer 5 ****| I **********| A **********| E **********| O **********|*********|***************| S **********| N **********| R **********| T **********| D **********|**********|****************|********************|
 /*N*/ _______      ,_______      ,_______      ,_______      ,_______      ,_______      ,_______      ,_______    ,_______      ,_______      ,_______      ,_______      ,_______      ,(      _______      )      ,(      _______      )
 /*F*/,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX                                ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,_______      ,(      _______      )
 /* */,X(DCIRC)     ,X(DCEDI)     ,X(DTILD)     ,X(DDIA)      ,X(DACUT)     ,X(DGRV)                                ,_______      ,_______      ,_______      ,_______      ,_______      ,_______      ,_______      ,_______      ,_______
-/*H*/,X(DDEGR)     ,S(DE_UDIA)   ,_______      ,S(DE_ADIA)   ,DE_EURO      ,S(DE_ODIA)        ,_______             ,_______      ,(      _______      )      ,_______      ,_______      ,X(NOT)       ,_______      ,_______      ,_______
-/* */,_______      ,_______      ,_______      ,_______      ,_______      ,RSA(DE_SS)        ,_______             ,_______      ,DE_MICR                    ,_______      ,_______      ,_______      ,_______      ,_______
+/*H*/,X(DDEGR)     ,S(DE_UDIA)   ,TEST_3       ,S(DE_ADIA)   ,DE_EURO      ,S(DE_ODIA)        ,_______             ,_______      ,X(NOT)       ,_______      ,_______      ,_______      ,_______      ,(      _______      )      ,_______
+/* */,_______      ,_______      ,_______      ,_______      ,TEST_2       ,RSA(DE_SS)        ,_______             ,_______      ,DE_MICR      ,_______      ,_______      ,_______      ,_______                    ,_______
 /*T*/,_______      ,_______      ,(      _______      )      ,(      _______      )      ,_______      ,_______    ,(      _______      )      ,(      _______      )      ,_______      ,_______      ,_______      ,_______      ,_______
 
 ), [_NV] = LAYOUT( //navigation & keyboard settings *********| E **********| O **********|*********|***************| S **********| N **********| R **********| T **********| D **********|**********|****************|********************|
@@ -181,7 +227,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /* */,_______      ,C(KC_6)      ,C(KC_7)      ,C(KC_8)      ,C(KC_9)      ,C(KC_0)                                ,C(KC_HOME)   ,KC_HOME      ,KC_UP        ,KC_END       ,C(KC_END)    ,DT_UP        ,KC_WWW_HOME  ,KC_MSEL      ,KC_VOLU
 /*H*/,KC_LWIN      ,_______      ,_______      ,_______      ,_______      ,_______            ,KM_COPY            ,KM_PAST      ,KC_LEFT      ,KC_DOWN      ,KC_RGHT      ,KC_PGUP      ,DT_DOWN      ,(      KC_MUTE      )      ,KC_VOLD
 /* */,C(KC_PLUS)   ,C(KC_1)      ,C(KC_2)      ,C(KC_3)      ,C(KC_4)      ,C(KC_5)            ,KM_CUT             ,KC_INS       ,C(KC_LEFT)   ,KC_DEL       ,C(KC_RGHT)   ,KC_PGDN      ,DT_PRNT                    ,KC_MSTP
-/*T*/,C(KC_MINUS)  ,KC_RWIN      ,(      _______      )      ,(      _______      )      ,KC_CAPS      ,KC_APP     ,(      _______      )      ,(      _______      )      ,_______      ,_______      ,KC_MPRV      ,KC_MPLY      ,KC_MNXT
+/*T*/,C(KC_MINUS)  ,KC_RWIN      ,(      _______      )      ,(      _______      )      ,KC_PAUS      ,KC_APP     ,(      _______      )      ,(      _______      )      ,_______      ,_______      ,KC_MPRV      ,KC_MPLY      ,KC_MNXT
 
 ), [_AS] = LAYOUT( //arrows *****| I **********| A **********| E **********| O **********|*********|***************| S **********| N **********| R **********| T **********| D **********|**********|****************|********************|
 /*N*/ _______      ,_______      ,_______      ,_______      ,_______      ,_______      ,_______      ,_______    ,_______      ,_______      ,_______      ,_______      ,_______      ,(      _______      )      ,(      _______      )
