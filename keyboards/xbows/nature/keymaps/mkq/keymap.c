@@ -23,25 +23,12 @@
 #define _L3	 3	//layer 3 (counting base as 1 and shift as 2)
 #define _L4	 4	//layer 4
 #define _L5	 5	//layer 5
+#define _DS	_L3	//double shift = _L3
 #define _FS	10	//frames
 #define _FD	11	//double frames
 #define _AS	12	//arrows
 #define _AD	13	//double arrows
 #define _NV	14	//navigation
-
-//layer_state_t layer_state_set_user(layer_state_t state) {
-//	// shift + layer _Y1 => layer _Y3
-//	// TODO This does not work.
-//	// TODO When fixed, remove the two MO(_Y3) from _Y1. They are only a
-//	// workaround to activate _Y3 with the drawback that it requires TT(_Y1)
-//	// to be pressed before shift, while the layer_state_set_user impl should
-//	// support any order.
-//	if (get_highest_layer(state) == _Y1 && (get_mods() & MOD_MASK_SHIFT)) {
-//		layer_off(_Y1);
-//		layer_on(_Y3);
-//	}
-//	return state;
-//}
 
 enum custom_keycodes {
 	CK_NEQ = SAFE_RANGE,
@@ -49,6 +36,7 @@ enum custom_keycodes {
 	CK_QX,
 };
 
+static uint8_t shiftCount;
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 	switch (keycode) {
 	case CK_SB:	// DE slash; with shift: DE backslash (but without shift (for layouts where that would give a capital sharp s))
@@ -71,26 +59,26 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 	case CK_NEQ:
 		if (record->event.pressed) { SEND_STRING("!="); }
 		return false;
-//	case KC_LSFT:	// double shift => release shift, activate layer _Y2
-//	case KC_RSFT:
-//		shiftCount += record->event.pressed ? 1 : -1;
-//		switch (shiftCount) {
-//		case 0:
-//			del_mods(MOD_MASK_SHIFT);
-//			return true;
-//		case 1:
-//			if (record->event.pressed) {	// previous shiftCount was 0 => normal shift behavior
-//				return true;
-//			} else {	// previous shiftCount was 2 => switch back from layer _Y2 to shift
-//				add_mods(MOD_MASK_SHIFT);
-//				layer_off(_Y2);
-//				return false;
-//			}
-//		default:	// double shift => release shift, activate layer _Y2
-//			del_mods(MOD_MASK_SHIFT);
-//			layer_on(_Y2);
-//			return false;
-//		}
+	case KC_LSFT:	// double shift => release shift, activate layer _DS
+	case KC_RSFT:
+		shiftCount += record->event.pressed ? 1 : -1;
+		switch (shiftCount) {
+		case 0:
+			del_mods(MOD_MASK_SHIFT);
+			return true;
+		case 1:
+			if (record->event.pressed) {	// previous shiftCount was 0 => normal shift behavior
+				return true;
+			} else {	// previous shiftCount was 2 => switch back from layer _DS to shift
+				add_mods(MOD_MASK_SHIFT);
+				layer_off(_DS);
+				return false;
+			}
+		default:	// double shift => release shift, activate layer _DS
+			del_mods(MOD_MASK_SHIFT);
+			layer_on(_DS);
+			return false;
+		}
 	}
 	return true;
 }
@@ -147,20 +135,6 @@ const uint32_t PROGMEM unicode_map[] = {
 #define KM_COPY   LCTL(KC_INS)
 #define KM_PAST   LSFT(KC_INS)
 
-// aliases for keys used in get_tapping_term (and in the keymap, obviously)
-#define CK_RSFT   RSFT_T(KC_DEL)
-#define CK_LSFT   LSFT_T(KC_BSPC)
-
-uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
-	switch (keycode) {
-		case CK_LSFT:
-		case CK_RSFT:
-			return (uint16_t)(TAPPING_TERM / 2.5);
-		default:
-			return TAPPING_TERM;
-	}
-}
-
 // ____________________ layers ____________________
 // Row label comments: N = numbers; F = function keys; H = home; T = thumb
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -170,7 +144,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /* */,LT(_FS,DE_CC),LT(_FD,KC_X) ,LT(_AD,KC_V) ,LT(_AS,SPC)  ,LT(_L5,KC_C) ,KC_W                                   ,KC_K         ,LT(_L5,KC_H) ,KC_G         ,KC_F         ,DE_Y         ,SFT_T(KC_CAP),KC_HOME      ,KC_END       ,KC_PGUP
 /*H*/,LW_T(KC_TAB) ,LALT_T(KC_U) ,LCTL_T(KC_I) ,LT(_NV,KC_A) ,LT(_L3,KC_E) ,KC_O               ,LCAG_T(KC_APP)     ,KC_S         ,LT(_L3,KC_N) ,LT(_NV,KC_R) ,RCTL_T(KC_T) ,LALT_T(KC_D) ,RW_T(DE_MI)  ,(      KC_SPC       )      ,KC_PGDN
 /* */,DE_PLUS      ,CK_QX        ,CK_SB        ,KC_L         ,LT(_L4,KC_P) ,DE_Z               ,DE_SECT            ,KC_B         ,LT(_L4,KC_M) ,DE_COMM      ,DE_DOT       ,KC_J         ,KC_Q                       ,KC_UP
-/*T*/,KC_SPC       ,KC_DEL       ,(      KC_BSPC      )      ,(      CK_LSFT      )      ,LT(_BT,ESC)  ,KC_ENTER   ,(     CK_RSFT      )       ,(      MO(_NV)       )     ,KC_LALT      ,KC_LCTL      ,KC_LEFT      ,KC_DOWN      ,KC_RGHT
+/*T*/,KC_SPC       ,KC_DEL       ,(      KC_BSPC      )      ,(      KC_LSFT      )      ,LT(_BT,ESC)  ,KC_ENTER   ,(     KC_RSFT      )       ,(      MO(_NV)       )     ,KC_LALT      ,KC_LCTL      ,KC_LEFT      ,KC_DOWN      ,KC_RGHT
 ), [_BT] = LAYOUT( //base, tap only | I **********| A **********| E **********| O **********|*********|***************| S **********| N **********| R **********| T **********| D **********|**********|****************|********************|
 /*N*/ _______      ,_______      ,_______      ,_______      ,_______      ,_______      ,_______      ,_______    ,_______      ,_______      ,_______      ,_______      ,_______      ,(       _______     )      ,(      _______      )
 /*F*/,_______      ,_______      ,_______      ,_______      ,_______      ,_______                                ,_______      ,_______      ,_______      ,_______      ,_______      ,_______      ,_______      ,(      _______      )
