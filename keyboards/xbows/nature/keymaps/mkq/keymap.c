@@ -56,6 +56,21 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 	}
 }
 
+// process_record_user implementation for a mod-sensitive custom key
+bool pru_mod_sensitive_key(keyrecord_t *record, uint16_t mod_mask, uint16_t keycode, uint16_t shift_keycode) {
+	if (record->event.pressed) {
+		uint16_t mods = get_mods();
+		if (!(mods & mod_mask)) {	// without modifier
+			tap_code16(keycode);
+		} else {	// with modifier
+			del_mods(mod_mask);
+			tap_code16(shift_keycode);
+			set_mods(mods);
+		}
+	}
+	return false;
+}
+
 static uint8_t shiftCount;
 bool process_record_user_impl(uint16_t keycode, keyrecord_t *record) {
 	bool pressed = record->event.pressed;
@@ -64,29 +79,15 @@ bool process_record_user_impl(uint16_t keycode, keyrecord_t *record) {
 		clear_keyboard();
 		return false;
 	case CK_SB:	// DE slash; with shift: DE backslash (but without shift (for layouts where that would give a capital sharp s))
-		if (pressed) {
-			uint16_t mods = get_mods();
-			if (!(mods & MOD_MASK_SHIFT)) {	// without Shift
-				tap_code16(DE_SLSH);
-			} else {	// with Shift
-				del_mods(MOD_MASK_SHIFT);
-				tap_code16(RALT(DE_BSLS));
-				set_mods(mods);
-			}
-		}
-		return false;
+		return pru_mod_sensitive_key(record, MOD_MASK_SHIFT, DE_SLSH, RALT(DE_BSLS));
 	case CK_QX:	// DE question mark; with shift: DE exclamation mark
-		if (pressed) {
-			tap_code16(!(get_mods() & MOD_MASK_SHIFT) ? S(DE_QUES) : DE_EXLM);
-		}
-		return false;
+		return pru_mod_sensitive_key(record, MOD_MASK_SHIFT, S(DE_QUES), DE_EXLM);
 	case CK_NEQ:
 		if (pressed) { SEND_STRING("!="); }
 		return false;
 	case KC_LSFT:	// double shift => release shift, activate layer _DS
 	case KC_RSFT:
 		shiftCount += pressed ? 1 : -1;
-//		handle_shift_layer(shiftCount == 1);
 		switch (shiftCount) {
 		case 0:
 			del_mods(MOD_MASK_SHIFT);
