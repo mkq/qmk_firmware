@@ -42,49 +42,19 @@ enum custom_keycodes {
 
 layer_state_t layer_state_set_user(layer_state_t state) {
 	// shift + layer _L4 => layer _S_L4
-	// TODO This does not work.
-	// TODO When fixed, remove the two MO(_L5) from layer _L4. They are only a
-	// workaround to activate _L5 with the drawback that it requires TT(_L4)
-	// to be pressed before shift, while the layer_state_set_user impl should
-	// support any order.
+	// TODO Only works if shift is held before LT(_L4,..). When fixed, remove the two MO(_L5) from layer _L4.
+	// Inspired by the update_tri_layer_state implementation.
 	layer_state_t l4_mask = (layer_state_t) 1 << _L4;
 	layer_state_t sh_l4_mask = (layer_state_t) 1 << _S_L4;
-//	bool shift = shiftCount > 0;
 	bool shift = get_mods() & MOD_MASK_SHIFT;
-//	bool l4 = IS_LAYER_ON_STATE(state, _L4);
-//	bool l4 = get_highest_layer(state) == _L4;
 	bool l4 = (state & l4_mask) == l4_mask;
-/*
-	if (l4 && shift) {
-//		layer_off(_L4);
-//		layer_on(_S_L4);
-		return state | sh_l4_mask;
-	} else if (!shift && IS_LAYER_ON_STATE(state, _S_L4)) {
-		return state & ~((layer_state_t) 1 << _S_L4);
-	}
-	return state;
-*/
 	if (l4 && shift) {
 		del_mods(MOD_MASK_SHIFT);
 		return state | sh_l4_mask;
 	} else {
-//		if (l4) { add_mods(MOD_MASK_SHIFT); }
 		return state & ~sh_l4_mask;
-//		return state;
 	}
 }
-
-/*
-void handle_shift_layer(bool shift) {
-	if (shift && IS_LAYER_ON(_L4)) {
-		layer_off(_L4);
-		layer_on(_L5);
-	} else if (!shift && IS_LAYER_ON(_L5)) {
-		layer_off(_L5);
-		layer_on(_L4);
-	}
-}
-*/
 
 static uint8_t shiftCount;
 bool process_record_user_impl(uint16_t keycode, keyrecord_t *record) {
@@ -134,29 +104,11 @@ bool process_record_user_impl(uint16_t keycode, keyrecord_t *record) {
 			layer_on(_DS);
 			return false;
 		}
-/* shift + layer _L4 => layer _S_L4 (attempt 3, TODO):
-	case LT(_L4,KC_SPC):
-		if (shiftCount > 0) { tap_code16(LT(_L5,KC_SPC)); return false; }
-		break;
-	case LT(_L4,KC_G):
-		if (shiftCount > 0) { tap_code16(LT(_L5,KC_G)); return false; }
-		break;
-*/
 	}
 	return true;
 }
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 	bool result = process_record_user_impl(keycode, record);
-
-/* shift + layer _L4 => layer _S_L4 (attempt 2, TODO):
-	if (biton32(layer_state) == _L4 && shiftCount > 0) {
-		layer_off(_L4);
-		layer_on(_S_L4);
-	} else if (biton32(layer_state) == _S_L4 && shiftCount <= 0) {
-		layer_off(_S_L4);
-		layer_on(_L4);
-	}
-*/
 	return result;
 }
 
@@ -249,7 +201,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /*H*/,_______      ,DE_UDIA      ,CK_NEQ       ,DE_ADIA      ,_______      ,DE_ODIA            ,_______            ,KC_PAST      ,KC_4         ,KC_5         ,KC_6         ,DE_DOT       ,_______      ,(      _______      )      ,_______
 /* */,DE_PERC      ,KC_PMNS      ,KC_PPLS      ,DE_EQL       ,TEST_1       ,DE_SS              ,_______            ,KC_0         ,KC_1         ,KC_2         ,KC_3         ,DE_COMM      ,_______                    ,_______
 /*T*/,_______      ,_______      ,(      _______      )      ,(      MO(_L5)      )      ,_______      ,_______    ,(      _______      )      ,(      MO(_L5)      )      ,_______      ,_______      ,_______      ,_______      ,_______
-///*T*/,_______      ,_______      ,(      _______      )      ,(      _______      )      ,_______      ,_______    ,(      _______      )      ,(      _______      )      ,_______      ,_______      ,_______      ,_______      ,_______
 ), [_L5] = LAYOUT( //layer 5 ****| I **********| A **********| E **********| O **********|*********|***************| S **********| N **********| R **********| T **********| D **********|**********|****************|********************|
 /*N*/ _______      ,X(SUB1)      ,X(SUB2)      ,X(SUB3)      ,X(SUB4)      ,X(SUB5)      ,X(SUB6)      ,X(SUB7)    ,X(SUB8)      ,X(SUB9)      ,X(SUB0)      ,RESET        ,_______      ,(      _______      )      ,(      _______      )
 /*F*/,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX                                ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,_______      ,(      _______      )
