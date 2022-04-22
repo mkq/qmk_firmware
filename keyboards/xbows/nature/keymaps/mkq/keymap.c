@@ -41,38 +41,43 @@ enum custom_keycodes {
 	CK_QX,
 	CK_LMRES,
 
-	// custom keys using (my custom, not UC_WINC) AutoHotkey compose:
-	// - misc
-	CKC_NOT, CKC_POO,
-	// - dead accents
+	// must be the last one:
+	CKC_RANGE
+};
+// custom keys using (my custom, not UC_WINC) AutoHotkey compose:
+enum custom_compose_keycodes {
+	CKC_NOT = CKC_RANGE, CKC_POO,
 	CKC_DGRV, CKC_DACUT, CKC_DCIRC, CKC_DDEGR, CKC_DDIA, CKC_DTILD, CKC_DCEDI,
-	// - superscript and subscript digits
 	CKC_SUP0, CKC_SUP1, CKC_SUP2, CKC_SUP3, CKC_SUP4, CKC_SUP5, CKC_SUP6, CKC_SUP7, CKC_SUP8, CKC_SUP9,
 	CKC_SUB0, CKC_SUB1, CKC_SUB2, CKC_SUB3, CKC_SUB4, CKC_SUB5, CKC_SUB6, CKC_SUB7, CKC_SUB8, CKC_SUB9,
-	// - arrows and double arrows
-	CKC_ARR_N,  CKC_ARR_S,  CKC_ARR_W,  CKC_ARR_E,  CKC_ARR_NW,  CKC_ARR_NE,  CKC_ARR_SE,  CKC_ARR_SW,  CKC_ARR_WE,  CKC_ARR_NS,
+	CKC_ARR_N1, CKC_ARR_S1, CKC_ARR_W1, CKC_ARR_E1, CKC_ARR_NW1, CKC_ARR_NE1, CKC_ARR_SE1, CKC_ARR_SW1, CKC_ARR_WE1, CKC_ARR_NS1,
 	CKC_ARR_N2, CKC_ARR_S2, CKC_ARR_W2, CKC_ARR_E2, CKC_ARR_NW2, CKC_ARR_NE2, CKC_ARR_SE2, CKC_ARR_SW2, CKC_ARR_WE2, CKC_ARR_NS2,
-	// - frames and double frames
-	CKC_FRM_N,  CKC_FRM_S,  CKC_FRM_W,  CKC_FRM_E,  CKC_FRM_NW,  CKC_FRM_NE,  CKC_FRM_SE,  CKC_FRM_SW,  CKC_FRM_HL,  CKC_FRM_VL,  CKC_FRM_CR,
-	CKC_FRM_N2, CKC_FRM_S2, CKC_FRM_W2, CKC_FRM_E2, CKC_FRM_NW2, CKC_FRM_NE2, CKC_FRM_SE2, CKC_FRM_SW2, CKC_FRM_HL2, CKC_FRM_VL2, CKC_FRM_CR2
+	CKC_FRM_N1, CKC_FRM_S1, CKC_FRM_W1, CKC_FRM_E1, CKC_FRM_NW1, CKC_FRM_NE1, CKC_FRM_SE1, CKC_FRM_SW1, CKC_FRM_HL1, CKC_FRM_VL1, CKC_FRM_CR1,
+	CKC_FRM_N2, CKC_FRM_S2, CKC_FRM_W2, CKC_FRM_E2, CKC_FRM_NW2, CKC_FRM_NE2, CKC_FRM_SE2, CKC_FRM_SW2, CKC_FRM_HL2, CKC_FRM_VL2, CKC_FRM_CR2,
 };
-const uint16_t PROGMEM COMPOSE_KEYCODE_START = CKC_NOT;
 const char* COMPOSE_STRINGS[] = {
 	// - misc
-	"bn", "xp",
+	[CKC_NOT-CKC_RANGE] = "bn", [CKC_POO-CKC_RANGE] = "xp",
 	// - dead accents
-	",`", ",'", ",^", ",°", ",\"", ",~", ",,",
+	[CKC_DGRV -CKC_RANGE] = ",`",
+	[CKC_DACUT-CKC_RANGE] = ",'",
+	[CKC_DCIRC-CKC_RANGE] = ",^",
+	[CKC_DDEGR-CKC_RANGE] = ",°",
+	[CKC_DDIA -CKC_RANGE] = ",\"",
+	[CKC_DTILD-CKC_RANGE] = ",~",
+	[CKC_DCEDI-CKC_RANGE] = ",,",
 	// - superscript and subscript digits
-	"^0", "^1", "^2", "^3", "^4", "^5", "^6", "^7", "^8", "^9",
-	"_0", "_1", "_2", "_3", "_4", "_5", "_6", "_7", "_8", "_9",
+	[CKC_SUP0-CKC_RANGE] = "^0", [CKC_SUP1-CKC_RANGE] = "^1", [CKC_SUP2-CKC_RANGE] = "^2", [CKC_SUP3-CKC_RANGE] = "^3", [CKC_SUP4-CKC_RANGE] = "^4", [CKC_SUP5-CKC_RANGE] = "^5", [CKC_SUP6-CKC_RANGE] = "^6", [CKC_SUP7-CKC_RANGE] = "^7", [CKC_SUP8-CKC_RANGE] = "^8", [CKC_SUP9-CKC_RANGE] = "^9",
+	[CKC_SUB0-CKC_RANGE] = "_0", [CKC_SUB1-CKC_RANGE] = "_1", [CKC_SUB2-CKC_RANGE] = "_2", [CKC_SUB3-CKC_RANGE] = "_3", [CKC_SUB4-CKC_RANGE] = "_4", [CKC_SUB5-CKC_RANGE] = "_5", [CKC_SUB6-CKC_RANGE] = "_6", [CKC_SUB7-CKC_RANGE] = "_7", [CKC_SUB8-CKC_RANGE] = "_8", [CKC_SUB9-CKC_RANGE] = "_9",
 	// - arrows and double arrows
-	"an",  "ag",  "at",  "ar",  "ad",  "a,",  "ah",  "af",  "a.",  "am",
-	"aan", "aag", "aat", "aar", "aad", "aa,", "aah", "aaf", "aa.", "aam",
+	[CKC_ARR_N1-CKC_RANGE] = "ag",  [CKC_ARR_S1-CKC_RANGE] = "ar",  [CKC_ARR_W1-CKC_RANGE] = "an",  [CKC_ARR_E1-CKC_RANGE] = "at",  [CKC_ARR_NW1-CKC_RANGE] = "ah",  [CKC_ARR_NE1-CKC_RANGE] = "af",  [CKC_ARR_SE1-CKC_RANGE] = "a.",  [CKC_ARR_SW1-CKC_RANGE] = "am",  [CKC_ARR_WE1-CKC_RANGE] = "ad",  [CKC_ARR_NS1-CKC_RANGE] = "a,",
+	[CKC_ARR_N2-CKC_RANGE] = "aag", [CKC_ARR_S2-CKC_RANGE] = "aar", [CKC_ARR_W2-CKC_RANGE] = "aan", [CKC_ARR_E2-CKC_RANGE] = "aat", [CKC_ARR_NW2-CKC_RANGE] = "aah", [CKC_ARR_NE2-CKC_RANGE] = "aaf", [CKC_ARR_SE2-CKC_RANGE] = "aa.", [CKC_ARR_SW2-CKC_RANGE] = "aam", [CKC_ARR_WE2-CKC_RANGE] = "aad", [CKC_ARR_NS2-CKC_RANGE] = "aa,",
 	// - frames and double frames
-	"fg", "f,", "fn", "ft", "fh", "ff", "f.", "fm", "fs", "fd", "fr",
-	"Fg", "F,", "Fn", "Ft", "Fh", "Ff", "F.", "Fm", "Fs", "Fd", "Fr"
+	[CKC_FRM_N1-CKC_RANGE] = "fg", [CKC_FRM_S1-CKC_RANGE] = "f,", [CKC_FRM_W1-CKC_RANGE] = "fn", [CKC_FRM_E1-CKC_RANGE] = "ft", [CKC_FRM_NW1-CKC_RANGE] = "fh", [CKC_FRM_NE1-CKC_RANGE] = "ff", [CKC_FRM_SE1-CKC_RANGE] = "f.", [CKC_FRM_SW1-CKC_RANGE] = "fm", [CKC_FRM_HL1-CKC_RANGE] = "fd", [CKC_FRM_VL1-CKC_RANGE] = "fs", [CKC_FRM_CR1-CKC_RANGE] = "fr",
+	[CKC_FRM_N2-CKC_RANGE] = "Fg", [CKC_FRM_S2-CKC_RANGE] = "F,", [CKC_FRM_W2-CKC_RANGE] = "Fn", [CKC_FRM_E2-CKC_RANGE] = "Ft", [CKC_FRM_NW2-CKC_RANGE] = "Fh", [CKC_FRM_NE2-CKC_RANGE] = "Ff", [CKC_FRM_SE2-CKC_RANGE] = "F.", [CKC_FRM_SW2-CKC_RANGE] = "Fm", [CKC_FRM_HL2-CKC_RANGE] = "Fd", [CKC_FRM_VL2-CKC_RANGE] = "Fs", [CKC_FRM_CR2-CKC_RANGE] = "Fr",
 };
-const char *COMPOSE_LEADER = SS_LSFT("3"); // DE "§";
+const uint16_t COMPOSE_STRINGS_COUNT = sizeof(COMPOSE_STRINGS) / sizeof(COMPOSE_STRINGS[0]);
+const char *COMPOSE_LEADER = "::"; //TODO SS_LSFT("3"); // DE "§";
 
 static layer_state_t prev_layer_state;
 layer_state_t layer_state_set_user_impl(layer_state_t state) {
@@ -161,21 +166,23 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 			layer_on(_DS);
 			return false;
 		}
-	}
 
-	// COMPOSE_STRINGS
-/* TODO
-	if (keycode >= COMPOSE_KEYCODE_START) {
-		uint16_t compose_index = keycode - COMPOSE_KEYCODE_START;
-		if (compose_index < sizeof(COMPOSE_STRINGS) / sizeof(COMPOSE_STRINGS[0])) {
+	default:
+		// COMPOSE_STRINGS
+		if (keycode >= CKC_RANGE && keycode < CKC_RANGE + COMPOSE_STRINGS_COUNT) {
 			if (pressed) {
-				send_string(COMPOSE_LEADER);
-				send_string(COMPOSE_STRINGS[compose_index]);
+				int i = keycode - CKC_RANGE;
+//				char s[32];  sprintf(s, "[%d]", i);  send_string(s);
+//				send_string(COMPOSE_LEADER);
+//				send_string("^3");
+//				send_string(COMPOSE_STRINGS[CKC_SUP1-CKC_RANGE]);
+//				send_string(COMPOSE_STRINGS[COMPOSE_STRINGS_COUNT - 1]);
+				send_string(COMPOSE_STRINGS[i]);
 			}
 			return false;
 		}
 	}
-*/
+
 	return true;
 }
 
@@ -265,9 +272,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 ), [_AS] = LAYOUT( //arrows *****| I **********| A **********| E **********| O **********|*********|***************| S **********| N **********| R **********| T **********| D **********|**********|****************|********************|
 /*N*/ x______      ,x            ,x            ,x            ,x            ,x            ,x            ,x          ,x            ,x            ,x            ,RESET        ,x            ,(      x______      )      ,(      x______      )
 /*F*/,x            ,x            ,x            ,x            ,x            ,x                                      ,x            ,x            ,x            ,x            ,x            ,x            ,x            ,(      x______      )
-/* */,x            ,x            ,x            ,x            ,x            ,x                                      ,x            ,CKC_ARR_NW   ,CKC_ARR_N    ,CKC_ARR_NE   ,x            ,x            ,x            ,x            ,x______
-/*H*/,x            ,x            ,x            ,x            ,x            ,x                  ,x                  ,x            ,CKC_ARR_W    ,CKC_ARR_S    ,CKC_ARR_E    ,CKC_ARR_WE   ,x            ,(      x______      )      ,x______
-/* */,x            ,x            ,x            ,x            ,x            ,x                  ,x                  ,x            ,CKC_ARR_SW   ,CKC_ARR_NS   ,CKC_ARR_SE   ,x            ,x                          ,x______
+/* */,x            ,x            ,x            ,x            ,x            ,x                                      ,x            ,CKC_ARR_NW1  ,CKC_ARR_N1   ,CKC_ARR_NE1  ,x            ,x            ,x            ,x            ,x______
+/*H*/,x            ,x            ,x            ,x            ,x            ,x                  ,x                  ,x            ,CKC_ARR_W1   ,CKC_ARR_S1   ,CKC_ARR_E1   ,CKC_ARR_WE1  ,x            ,(      x______      )      ,x______
+/* */,x            ,x            ,x            ,x            ,x            ,x                  ,x                  ,x            ,CKC_ARR_SW1  ,CKC_ARR_NS1  ,CKC_ARR_SE1  ,x            ,x                          ,x______
 /*T*/,x            ,x            ,(      x______      )      ,(      x______      )      ,x            ,x          ,(      x______      )      ,(      x______      )      ,x            ,x            ,x______      ,x______      ,x______
 ), [_AD] = LAYOUT( //double arrows ************| A **********| E **********| O **********|*********|***************| S **********| N **********| R **********| T **********| D **********|**********|****************|********************|
 /*N*/ x______      ,x            ,x            ,x            ,x            ,x            ,x            ,x          ,x            ,x            ,x            ,RESET        ,x            ,(      x______      )      ,(      x______      )
@@ -280,15 +287,15 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 ), [_FS] = LAYOUT( //frames *****| I **********| A **********| E **********| O **********|*********|***************| S **********| N **********| R **********| T **********| D **********|**********|****************|********************|
 /*N*/ x______      ,x            ,x            ,x            ,x            ,x            ,x            ,x          ,x            ,x            ,x            ,RESET        ,x            ,(      x______      )      ,(      x______      )
 /*F*/,x            ,x            ,x            ,x            ,x            ,x                                      ,x            ,x            ,x            ,x            ,x            ,x            ,x            ,(      x______      )
-/* */,x            ,x            ,x            ,x            ,x            ,x                                      ,x            ,CKC_FRM_NW   ,CKC_FRM_N    ,CKC_FRM_NE   ,x            ,x            ,x            ,x            ,x______
-/*H*/,x            ,x            ,x            ,x            ,x            ,x                  ,x                  ,CKC_FRM_HL   ,CKC_FRM_W    ,CKC_FRM_CR   ,CKC_FRM_E    ,CKC_FRM_VL   ,x            ,(      x______      )      ,x______
-/* */,x            ,x            ,x            ,x            ,x            ,x                  ,x                  ,x            ,CKC_FRM_SW   ,CKC_FRM_S    ,CKC_FRM_SE   ,x            ,x                          ,x______
+/* */,x            ,x            ,x            ,x            ,x            ,x                                      ,x            ,CKC_FRM_NW1  ,CKC_FRM_N1   ,CKC_FRM_NE1  ,x            ,x            ,x            ,x            ,x______
+/*H*/,x            ,x            ,x            ,x            ,x            ,x                  ,x                  ,CKC_FRM_VL1  ,CKC_FRM_W1   ,CKC_FRM_CR1  ,CKC_FRM_E1   ,CKC_FRM_HL1  ,x            ,(      x______      )      ,x______
+/* */,x            ,x            ,x            ,x            ,x            ,x                  ,x                  ,x            ,CKC_FRM_SW1  ,CKC_FRM_S1   ,CKC_FRM_SE1  ,x            ,x                          ,x______
 /*T*/,x            ,x            ,(      x______      )      ,(      x______      )      ,x            ,x          ,(      x______      )      ,(      x______      )      ,x            ,x            ,x______      ,x______      ,x______
 ), [_FD] = LAYOUT( //double frames ************| A **********| E **********| O **********|*********|***************| S **********| N **********| R **********| T **********| D **********|**********|****************|********************|
 /*N*/ x______      ,x            ,x            ,x            ,x            ,x            ,x            ,x          ,x            ,x            ,x            ,RESET        ,x            ,(      x______      )      ,(      x______      )
 /*F*/,x            ,x            ,x            ,x            ,x            ,x                                      ,x            ,x            ,x            ,x            ,x            ,x            ,x            ,(      x______      )
 /* */,x            ,x            ,x            ,x            ,x            ,x                                      ,x            ,CKC_FRM_NW2  ,CKC_FRM_N2   ,CKC_FRM_NE2  ,x            ,x            ,x            ,x            ,x______
-/*H*/,x            ,x            ,x            ,x            ,x            ,x                  ,x                  ,CKC_FRM_HL2  ,CKC_FRM_W2   ,CKC_FRM_CR2  ,CKC_FRM_E2   ,CKC_FRM_VL2  ,x            ,(      x______      )      ,x______
+/*H*/,x            ,x            ,x            ,x            ,x            ,x                  ,x                  ,CKC_FRM_VL2  ,CKC_FRM_W2   ,CKC_FRM_CR2  ,CKC_FRM_E2   ,CKC_FRM_HL2  ,x            ,(      x______      )      ,x______
 /* */,x            ,x            ,x            ,x            ,x            ,x                  ,x                  ,x            ,CKC_FRM_SW2  ,CKC_FRM_S2   ,CKC_FRM_SE2  ,x            ,x                          ,x______
 /*T*/,x            ,x            ,(      x______      )      ,(      x______      )      ,x            ,x          ,(      x______      )      ,(      x______      )      ,x            ,x            ,x______      ,x______      ,x______
 )};
