@@ -41,43 +41,21 @@ enum custom_keycodes {
 	CK_QX,
 	CK_LMRES,
 
-	// must be the last one:
-	CKC_RANGE
-};
-// custom keys using (my custom, not UC_WINC) AutoHotkey compose:
-enum custom_compose_keycodes {
-	CKC_NOT = CKC_RANGE, CKC_POO,
+	// custom keys using (my custom, not UC_WINC) AutoHotkey compose:
+	// - misc
+	CKC_NOT, CKC_POO,
+	// - dead accents
 	CKC_DGRV, CKC_DACUT, CKC_DCIRC, CKC_DDEGR, CKC_DDIA, CKC_DTILD, CKC_DCEDI,
+	// - superscript and subscript digits
 	CKC_SUP0, CKC_SUP1, CKC_SUP2, CKC_SUP3, CKC_SUP4, CKC_SUP5, CKC_SUP6, CKC_SUP7, CKC_SUP8, CKC_SUP9,
 	CKC_SUB0, CKC_SUB1, CKC_SUB2, CKC_SUB3, CKC_SUB4, CKC_SUB5, CKC_SUB6, CKC_SUB7, CKC_SUB8, CKC_SUB9,
+	// - arrows and double arrows
 	CKC_ARR_N1, CKC_ARR_S1, CKC_ARR_W1, CKC_ARR_E1, CKC_ARR_NW1, CKC_ARR_NE1, CKC_ARR_SE1, CKC_ARR_SW1, CKC_ARR_WE1, CKC_ARR_NS1,
 	CKC_ARR_N2, CKC_ARR_S2, CKC_ARR_W2, CKC_ARR_E2, CKC_ARR_NW2, CKC_ARR_NE2, CKC_ARR_SE2, CKC_ARR_SW2, CKC_ARR_WE2, CKC_ARR_NS2,
-	CKC_FRM_N1, CKC_FRM_S1, CKC_FRM_W1, CKC_FRM_E1, CKC_FRM_NW1, CKC_FRM_NE1, CKC_FRM_SE1, CKC_FRM_SW1, CKC_FRM_HL1, CKC_FRM_VL1, CKC_FRM_CR1,
-	CKC_FRM_N2, CKC_FRM_S2, CKC_FRM_W2, CKC_FRM_E2, CKC_FRM_NW2, CKC_FRM_NE2, CKC_FRM_SE2, CKC_FRM_SW2, CKC_FRM_HL2, CKC_FRM_VL2, CKC_FRM_CR2,
-};
-const char* COMPOSE_STRINGS[] = {
-	// - misc
-	[CKC_NOT-CKC_RANGE] = "bn", [CKC_POO-CKC_RANGE] = "xp",
-	// - dead accents
-	[CKC_DGRV -CKC_RANGE] = ",`",
-	[CKC_DACUT-CKC_RANGE] = ",'",
-	[CKC_DCIRC-CKC_RANGE] = ",^",
-	[CKC_DDEGR-CKC_RANGE] = ",°",
-	[CKC_DDIA -CKC_RANGE] = ",\"",
-	[CKC_DTILD-CKC_RANGE] = ",~",
-	[CKC_DCEDI-CKC_RANGE] = ",,",
-	// - superscript and subscript digits
-	[CKC_SUP0-CKC_RANGE] = "^0", [CKC_SUP1-CKC_RANGE] = "^1", [CKC_SUP2-CKC_RANGE] = "^2", [CKC_SUP3-CKC_RANGE] = "^3", [CKC_SUP4-CKC_RANGE] = "^4", [CKC_SUP5-CKC_RANGE] = "^5", [CKC_SUP6-CKC_RANGE] = "^6", [CKC_SUP7-CKC_RANGE] = "^7", [CKC_SUP8-CKC_RANGE] = "^8", [CKC_SUP9-CKC_RANGE] = "^9",
-	[CKC_SUB0-CKC_RANGE] = "_0", [CKC_SUB1-CKC_RANGE] = "_1", [CKC_SUB2-CKC_RANGE] = "_2", [CKC_SUB3-CKC_RANGE] = "_3", [CKC_SUB4-CKC_RANGE] = "_4", [CKC_SUB5-CKC_RANGE] = "_5", [CKC_SUB6-CKC_RANGE] = "_6", [CKC_SUB7-CKC_RANGE] = "_7", [CKC_SUB8-CKC_RANGE] = "_8", [CKC_SUB9-CKC_RANGE] = "_9",
-	// - arrows and double arrows
-	[CKC_ARR_N1-CKC_RANGE] = "ag",  [CKC_ARR_S1-CKC_RANGE] = "ar",  [CKC_ARR_W1-CKC_RANGE] = "an",  [CKC_ARR_E1-CKC_RANGE] = "at",  [CKC_ARR_NW1-CKC_RANGE] = "ah",  [CKC_ARR_NE1-CKC_RANGE] = "af",  [CKC_ARR_SE1-CKC_RANGE] = "a.",  [CKC_ARR_SW1-CKC_RANGE] = "am",  [CKC_ARR_WE1-CKC_RANGE] = "ad",  [CKC_ARR_NS1-CKC_RANGE] = "a,",
-	[CKC_ARR_N2-CKC_RANGE] = "aag", [CKC_ARR_S2-CKC_RANGE] = "aar", [CKC_ARR_W2-CKC_RANGE] = "aan", [CKC_ARR_E2-CKC_RANGE] = "aat", [CKC_ARR_NW2-CKC_RANGE] = "aah", [CKC_ARR_NE2-CKC_RANGE] = "aaf", [CKC_ARR_SE2-CKC_RANGE] = "aa.", [CKC_ARR_SW2-CKC_RANGE] = "aam", [CKC_ARR_WE2-CKC_RANGE] = "aad", [CKC_ARR_NS2-CKC_RANGE] = "aa,",
 	// - frames and double frames
-	[CKC_FRM_N1-CKC_RANGE] = "fg", [CKC_FRM_S1-CKC_RANGE] = "f,", [CKC_FRM_W1-CKC_RANGE] = "fn", [CKC_FRM_E1-CKC_RANGE] = "ft", [CKC_FRM_NW1-CKC_RANGE] = "fh", [CKC_FRM_NE1-CKC_RANGE] = "ff", [CKC_FRM_SE1-CKC_RANGE] = "f.", [CKC_FRM_SW1-CKC_RANGE] = "fm", [CKC_FRM_HL1-CKC_RANGE] = "fd", [CKC_FRM_VL1-CKC_RANGE] = "fs", [CKC_FRM_CR1-CKC_RANGE] = "fr",
-	[CKC_FRM_N2-CKC_RANGE] = "Fg", [CKC_FRM_S2-CKC_RANGE] = "F,", [CKC_FRM_W2-CKC_RANGE] = "Fn", [CKC_FRM_E2-CKC_RANGE] = "Ft", [CKC_FRM_NW2-CKC_RANGE] = "Fh", [CKC_FRM_NE2-CKC_RANGE] = "Ff", [CKC_FRM_SE2-CKC_RANGE] = "F.", [CKC_FRM_SW2-CKC_RANGE] = "Fm", [CKC_FRM_HL2-CKC_RANGE] = "Fd", [CKC_FRM_VL2-CKC_RANGE] = "Fs", [CKC_FRM_CR2-CKC_RANGE] = "Fr",
+	CKC_FRM_N1, CKC_FRM_S1, CKC_FRM_W1, CKC_FRM_E1, CKC_FRM_NW1, CKC_FRM_NE1, CKC_FRM_SE1, CKC_FRM_SW1, CKC_FRM_HL1, CKC_FRM_VL1, CKC_FRM_CR1,
+	CKC_FRM_N2, CKC_FRM_S2, CKC_FRM_W2, CKC_FRM_E2, CKC_FRM_NW2, CKC_FRM_NE2, CKC_FRM_SE2, CKC_FRM_SW2, CKC_FRM_HL2, CKC_FRM_VL2, CKC_FRM_CR2
 };
-const uint16_t COMPOSE_STRINGS_COUNT = sizeof(COMPOSE_STRINGS) / sizeof(COMPOSE_STRINGS[0]);
-const char *COMPOSE_LEADER = "::"; //TODO SS_LSFT("3"); // DE "§";
 
 static layer_state_t prev_layer_state;
 layer_state_t layer_state_set_user_impl(layer_state_t state) {
@@ -132,6 +110,12 @@ bool pru_mod_sensitive_key(keyrecord_t *record, uint16_t mod_mask, uint16_t keyc
 	return false;
 }
 
+// process_record_user implementation to call send_string
+bool pru_str(keyrecord_t *record, const char *s) {
+	if (record->event.pressed) { send_string(s); }
+	return false;
+}
+
 static uint8_t shift_count;
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 	bool pressed = record->event.pressed;
@@ -167,20 +151,83 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 			return false;
 		}
 
-	default:
-		// COMPOSE_STRINGS
-		if (keycode >= CKC_RANGE && keycode < CKC_RANGE + COMPOSE_STRINGS_COUNT) {
-			if (pressed) {
-				int i = keycode - CKC_RANGE;
-//				char s[32];  sprintf(s, "[%d]", i);  send_string(s);
-//				send_string(COMPOSE_LEADER);
-//				send_string("^3");
-//				send_string(COMPOSE_STRINGS[CKC_SUP1-CKC_RANGE]);
-//				send_string(COMPOSE_STRINGS[COMPOSE_STRINGS_COUNT - 1]);
-				send_string(COMPOSE_STRINGS[i]);
-			}
-			return false;
-		}
+	// custom keys using (my custom, not UC_WINC) AutoHotkey compose:
+	// - misc
+	case CKC_NOT    : return pru_str(record, "§bn");
+	case CKC_POO    : return pru_str(record, "§xp");
+	// - dead accents
+	case CKC_DGRV   : return pru_str(record, "§);`");
+	case CKC_DACUT  : return pru_str(record, "§);'");
+	case CKC_DCIRC  : return pru_str(record, "§);^");
+	case CKC_DDEGR  : return pru_str(record, "§);°");
+	case CKC_DDIA   : return pru_str(record, "§);\"");
+	case CKC_DTILD  : return pru_str(record, "§);~");
+	case CKC_DCEDI  : return pru_str(record, "§);,");
+	// - superscript and subscript digits
+	case CKC_SUP0   : return pru_str(record, "§^0");
+	case CKC_SUP1   : return pru_str(record, "§^1");
+	case CKC_SUP2   : return pru_str(record, "§^2");
+	case CKC_SUP3   : return pru_str(record, "§^3");
+	case CKC_SUP4   : return pru_str(record, "§^4");
+	case CKC_SUP5   : return pru_str(record, "§^5");
+	case CKC_SUP6   : return pru_str(record, "§^6");
+	case CKC_SUP7   : return pru_str(record, "§^7");
+	case CKC_SUP8   : return pru_str(record, "§^8");
+	case CKC_SUP9   : return pru_str(record, "§^9");
+	case CKC_SUB0   : return pru_str(record, "§_0");
+	case CKC_SUB1   : return pru_str(record, "§_1");
+	case CKC_SUB2   : return pru_str(record, "§_2");
+	case CKC_SUB3   : return pru_str(record, "§_3");
+	case CKC_SUB4   : return pru_str(record, "§_4");
+	case CKC_SUB5   : return pru_str(record, "§_5");
+	case CKC_SUB6   : return pru_str(record, "§_6");
+	case CKC_SUB7   : return pru_str(record, "§_7");
+	case CKC_SUB8   : return pru_str(record, "§_8");
+	case CKC_SUB9   : return pru_str(record, "§_9");
+	// - arrows and double arrows
+	case CKC_ARR_N1 : return pru_str(record, "§ag");
+	case CKC_ARR_S1 : return pru_str(record, "§ar");
+	case CKC_ARR_W1 : return pru_str(record, "§an");
+	case CKC_ARR_E1 : return pru_str(record, "§at");
+	case CKC_ARR_NW1: return pru_str(record, "§ah");
+	case CKC_ARR_NE1: return pru_str(record, "§af");
+	case CKC_ARR_SE1: return pru_str(record, "§a.");
+	case CKC_ARR_SW1: return pru_str(record, "§am");
+	case CKC_ARR_WE1: return pru_str(record, "§ad");
+	case CKC_ARR_NS1: return pru_str(record, "§a,");
+	case CKC_ARR_N2 : return pru_str(record, "§aag");
+	case CKC_ARR_S2 : return pru_str(record, "§aar");
+	case CKC_ARR_W2 : return pru_str(record, "§aan");
+	case CKC_ARR_E2 : return pru_str(record, "§aat");
+	case CKC_ARR_NW2: return pru_str(record, "§aah");
+	case CKC_ARR_NE2: return pru_str(record, "§aaf");
+	case CKC_ARR_SE2: return pru_str(record, "§aa.");
+	case CKC_ARR_SW2: return pru_str(record, "§aam");
+	case CKC_ARR_WE2: return pru_str(record, "§aad");
+	case CKC_ARR_NS2: return pru_str(record, "§aa,");
+	// - frames and double frames
+	case CKC_FRM_N1 : return pru_str(record, "§fg");
+	case CKC_FRM_S1 : return pru_str(record, "§f,");
+	case CKC_FRM_W1 : return pru_str(record, "§fn");
+	case CKC_FRM_E1 : return pru_str(record, "§ft");
+	case CKC_FRM_NW1: return pru_str(record, "§fh");
+	case CKC_FRM_NE1: return pru_str(record, "§ff");
+	case CKC_FRM_SE1: return pru_str(record, "§f.");
+	case CKC_FRM_SW1: return pru_str(record, "§fm");
+	case CKC_FRM_HL1: return pru_str(record, "§fd");
+	case CKC_FRM_VL1: return pru_str(record, "§fs");
+	case CKC_FRM_CR1: return pru_str(record, "§fr");
+	case CKC_FRM_N2 : return pru_str(record, "§Fg");
+	case CKC_FRM_S2 : return pru_str(record, "§F,");
+	case CKC_FRM_W2 : return pru_str(record, "§Fn");
+	case CKC_FRM_E2 : return pru_str(record, "§Ft");
+	case CKC_FRM_NW2: return pru_str(record, "§Fh");
+	case CKC_FRM_NE2: return pru_str(record, "§Ff");
+	case CKC_FRM_SE2: return pru_str(record, "§F.");
+	case CKC_FRM_SW2: return pru_str(record, "§Fm");
+	case CKC_FRM_HL2: return pru_str(record, "§Fd");
+	case CKC_FRM_VL2: return pru_str(record, "§Fs");
+	case CKC_FRM_CR2: return pru_str(record, "§Fr");
 	}
 
 	return true;
