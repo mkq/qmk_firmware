@@ -156,13 +156,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 	case CKC_NOT    : return pru_str(record, "§bn");
 	case CKC_POO    : return pru_str(record, "§xp");
 	// - dead accents
-	case CKC_DGRV   : return pru_str(record, "§);`");
-	case CKC_DACUT  : return pru_str(record, "§);'");
-	case CKC_DCIRC  : return pru_str(record, "§);^");
-	case CKC_DDEGR  : return pru_str(record, "§);°");
-	case CKC_DDIA   : return pru_str(record, "§);\"");
-	case CKC_DTILD  : return pru_str(record, "§);~");
-	case CKC_DCEDI  : return pru_str(record, "§);,");
+	case CKC_DGRV   : return pru_str(record, "§;`");
+	case CKC_DACUT  : return pru_str(record, "§;'");
+	case CKC_DCIRC  : return pru_str(record, "§;^");
+	case CKC_DDEGR  : return pru_str(record, "§;°");
+	case CKC_DDIA   : return pru_str(record, "§;\"");
+	case CKC_DTILD  : return pru_str(record, "§;~");
+	case CKC_DCEDI  : return pru_str(record, "§;,");
 	// - superscript and subscript digits
 	case CKC_SUP0   : return pru_str(record, "§^0");
 	case CKC_SUP1   : return pru_str(record, "§^1");
