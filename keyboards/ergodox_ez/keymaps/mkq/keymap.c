@@ -35,6 +35,8 @@ enum custom_layers {
 #define _DS   _L3	//double shift = _L3
 #define _S_L4 _L5	//shift + layer 4 = layer 5
 const uint8_t layer_leds[] = {
+	// These values (1 = blue, 2 = green, 4 = red) are chosen here for readability in binary literals.
+	// Function layer_state_set_user_led maps them back to ergodox_right_led_..._on calls.
 	//... = ..rgb
 	[_L3] = 0b001,
 	[_L4] = 0b100,
