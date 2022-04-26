@@ -299,9 +299,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /*H*/,KC_TAB       ,LWIN_T(KC_U) ,LALT_T(KC_I) ,LCTL_T(KC_A) ,LT(_NV,KC_E) ,KC_O                                       ,KC_S         ,LT(_NV,KC_N) ,RCTL_T(KC_R) ,LALT_T(KC_T) ,RWIN_T(KC_D) ,CK_SB
 /* */,DE_PLUS      ,LT(_DW,DE_MI),CK_QX        ,LT(_DC,KC_L) ,KC_P         ,DE_Z         ,KC_LCTL        ,x______      ,KC_B         ,KC_M         ,DE_COMM      ,DE_DOT       ,KC_J         ,KC_Q
 /* */,KC_HOME      ,KC_END       ,KC_PGUP      ,KC_PGDN      ,KC_ESC                                                                 ,MO(_NV)      ,KC_UP        ,KC_DOWN      ,KC_LEFT      ,KC_RGHT
-/*T*/                                                                      ,KM_COPY      ,KM_PAST        ,x______      ,x______
+/*T*/                                                                      ,KM_COPY      ,KM_PAST        ,x______      ,TT(_BT)
 /*T*/                                                                                    ,KM_CUT         ,x______
-/*T*/                                                        ,KC_LSFT      ,LT(_BT,KC_BS),KC_DEL         ,KC_SPC       ,KC_ENTER     ,KC_RSFT
+/*T*/                                                        ,KC_LSFT      ,KC_BS        ,KC_DEL         ,KC_SPC       ,KC_ENTER     ,KC_RSFT
 ), [_BT] = LAYOUT_ergodox_pretty(
 // [base, tap only]| U **********| I **********| A **********| E **********| O **********|                             | S **********| N **********| R **********| T **********| D **********|*************
 /*F*/ x______      ,KC_F2        ,KC_F3        ,KC_F4        ,KC_F5        ,x______      ,x______        ,x______      ,x______      ,x______      ,x______      ,x______      ,x______      ,x______
