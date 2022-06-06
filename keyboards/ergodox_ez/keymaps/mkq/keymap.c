@@ -32,6 +32,7 @@ enum custom_layers {
 	_NV,	//navigation
 	_DC,	//LCTL + digits
 	_DW,	//LWIN + digits
+	_LY,	//layer selection
 
 	LAYER_COUNT
 };
@@ -51,6 +52,7 @@ const uint8_t layer_leds[] = {
 	[_FS] = 0b111,
 	[_FD] = 0b111,
 	[_NV] = 0b010,
+	[_LY] = 0b010,
 };
 const uint8_t layer_leds_length = sizeof(layer_leds) / sizeof(layer_leds[0]);
 
@@ -326,9 +328,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 // keycode aliases
 #define SPC       KC_SPC
 #define ESC       KC_ESC
-#define KC_BS     KC_BSPC
-#define KC_AP     KC_APP
-#define KC_CAP    KC_CAPS
+#define TAB       KC_TAB
+#define DEL       KC_DEL
+#define BSPC      KC_BSPC
+#define APP       KC_APP
+#define HOME      KC_HOME
+#define END       KC_END
 #define DE_MI     DE_MINS
 #define KM_CUT    LSFT(KC_DEL)
 #define KM_COPY   LCTL(KC_INS)
@@ -344,24 +349,35 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 // ____________________ layers ____________________
 // Row label comments: F = function keys; H = home; T = thumb
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-[_BA] = LAYOUT_ergodox_pretty(
+[_LY] = LAYOUT_ergodox_pretty(
+// [layer selection]             | I **********| A **********| E **********| O **********|                             | S **********| N **********| R **********| T **********| D **********|*************
+/*F*/ x______      ,TO(_FS)      ,TO(_FD)      ,TO(_AS)      ,TO(_AD)      ,x______      ,x______        ,x______      ,x______      ,x______      ,x______      ,x______      ,x______      ,x______
+/* */,x______      ,x______      ,TO(_L5)      ,TO(_L4)      ,TO(_L3)      ,x______      ,x______        ,x______      ,x______      ,TO(_L3)      ,TO(_L4)      ,TO(_L5)      ,x______      ,x______
+/*H*/,x______      ,x______      ,x______      ,x______      ,TO(_NV)      ,x______                                    ,x______      ,TO(_NV)      ,x______      ,x______      ,x______      ,x______
+/* */,x______      ,TO(_DW)      ,x______      ,TO(_DC)      ,x______      ,x______      ,x______        ,x______      ,x______      ,x______      ,x______      ,x______      ,x______      ,x______
+/* */,x______      ,x______      ,x______      ,x______      ,x______                                                                ,x______      ,x______      ,x______      ,x______      ,x______
+/*T*/                                                                      ,TO(_BT)      ,x______        ,x______      ,x______
+/*T*/                                                                                    ,x______        ,x______
+/*T*/                                                        ,TO(_BA)      ,x______      ,x______        ,x______      ,x______      ,TO(_BA)
+
+) ,[_BA] = LAYOUT_ergodox_pretty(
 // [base]          | U **********| I **********| A **********| E **********| O **********|                             | S **********| N **********| R **********| T **********| D **********|*************
-/*F*/ DE_PLUS      ,LT(_FS,KC_F1),LT(_FD,KC_F2),LT(_AS,KC_F3),LT(_AD,KC_F4),KC_F5        ,LWIN_T(KC_F6)  ,KC_F7        ,KC_F8        ,KC_F9        ,KC_F10       ,KC_F11       ,KC_F12       ,KC_PGUP
-/* */,DE_CIRC      ,KC_X         ,KC_V         ,LT(_L4,SPC)  ,KC_C         ,KC_W         ,LALT_T(KC_Q)   ,LCAG_T(KC_AP),KC_K         ,KC_H         ,LT(_L4,KC_G) ,KC_F         ,DE_Y         ,KC_PGDN
-/*H*/,KC_TAB       ,LWIN_T(KC_U) ,LALT_T(KC_I) ,LCTL_T(KC_A) ,LT(_NV,KC_E) ,KC_O                                       ,KC_S         ,LT(_NV,KC_N) ,RCTL_T(KC_R) ,LALT_T(KC_T) ,RWIN_T(KC_D) ,KC_UP
-/* */,LCTL_T(KC_J) ,LT(_DW,DE_MI),CK_QX        ,LT(_DC,KC_L) ,KC_P         ,DE_Z         ,KC_LCTL        ,KC_INS       ,KC_B         ,KC_M         ,DE_COMM      ,DE_DOT       ,CK_SB        ,KC_DOWN
-/* */,KC_LWIN      ,KC_LALT      ,CK_CYLAY     ,SFT_T(KC_CAP),LT(_BT,ESC)                                                            ,MO(_NV)      ,KC_HOME      ,KC_END       ,KC_LEFT      ,KC_RGHT
-/*T*/                                                                      ,LALT(KC_LEFT),LALT(KC_RGHT)  ,KM_CUT       ,KC_DEL
-/*T*/                                                                                    ,CK_LMRES       ,KM_COPY
-/*T*/                                                        ,KC_LSFT      ,KC_BS        ,KC_SPC         ,KM_PAST      ,KC_ENTER     ,KC_RSFT
+/*F*/ KC_F1        ,LT(_FS,KC_F2),LT(_FD,KC_F3),LT(_AS,KC_F4),LT(_AD,KC_F5),KC_F6        ,KC_PAUS        ,KC_PSCR      ,KC_F7        ,KC_F8        ,KC_F9        ,KC_F10       ,KC_F11       ,KC_F12
+/* */,DE_CIRC      ,KC_X         ,KC_V         ,LT(_L4,SPC)  ,KC_C         ,KC_W         ,CK_CYLAY       ,LCAG_T(APP)  ,KC_K         ,KC_H         ,LT(_L4,KC_G) ,KC_F         ,DE_Y         ,KC_PGUP
+/*H*/,LT(_LY,TAB)  ,LWIN_T(KC_U) ,LALT_T(KC_I) ,LCTL_T(KC_A) ,LT(_NV,KC_E) ,KC_O                                       ,KC_S         ,LT(_NV,KC_N) ,RCTL_T(KC_R) ,LALT_T(KC_T) ,RWIN_T(KC_D) ,CK_SB
+/* */,KC_Q         ,LT(_DW,DE_MI),CK_QX        ,LT(_DC,KC_L) ,KC_P         ,DE_Z         ,KC_INS         ,KC_SPC       ,KC_B         ,KC_M         ,DE_COMM      ,DE_DOT       ,CK_SB        ,KC_PGDN
+/* */,KC_LWIN      ,KC_LALT      ,KC_LCTL      ,KC_CAPS      ,ESC                                                                    ,MO(_NV)      ,KC_UP        ,KC_DOWN      ,KC_LEFT      ,KC_RGHT
+/*T*/                                                                      ,LT(_BT,DEL)  ,KM_CUT         ,LALT_T(HOME) ,LCTL_T(END)
+/*T*/                                                                                    ,KM_COPY        ,KC_PGUP
+/*T*/                                                        ,KC_LSFT      ,BSPC         ,KC_PAST        ,KC_PGDN      ,KC_ENTER     ,KC_RSFT
 ), [_BT] = LAYOUT_ergodox_pretty(
 // [base, tap only]| U **********| I **********| A **********| E **********| O **********|                             | S **********| N **********| R **********| T **********| D **********|*************
-/*F*/ x______      ,KC_F1        ,KC_F2        ,KC_F3        ,KC_F4        ,KC_F5        ,KC_F6          ,KC_F7        ,KC_F8        ,KC_F9        ,KC_F10       ,KC_F11       ,KC_F12       ,x______
-/* */,x______      ,x______      ,x______      ,SPC          ,x______      ,x______      ,KC_Q           ,KC_AP        ,x______      ,x______      ,KC_G         ,x______      ,x______      ,x______
-/*H*/,x______      ,KC_U         ,KC_I         ,KC_A         ,KC_E         ,x______                                    ,x______      ,KC_N         ,KC_R         ,KC_T         ,KC_D         ,x______
+/*F*/ KC_F1        ,KC_F2        ,KC_F3        ,KC_F4        ,KC_F5        ,KC_F6        ,x______        ,x______      ,KC_F7        ,KC_F8        ,KC_F9        ,KC_F10       ,KC_F11       ,KC_F12
+/* */,x______      ,x______      ,x______      ,SPC          ,x______      ,x______      ,x______        ,APP          ,x______      ,x______      ,KC_G         ,x______      ,x______      ,x______
+/*H*/,KC_TAB       ,KC_U         ,KC_I         ,KC_A         ,KC_E         ,x______                                    ,x______      ,KC_N         ,KC_R         ,KC_T         ,KC_D         ,x______
 /* */,KC_J         ,DE_MI        ,x______      ,KC_L         ,x______      ,x______      ,x______        ,x______      ,x______      ,x______      ,x______      ,x______      ,x______      ,x______
-/* */,x______      ,x______      ,x______      ,KC_CAP       ,ESC                                                                    ,x______      ,x______      ,x______      ,x______      ,x______
-/*T*/                                                                      ,x______      ,x______        ,x______      ,x______
+/* */,x______      ,x______      ,x______      ,x______      ,x______                                                                ,x______      ,x______      ,x______      ,x______      ,x______
+/*T*/                                                                      ,DEL          ,x______        ,HOME         ,END
 /*T*/                                                                                    ,x______        ,x______
 /*T*/                                                        ,x______      ,x______      ,x______        ,x______      ,x______      ,x______
 
@@ -403,9 +419,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /*H*/,x______      ,x______      ,x______      ,x______      ,x______      ,x______                                    ,KM_PAST      ,KC_LEFT      ,KC_DOWN      ,KC_RGHT      ,KC_PGUP      ,KC_VOLD
 /* */,x______      ,C(DE_MINS)   ,C(DE_PLUS)   ,x______      ,x______      ,x______      ,x______        ,KM_CUT       ,KC_INS       ,C(KC_LEFT)   ,KC_DEL       ,C(KC_RGHT)   ,KC_PGDN      ,KC_MUTE
 /* */,x______      ,x______      ,x______      ,KC_SLCK      ,x______                                                                ,XXXXXXX      ,KC_MSEL      ,KC_MPLY      ,KC_MPRV      ,KC_MNXT
-/*T*/                                                                      ,KC_WBAK      ,KC_WFWD        ,LALT(KC_PSCR),x______
-/*T*/                                                                                    ,x______        ,KC_PSCR
-/*T*/                                                        ,KC_LSFT      ,x______      ,x______        ,KC_PAUS      ,x______      ,KC_RSFT
+/*T*/                                                                      ,KC_WBAK      ,KC_WFWD        ,LALT(KC_LEFT),LALT(KC_RGHT)
+/*T*/                                                                                    ,x______        ,x______
+/*T*/                                                        ,KC_LSFT      ,x______      ,x______        ,x______      ,x______      ,KC_RSFT
 
 ) ,[_DC] = LAYOUT_ergodox_pretty(
 // [ctrl+digits]   | U **********| I **********| A **********| E **********| O **********|                             | S **********| N **********| R **********| T **********| D **********|*************
