@@ -369,7 +369,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /* */,KC_LWIN      ,KC_LALT      ,KC_LCTL      ,KC_CAPS      ,ESC                                                                    ,MO(_NV)      ,KC_UP        ,KC_DOWN      ,KC_LEFT      ,KC_RGHT
 /*T*/                                                                      ,LT(_BT,DEL)  ,KM_CUT         ,LALT_T(HOME) ,LCTL_T(END)
 /*T*/                                                                                    ,KM_COPY        ,KC_PGUP
-/*T*/                                                        ,KC_LSFT      ,BSPC         ,KC_PAST        ,KC_PGDN      ,KC_ENTER     ,KC_RSFT
+/*T*/                                                        ,KC_LSFT      ,BSPC         ,KM_PAST        ,KC_PGDN      ,KC_ENTER     ,KC_RSFT
 ), [_BT] = LAYOUT_ergodox_pretty(
 // [base, tap only]| U **********| I **********| A **********| E **********| O **********|                             | S **********| N **********| R **********| T **********| D **********|*************
 /*F*/ KC_F1        ,KC_F2        ,KC_F3        ,KC_F4        ,KC_F5        ,KC_F6        ,x______        ,x______      ,KC_F7        ,KC_F8        ,KC_F9        ,KC_F10       ,KC_F11       ,KC_F12
@@ -395,7 +395,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 // [layer 4]       | U **********| I **********| A **********| E **********| O **********|                             | S **********| N **********| R **********| T **********| D **********|*************
 /*F*/ XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX        ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX
 /* */,CKC_DCIRC    ,x______      ,x______      ,x______      ,DE_ACUT      ,x______      ,x______        ,x______      ,KC_PSLS      ,KC_7         ,KC_8         ,KC_9         ,DE_COLN      ,x______
-/*H*/,x______      ,DE_UDIA      ,CK_NEQ       ,DE_ADIA      ,DE_EURO      ,DE_ODIA                                    ,KC_PAST      ,KC_4         ,KC_5         ,KC_6         ,DE_DOT       ,x______
+/*H*/,x______      ,DE_UDIA      ,CK_NEQ       ,DE_ADIA      ,DE_EURO      ,DE_ODIA                                    ,KM_PAST      ,KC_4         ,KC_5         ,KC_6         ,DE_DOT       ,x______
 /* */,DE_PERC      ,KC_PMNS      ,KC_PPLS      ,DE_EQL       ,CKC_POUND    ,DE_SS        ,x______        ,x______      ,KC_0         ,KC_1         ,KC_2         ,KC_3         ,DE_COMM      ,x______
 /* */,x______      ,x______      ,x______      ,x______      ,x______                                                                ,x______      ,x______      ,x______      ,x______      ,x______
 /*T*/                                                                      ,x______      ,x______        ,x______      ,x______
