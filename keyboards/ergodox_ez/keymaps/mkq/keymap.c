@@ -66,7 +66,7 @@ enum custom_keycodes {
 
 	// custom keys using (my custom, not UC_WINC) AutoHotkey compose:
 	// - misc
-	CKC_NOT, CKC_POO, CKC_ELIP, CKC_BULLET, CKC_TM, CKC_COPY, CKC_POUND,
+	CKC_NOT, CKC_POO, CKC_ELIP, CKC_BULLET, CKC_TM, CKC_COPY, CKC_POUND, CKC_NEQ, CKC_AEQ,
 	// - dead accents
 	CKC_DGRV, CKC_DACUT, CKC_DCIRC, CKC_DDEGR, CKC_DDIA, CKC_DTILD, CKC_DCEDI,
 	// - superscript and subscript digits
@@ -241,6 +241,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 	// custom keys using (my custom, not UC_WINC) AutoHotkey compose:
 	// - misc
 	case CKC_NOT    : return pru_compose(record, "bn");
+	case CKC_NEQ    : return pru_compose(record, "=n");
+	case CKC_AEQ    : return pru_compose(record, "=a");
 	case CKC_POO    : return pru_compose(record, "xp");
 	case CKC_BULLET : return pru_compose(record, ".o");
 	case CKC_ELIP   : return pru_compose(record, "...");
@@ -375,7 +377,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /*F*/ KC_F1        ,KC_F2        ,KC_F3        ,KC_F4        ,KC_F5        ,KC_F6        ,x______        ,x______      ,KC_F7        ,KC_F8        ,KC_F9        ,KC_F10       ,KC_F11       ,KC_F12
 /* */,x______      ,x______      ,x______      ,SPC          ,x______      ,x______      ,x______        ,APP          ,x______      ,x______      ,KC_G         ,x______      ,x______      ,x______
 /*H*/,KC_TAB       ,KC_U         ,KC_I         ,KC_A         ,KC_E         ,x______                                    ,x______      ,KC_N         ,KC_R         ,KC_T         ,KC_D         ,x______
-/* */,KC_J         ,DE_MI        ,x______      ,KC_L         ,x______      ,x______      ,x______        ,x______      ,x______      ,x______      ,x______      ,x______      ,x______      ,x______
+/* */,x______      ,DE_MI        ,x______      ,KC_L         ,x______      ,x______      ,x______        ,x______      ,x______      ,x______      ,x______      ,x______      ,x______      ,x______
 /* */,x______      ,x______      ,x______      ,x______      ,x______                                                                ,x______      ,x______      ,x______      ,x______      ,x______
 /*T*/                                                                      ,DEL          ,x______        ,HOME         ,END
 /*T*/                                                                                    ,x______        ,x______
@@ -386,7 +388,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /*F*/ XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX        ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX
 /* */,x______      ,DE_PERC      ,DE_AMPR      ,DE_DQUO      ,DE_QUOT      ,DE_GRV       ,x______        ,x______      ,DE_HASH      ,DE_LCBR      ,DE_RCBR      ,DE_PIPE      ,x______      ,x______
 /*H*/,x______      ,DE_AT        ,DE_EQL       ,DE_LABK      ,DE_RABK      ,x______                                    ,DE_ASTR      ,DE_LPRN      ,DE_RPRN      ,DE_TILD      ,DE_DLR       ,x______
-/* */,DE_SECT      ,x______      ,CK_NEQ       ,x______      ,DE_PLUS      ,x______      ,x______        ,x______      ,x______      ,DE_LBRC      ,DE_RBRC      ,CKC_ELIP     ,x______      ,x______
+/* */,x______      ,x______      ,CK_NEQ       ,x______      ,DE_PLUS      ,x______      ,x______        ,x______      ,x______      ,DE_LBRC      ,DE_RBRC      ,CKC_ELIP     ,DE_SECT      ,x______
 /* */,x______      ,x______      ,x______      ,x______      ,x______                                                                ,x______      ,x______      ,x______      ,x______      ,x______
 /*T*/                                                                      ,x______      ,x______        ,x______      ,x______
 /*T*/                                                                                    ,x______        ,x______
@@ -395,7 +397,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 // [layer 4]       | U **********| I **********| A **********| E **********| O **********|                             | S **********| N **********| R **********| T **********| D **********|*************
 /*F*/ XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX        ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX
 /* */,CKC_DCIRC    ,x______      ,x______      ,x______      ,DE_ACUT      ,x______      ,x______        ,x______      ,KC_PSLS      ,KC_7         ,KC_8         ,KC_9         ,DE_COLN      ,x______
-/*H*/,x______      ,DE_UDIA      ,CK_NEQ       ,DE_ADIA      ,DE_EURO      ,DE_ODIA                                    ,KM_PAST      ,KC_4         ,KC_5         ,KC_6         ,DE_DOT       ,x______
+/*H*/,x______      ,DE_UDIA      ,CKC_NEQ      ,DE_ADIA      ,DE_EURO      ,DE_ODIA                                    ,KM_PAST      ,KC_4         ,KC_5         ,KC_6         ,DE_DOT       ,x______
 /* */,DE_PERC      ,KC_PMNS      ,KC_PPLS      ,DE_EQL       ,CKC_POUND    ,DE_SS        ,x______        ,x______      ,KC_0         ,KC_1         ,KC_2         ,KC_3         ,DE_COMM      ,x______
 /* */,x______      ,x______      ,x______      ,x______      ,x______                                                                ,x______      ,x______      ,x______      ,x______      ,x______
 /*T*/                                                                      ,x______      ,x______        ,x______      ,x______
@@ -405,7 +407,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 // [layer 5]       | U **********| I **********| A **********| E **********| O **********|                             | S **********| N **********| R **********| T **********| D **********|*************
 /*F*/ XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX        ,XXXXXXX      ,XXXXXXX      ,CK_LMRES     ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX
 /* */,CKC_DDEGR    ,CKC_DCEDI    ,CKC_DTILD    ,CKC_DDIA     ,CKC_DACUT    ,CKC_DGRV     ,x______        ,x______      ,x______      ,x______      ,x______      ,x______      ,x______      ,x______
-/*H*/,x______      ,S(DE_UDIA)   ,TEST_3       ,S(DE_ADIA)   ,x______      ,S(DE_ODIA)                                 ,x______      ,CKC_NOT      ,CKC_COPY     ,CKC_TM       ,x______      ,x______
+/*H*/,x______      ,S(DE_UDIA)   ,CKC_AEQ      ,S(DE_ADIA)   ,x______      ,S(DE_ODIA)                                 ,x______      ,CKC_NOT      ,CKC_COPY     ,CKC_TM       ,x______      ,x______
 /* */,x______      ,x______      ,x______      ,x______      ,CKC_POO      ,RSA(DE_SS)   ,x______        ,x______      ,DE_MICR      ,x______      ,CKC_BULLET   ,x______      ,x______      ,x______
 /* */,x______      ,x______      ,x______      ,x______      ,x______                                                                ,x______      ,x______      ,x______      ,x______      ,x______
 /*T*/                                                                      ,x______      ,x______        ,x______      ,x______
