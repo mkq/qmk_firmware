@@ -70,8 +70,8 @@ enum custom_keycodes {
 	// - dead accents
 	CKC_DGRV, CKC_DACUT, CKC_DCIRC, CKC_DDEGR, CKC_DDIA, CKC_DTILD, CKC_DCEDI,
 	// - superscript and subscript digits
-	CKC_SUP0, CKC_SUP1, CKC_SUP2, CKC_SUP3, CKC_SUP4, CKC_SUP5, CKC_SUP6, CKC_SUP7, CKC_SUP8, CKC_SUP9,
-	CKC_SUB0, CKC_SUB1, CKC_SUB2, CKC_SUB3, CKC_SUB4, CKC_SUB5, CKC_SUB6, CKC_SUB7, CKC_SUB8, CKC_SUB9,
+	CKC_SUP0, CKC_SUP1, CKC_SUP2, CKC_SUP3, CKC_SUP4, CKC_SUP5, CKC_SUP6, CKC_SUP7, CKC_SUP8, CKC_SUP9, CKC_SUPN,
+	CKC_SUB0, CKC_SUB1, CKC_SUB2, CKC_SUB3, CKC_SUB4, CKC_SUB5, CKC_SUB6, CKC_SUB7, CKC_SUB8, CKC_SUB9, CKC_SUBN,
 	// - arrows and double arrows
 	CKC_ARR_N1, CKC_ARR_S1, CKC_ARR_W1, CKC_ARR_E1, CKC_ARR_NW1, CKC_ARR_NE1, CKC_ARR_SE1, CKC_ARR_SW1, CKC_ARR_WE1, CKC_ARR_NS1,
 	CKC_ARR_N2, CKC_ARR_S2, CKC_ARR_W2, CKC_ARR_E2, CKC_ARR_NW2, CKC_ARR_NE2, CKC_ARR_SE2, CKC_ARR_SW2, CKC_ARR_WE2, CKC_ARR_NS2,
@@ -268,6 +268,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 	case CKC_SUP7   : return pru_compose(record, "^7");
 	case CKC_SUP8   : return pru_compose(record, "^8");
 	case CKC_SUP9   : return pru_compose(record, "^9");
+	case CKC_SUPN   : return pru_compose(record, "^n");
 	case CKC_SUB0   : return pru_compose(record, "_0");
 	case CKC_SUB1   : return pru_compose(record, "_1");
 	case CKC_SUB2   : return pru_compose(record, "_2");
@@ -278,6 +279,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 	case CKC_SUB7   : return pru_compose(record, "_7");
 	case CKC_SUB8   : return pru_compose(record, "_8");
 	case CKC_SUB9   : return pru_compose(record, "_9");
+	case CKC_SUBN   : return pru_compose(record, "_n");
 	// - arrows and double arrows
 	case CKC_ARR_N1 : return pru_compose(record, "ag");
 	case CKC_ARR_S1 : return pru_compose(record, "ar");
@@ -395,7 +397,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /*T*/                                                        ,x______      ,x______      ,x______        ,x______      ,x______      ,x______
 ), [_L4] = LAYOUT_ergodox_pretty(
 // [layer 4]       | U **********| I **********| A **********| E **********| O **********|                             | S **********| N **********| R **********| T **********| D **********|*************
-/*F*/ XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX        ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX
+/*F*/ CKC_SUP1     ,CKC_SUP2     ,CKC_SUP3     ,CKC_SUP4     ,CKC_SUP5     ,CKC_SUP6     ,x______        ,x______      ,CKC_SUP7     ,CKC_SUP8     ,CKC_SUP9     ,CKC_SUP0     ,CKC_SUPN     ,XXXXXXX
 /* */,CKC_DCIRC    ,x______      ,x______      ,x______      ,DE_ACUT      ,x______      ,x______        ,x______      ,KC_PSLS      ,KC_7         ,KC_8         ,KC_9         ,DE_COLN      ,x______
 /*H*/,x______      ,DE_UDIA      ,CKC_NEQ      ,DE_ADIA      ,DE_EURO      ,DE_ODIA                                    ,KM_PAST      ,KC_4         ,KC_5         ,KC_6         ,DE_DOT       ,x______
 /* */,DE_PERC      ,KC_PMNS      ,KC_PPLS      ,DE_EQL       ,CKC_POUND    ,DE_SS        ,x______        ,x______      ,KC_0         ,KC_1         ,KC_2         ,KC_3         ,DE_COMM      ,x______
@@ -405,7 +407,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /*T*/                                                        ,MO(_L5)      ,x______      ,x______        ,x______      ,x______      ,MO(_L5)
 ), [_L5] = LAYOUT_ergodox_pretty(
 // [layer 5]       | U **********| I **********| A **********| E **********| O **********|                             | S **********| N **********| R **********| T **********| D **********|*************
-/*F*/ XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX        ,XXXXXXX      ,XXXXXXX      ,CK_LMRES     ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX
+/*F*/ CKC_SUB1     ,CKC_SUB2     ,CKC_SUB3     ,CKC_SUB4     ,CKC_SUB5     ,CKC_SUB6     ,x______        ,x______      ,CKC_SUB7     ,CKC_SUB8     ,CKC_SUB9     ,CKC_SUB0     ,CKC_SUBN     ,XXXXXXX
 /* */,CKC_DDEGR    ,CKC_DCEDI    ,CKC_DTILD    ,CKC_DDIA     ,CKC_DACUT    ,CKC_DGRV     ,x______        ,x______      ,x______      ,x______      ,x______      ,x______      ,x______      ,x______
 /*H*/,x______      ,S(DE_UDIA)   ,CKC_AEQ      ,S(DE_ADIA)   ,x______      ,S(DE_ODIA)                                 ,x______      ,CKC_NOT      ,CKC_COPY     ,CKC_TM       ,x______      ,x______
 /* */,x______      ,x______      ,x______      ,x______      ,CKC_POO      ,RSA(DE_SS)   ,x______        ,x______      ,DE_MICR      ,x______      ,CKC_BULLET   ,x______      ,x______      ,x______
