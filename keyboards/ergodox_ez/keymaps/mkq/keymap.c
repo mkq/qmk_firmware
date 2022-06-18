@@ -42,17 +42,18 @@ enum custom_layers {
 
 const uint8_t layer_leds[] = {
 	// These values (1 = blue, 2 = green, 4 = red) are chosen here for readability in binary literals.
-	// Function layer_state_set_user_led maps them back to ergodox_right_led_..._on calls.
-	//... = ..rgb
+	// Function layer_state_set_user_led maps them to ergodox_right_led_on calls.
+	//... = ..RGB
+	[_BT] = 0b010,
 	[_L3] = 0b001,
-	[_L4] = 0b100,
-	[_L5] = 0b110,
-	[_AS] = 0b101,
-	[_AD] = 0b101,
-	[_FS] = 0b111,
-	[_FD] = 0b111,
-	[_NV] = 0b010,
-	[_LY] = 0b010,
+	[_L4] = 0b001,
+	[_L5] = 0b101,
+	[_AS] = 0b011,
+	[_AD] = 0b011,
+	[_FS] = 0b011,
+	[_FD] = 0b011,
+	[_NV] = 0b100,
+	[_LY] = 0b111,
 };
 const uint8_t layer_leds_length = sizeof(layer_leds) / sizeof(layer_leds[0]);
 
@@ -122,23 +123,25 @@ void keyboard_post_init_user(void) {
 	#endif
 }
 
-layer_state_t layer_state_set_user_led(layer_state_t state) {
-	ergodox_right_led_1_off();
-	ergodox_right_led_2_off();
-	ergodox_right_led_3_off();
-
+static uint8_t leds_state = 0;
+void layer_state_set_user_led(layer_state_t state) {
 	uint8_t layer = get_highest_layer(state);
-	uint8_t led_state = 0 <= layer && layer < layer_leds_length ? layer_leds[layer] : 0;
-	if (led_state & 0b100) { ergodox_right_led_1_on(); }
-	if (led_state & 0b010) { ergodox_right_led_2_on(); }
-	if (led_state & 0b001) { ergodox_right_led_3_on(); }
-
-	return state;
+	uint8_t new_leds_state = 0 <= layer && layer < layer_leds_length ? layer_leds[layer] : 0;
+	uint8_t rgb_mask = 0b100;
+	for (uint8_t led_no = 1; led_no <= 3; led_no++) { // args needed for ergodox_right_led_on: R = 1, G = 2, B = 3
+		bool led_state = leds_state & rgb_mask;
+		bool new_led_state = new_leds_state & rgb_mask;
+		if (led_state != new_led_state) {
+			if (new_led_state) { ergodox_right_led_on(led_no); } else { ergodox_right_led_off(led_no); }
+		}
+		rgb_mask /= 2; // iterate: 100, 010, 001
+	}
+	leds_state = new_leds_state;
 };
 
 layer_state_t layer_state_set_user(layer_state_t state) {
 	layer_state_t new_layer_state = layer_state_set_user_impl(state);
-	new_layer_state = layer_state_set_user_led(new_layer_state);
+	layer_state_set_user_led(new_layer_state);
 	prev_layer_state = new_layer_state;
 	return new_layer_state;
 }
