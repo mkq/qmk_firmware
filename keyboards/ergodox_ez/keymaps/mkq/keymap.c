@@ -67,7 +67,7 @@ enum custom_keycodes {
 
 	// custom keys using (my custom, not UC_WINC) AutoHotkey compose:
 	// - misc
-	CKC_NOT, CKC_POO, CKC_ELIP, CKC_BULLET, CKC_TM, CKC_COPY, CKC_POUND, CKC_NEQ, CKC_AEQ,
+	CKC_NEG, CKC_POO, CKC_ELIP, CKC_BULLET, CKC_TM, CKC_COPY, CKC_POUND, CKC_NEQ, CKC_AEQ,
 	// - dead accents
 	CKC_DGRV, CKC_DACUT, CKC_DCIRC, CKC_DDEGR, CKC_DDIA, CKC_DTILD, CKC_DCEDI,
 	// - superscript and subscript digits
@@ -243,7 +243,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
 	// custom keys using (my custom, not UC_WINC) AutoHotkey compose:
 	// - misc
-	case CKC_NOT    : return pru_compose(record, "bn");
+	case CKC_NEG    : return pru_compose(record, "bn");
 	case CKC_NEQ    : return pru_compose(record, "=n");
 	case CKC_AEQ    : return pru_compose(record, "=a");
 	case CKC_POO    : return pru_compose(record, "xp");
@@ -345,6 +345,19 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 #define KM_CUT    LSFT(KC_DEL)
 #define KM_COPY   LCTL(KC_INS)
 #define KM_PAST   LSFT(KC_INS)
+// keycode aliases introduced because qmk_kle treats each comma as a key separator
+#define LT_BT(x)  LT(_BT,x)
+#define LT_L3(x)  LT(_L3,x)
+#define LT_L4(x)  LT(_L4,x)
+#define LT_L5(x)  LT(_L5,x)
+#define LT_FS(x)  LT(_FS,x)
+#define LT_FD(x)  LT(_FD,x)
+#define LT_AS(x)  LT(_AS,x)
+#define LT_AD(x)  LT(_AD,x)
+#define LT_NV(x)  LT(_NV,x)
+#define LT_DC(x)  LT(_DC,x)
+#define LT_DW(x)  LT(_DW,x)
+#define LT_LY(x)  LT(_LY,x)
 // - not as readabe as _______, but editor navigation-friendlier (word boundary)
 #define x______   _______
 // - temporary key codes for testing
@@ -358,6 +371,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [_LY] = LAYOUT_ergodox_pretty(
 // [layer selection]             | I **********| A **********| E **********| O **********|                             | S **********| N **********| R **********| T **********| D **********|*************
+// <deflayer LaySel>
 /*F*/ x______      ,TO(_FS)      ,TO(_FD)      ,TO(_AS)      ,TO(_AD)      ,x______      ,x______        ,x______      ,x______      ,x______      ,x______      ,x______      ,x______      ,x______
 /* */,x______      ,x______      ,TO(_L5)      ,TO(_L4)      ,TO(_L3)      ,x______      ,x______        ,x______      ,x______      ,TO(_L3)      ,TO(_L4)      ,TO(_L5)      ,x______      ,x______
 /*H*/,x______      ,x______      ,x______      ,x______      ,TO(_NV)      ,x______                                    ,x______      ,TO(_NV)      ,x______      ,x______      ,x______      ,x______
@@ -366,17 +380,20 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /*T*/                                                                      ,TO(_BT)      ,x______        ,x______      ,x______
 /*T*/                                                                                    ,x______        ,x______
 /*T*/                                                        ,TO(_BA)      ,x______      ,x______        ,x______      ,x______      ,TO(_BA)
+// </deflayer>
 
 ) ,[_BA] = LAYOUT_ergodox_pretty(
 // [base]          | U **********| I **********| A **********| E **********| O **********|                             | S **********| N **********| R **********| T **********| D **********|*************
-/*F*/ KC_F1        ,LT(_FS,KC_F2),LT(_FD,KC_F3),LT(_AS,KC_F4),LT(_AD,KC_F5),KC_F6        ,KC_PSCR        ,SPC          ,KC_F7        ,KC_F8        ,KC_F9        ,KC_F10       ,KC_F11       ,KC_F12
-/* */,DE_CIRC      ,KC_X         ,KC_V         ,LT(_L4,SPC)  ,KC_C         ,KC_W         ,CK_CYLAY       ,LCAG_T(APP)  ,KC_K         ,KC_H         ,LT(_L4,KC_G) ,KC_F         ,DE_Y         ,KC_PGUP
-/*H*/,LT(_LY,TAB)  ,LWIN_T(KC_U) ,LALT_T(KC_I) ,LCTL_T(KC_A) ,LT(_NV,KC_E) ,KC_O                                       ,KC_S         ,LT(_NV,KC_N) ,RCTL_T(KC_R) ,LALT_T(KC_T) ,RWIN_T(KC_D) ,CK_SB
-/* */,KC_Q         ,LT(_DW,DE_MI),CK_QX        ,LT(_DC,KC_L) ,KC_P         ,DE_Z         ,KC_INS         ,DEL          ,KC_B         ,KC_M         ,DE_COMM      ,DE_DOT       ,KC_J         ,KC_PGDN
+// <deflayer>
+/*F*/ KC_F1        ,LT_FS(KC_F2) ,LT_FD(KC_F3) ,LT_AS(KC_F4) ,LT_AD(KC_F5) ,KC_F6        ,KC_PSCR        ,SPC          ,KC_F7        ,KC_F8        ,KC_F9        ,KC_F10       ,KC_F11       ,KC_F12
+/* */,DE_CIRC      ,KC_X         ,KC_V         ,LT_L4(SPC)   ,KC_C         ,KC_W         ,CK_CYLAY       ,LCAG_T(APP)  ,KC_K         ,KC_H         ,LT_L4(KC_G)  ,KC_F         ,DE_Y         ,KC_PGUP
+/*H*/,LT_LY(TAB)   ,LWIN_T(KC_U) ,LALT_T(KC_I) ,LCTL_T(KC_A) ,LT_NV(KC_E)  ,KC_O                                       ,KC_S         ,LT_NV(KC_N)  ,RCTL_T(KC_R) ,LALT_T(KC_T) ,RWIN_T(KC_D) ,CK_SB
+/* */,KC_Q         ,LT_DW(DE_MI) ,CK_QX        ,LT_DC(KC_L)  ,KC_P         ,DE_Z         ,KC_INS         ,DEL          ,KC_B         ,KC_M         ,DE_COMM      ,DE_DOT       ,KC_J         ,KC_PGDN
 /* */,KC_LWIN      ,KC_LALT      ,KC_LCTL      ,DE_PLUS      ,ESC                                                                    ,MO(_NV)      ,KC_UP        ,KC_DOWN      ,KC_LEFT      ,KC_RGHT
-/*T*/                                                                      ,LT(_BT,DEL)  ,KM_CUT         ,LALT_T(HOME) ,LCTL_T(END)
+/*T*/                                                                      ,LT_BT(DEL)   ,KM_CUT         ,KC_HOME      ,KC_END
 /*T*/                                                                                    ,KM_COPY        ,KC_PGUP
 /*T*/                                                        ,KC_LSFT      ,BSPC         ,KM_PAST        ,KC_PGDN      ,KC_ENTER     ,KC_RSFT
+// </deflayer>
 ), [_BT] = LAYOUT_ergodox_pretty(
 // [base, tap only]| U **********| I **********| A **********| E **********| O **********|                             | S **********| N **********| R **********| T **********| D **********|*************
 /*F*/ KC_F1        ,KC_F2        ,KC_F3        ,KC_F4        ,KC_F5        ,KC_F6        ,x______        ,x______      ,KC_F7        ,KC_F8        ,KC_F9        ,KC_F10       ,KC_F11       ,KC_F12
@@ -390,6 +407,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 ), [_L3] = LAYOUT_ergodox_pretty(
 // [layer 3]       | U **********| I **********| A **********| E **********| O **********|                             | S **********| N **********| R **********| T **********| D **********|*************
+// <deflayer L3>
 /*F*/ XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX        ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX
 /* */,x______      ,DE_PERC      ,DE_AMPR      ,DE_DQUO      ,DE_QUOT      ,DE_GRV       ,x______        ,x______      ,DE_HASH      ,DE_LCBR      ,DE_RCBR      ,DE_PIPE      ,x______      ,x______
 /*H*/,x______      ,DE_AT        ,DE_EQL       ,DE_LABK      ,DE_RABK      ,x______                                    ,DE_ASTR      ,DE_LPRN      ,DE_RPRN      ,DE_TILD      ,DE_DLR       ,x______
@@ -398,8 +416,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /*T*/                                                                      ,x______      ,x______        ,x______      ,x______
 /*T*/                                                                                    ,x______        ,x______
 /*T*/                                                        ,x______      ,x______      ,x______        ,x______      ,x______      ,x______
+// </deflayer>
 ), [_L4] = LAYOUT_ergodox_pretty(
 // [layer 4]       | U **********| I **********| A **********| E **********| O **********|                             | S **********| N **********| R **********| T **********| D **********|*************
+// <deflayer L4>
 /*F*/ CKC_SUP1     ,CKC_SUP2     ,CKC_SUP3     ,CKC_SUP4     ,CKC_SUP5     ,CKC_SUP6     ,x______        ,x______      ,CKC_SUP7     ,CKC_SUP8     ,CKC_SUP9     ,CKC_SUP0     ,CKC_SUPN     ,XXXXXXX
 /* */,CKC_DCIRC    ,x______      ,x______      ,x______      ,DE_ACUT      ,x______      ,x______        ,x______      ,KC_PSLS      ,KC_7         ,KC_8         ,KC_9         ,DE_COLN      ,x______
 /*H*/,x______      ,DE_UDIA      ,CKC_NEQ      ,DE_ADIA      ,DE_EURO      ,DE_ODIA                                    ,KC_PAST      ,KC_4         ,KC_5         ,KC_6         ,DE_DOT       ,x______
@@ -408,19 +428,23 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /*T*/                                                                      ,x______      ,x______        ,x______      ,x______
 /*T*/                                                                                    ,x______        ,x______
 /*T*/                                                        ,MO(_L5)      ,x______      ,x______        ,x______      ,x______      ,MO(_L5)
+// </deflayer>
 ), [_L5] = LAYOUT_ergodox_pretty(
 // [layer 5]       | U **********| I **********| A **********| E **********| O **********|                             | S **********| N **********| R **********| T **********| D **********|*************
+// <deflayer L5>
 /*F*/ CKC_SUB1     ,CKC_SUB2     ,CKC_SUB3     ,CKC_SUB4     ,CKC_SUB5     ,CKC_SUB6     ,x______        ,x______      ,CKC_SUB7     ,CKC_SUB8     ,CKC_SUB9     ,CKC_SUB0     ,CKC_SUBN     ,XXXXXXX
 /* */,CKC_DDEGR    ,CKC_DCEDI    ,CKC_DTILD    ,CKC_DDIA     ,CKC_DACUT    ,CKC_DGRV     ,x______        ,x______      ,x______      ,x______      ,x______      ,x______      ,x______      ,x______
-/*H*/,x______      ,S(DE_UDIA)   ,CKC_AEQ      ,S(DE_ADIA)   ,x______      ,S(DE_ODIA)                                 ,x______      ,CKC_NOT      ,CKC_COPY     ,CKC_TM       ,x______      ,x______
+/*H*/,x______      ,S(DE_UDIA)   ,CKC_AEQ      ,S(DE_ADIA)   ,x______      ,S(DE_ODIA)                                 ,x______      ,CKC_NEG      ,CKC_COPY     ,CKC_TM       ,x______      ,x______
 /* */,x______      ,x______      ,x______      ,x______      ,CKC_POO      ,RSA(DE_SS)   ,x______        ,x______      ,DE_MICR      ,x______      ,CKC_BULLET   ,x______      ,x______      ,x______
 /* */,x______      ,x______      ,x______      ,x______      ,x______                                                                ,x______      ,x______      ,x______      ,x______      ,x______
 /*T*/                                                                      ,x______      ,x______        ,x______      ,x______
 /*T*/                                                                                    ,x______        ,x______
 /*T*/                                                        ,x______      ,x______      ,x______        ,x______      ,x______      ,x______
+// </deflayer>
 
 ), [_NV] = LAYOUT_ergodox_pretty(
 // [navigation & settings] ******| I **********| A **********| E **********| O **********|                             | S **********| N **********| R **********| T **********| D **********|*************
+// <deflayer Nav>
 /*F*/ DM_RSTP      ,DM_REC1      ,DM_REC2      ,DM_PLY1      ,DM_PLY2      ,x______      ,KC_SLCK        ,x______      ,RGB_TOG      ,CK_LMRES     ,RESET        ,CK_DBG       ,x______      ,KC_WHOM
 /* */,x______      ,x______      ,x______      ,x______      ,x______      ,x______      ,x______        ,KM_COPY      ,C(KC_HOME)   ,KC_HOME      ,KC_UP        ,KC_END       ,C(KC_END)    ,KC_VOLU
 /*H*/,x______      ,x______      ,x______      ,x______      ,x______      ,x______                                    ,KM_PAST      ,KC_LEFT      ,KC_DOWN      ,KC_RGHT      ,KC_PGUP      ,KC_VOLD
@@ -429,9 +453,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /*T*/                                                                      ,KC_WBAK      ,KC_WFWD        ,LALT(KC_LEFT),LALT(KC_RGHT)
 /*T*/                                                                                    ,x______        ,x______
 /*T*/                                                        ,KC_LSFT      ,x______      ,x______        ,x______      ,x______      ,KC_RSFT
+// </deflayer>
 
 ) ,[_DC] = LAYOUT_ergodox_pretty(
 // [ctrl+digits]   | U **********| I **********| A **********| E **********| O **********|                             | S **********| N **********| R **********| T **********| D **********|*************
+// <deflayer Num>
 /*F*/ x______      ,x______      ,x______      ,x______      ,x______      ,x______      ,x______        ,x______      ,x______      ,x______      ,x______      ,x______      ,x______      ,x______
 /* */,x______      ,x______      ,x______      ,x______      ,x______      ,x______      ,x______        ,x______      ,x______      ,KC_7         ,KC_8         ,KC_9         ,x______      ,x______
 /*H*/,x______      ,x______      ,x______      ,x______      ,x______      ,x______                                    ,x______      ,KC_4         ,KC_5         ,KC_6         ,x______      ,x______
@@ -440,6 +466,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /*T*/                                                                      ,x______      ,x______        ,x______      ,x______
 /*T*/                                                                                    ,x______        ,x______
 /*T*/                                                        ,x______      ,x______      ,x______        ,x______      ,x______      ,x______
+// </deflayer>
 ), [_DW] = LAYOUT_ergodox_pretty(
 // [win+digits]    | U **********| I **********| A **********| E **********| O **********|                             | S **********| N **********| R **********| T **********| D **********|*************
 /*F*/ x______      ,x______      ,x______      ,x______      ,x______      ,x______      ,x______        ,x______      ,x______      ,x______      ,x______      ,x______      ,x______      ,x______
@@ -453,6 +480,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 ), [_AS] = LAYOUT_ergodox_pretty(
 // [arrows]        | U **********| I **********| A **********| E **********| O **********|                             | S **********| N **********| R **********| T **********| D **********|*************
+// <deflayer Arrows>
 /*F*/ x______      ,x______      ,x______      ,x______      ,x______      ,x______      ,x______        ,x______      ,x______      ,x______      ,x______      ,x______      ,x______      ,x______
 /* */,x______      ,x______      ,x______      ,x______      ,x______      ,x______      ,x______        ,x______      ,x______      ,CKC_ARR_NW1  ,CKC_ARR_N1   ,CKC_ARR_NE1  ,x______      ,x______
 /*H*/,x______      ,x______      ,x______      ,x______      ,x______      ,x______                                    ,x______      ,CKC_ARR_W1   ,CKC_ARR_S1   ,CKC_ARR_E1   ,CKC_ARR_WE1  ,x______
@@ -461,6 +489,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /*T*/                                                                      ,x______      ,x______        ,x______      ,x______
 /*T*/                                                                                    ,x______        ,x______
 /*T*/                                                        ,x______      ,x______      ,x______        ,x______      ,x______      ,x______
+// </deflayer>
 ), [_AD] = LAYOUT_ergodox_pretty(
 // [double arrows] | U **********| I **********| A **********| E **********| O **********|                             | S **********| N **********| R **********| T **********| D **********|*************
 /*F*/ x______      ,x______      ,x______      ,x______      ,x______      ,x______      ,x______        ,x______      ,x______      ,x______      ,x______      ,x______      ,x______      ,x______
@@ -474,6 +503,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 ), [_FS] = LAYOUT_ergodox_pretty(
 // [frames]        | U **********| I **********| A **********| E **********| O **********|                             | S **********| N **********| R **********| T **********| D **********|*************
+// <deflayer Frames>
 /*F*/ x______      ,x______      ,x______      ,x______      ,x______      ,x______      ,x______        ,x______      ,x______      ,x______      ,x______      ,x______      ,x______      ,x______
 /* */,x______      ,x______      ,x______      ,x______      ,x______      ,x______      ,x______        ,x______      ,x______      ,CKC_FRM_NW1  ,CKC_FRM_N1   ,CKC_FRM_NE1  ,x______      ,x______
 /*H*/,x______      ,x______      ,x______      ,x______      ,x______      ,x______                                    ,CKC_FRM_VL1  ,CKC_FRM_W1   ,CKC_FRM_CR1  ,CKC_FRM_E1   ,CKC_FRM_HL1  ,x______
@@ -482,6 +512,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /*T*/                                                                      ,x______      ,x______        ,x______      ,x______
 /*T*/                                                                                    ,x______        ,x______
 /*T*/                                                        ,x______      ,x______      ,x______        ,x______      ,x______      ,x______
+// </deflayer>
 ), [_FD] = LAYOUT_ergodox_pretty(
 // [double frames] | U **********| I **********| A **********| E **********| O **********|                             | S **********| N **********| R **********| T **********| D **********|*************
 /*F*/ x______      ,x______      ,x______      ,x______      ,x______      ,x______      ,x______        ,x______      ,x______      ,x______      ,x______      ,x______      ,x______      ,x______
@@ -493,3 +524,282 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /*T*/                                                                                    ,x______        ,x______
 /*T*/                                                        ,x______      ,x______      ,x______        ,x______      ,x______      ,x______
 )};
+
+/* Data for QMK to KLE Generator (kle.py) [https://github.com/mnesarco/qmk_kle]
+Limitations:
+- KLE only supports "r" (rotation) at the beginning of a row, and kle.py treats each src line as a row
+  => ErgoDox "V-shaped" rows are not possible
+- kle.py does not allow ")" inside a keycode (as of commit af3c13c from 2022-03-05);
+  fixed in my copy, but not committed
+- KC_NO inside a keycode treated as XX => had to rename my CKC_NOT
+<hardware-layout>
+(keycap
+  defsrc   Sh       L3
+  L4       L5       Num
+  Hold     _        Nav
+  Arrows   Frames   LaySel
+)
+(colors
+  #000000  #202020  #000000
+  #000000  #000000  #757575
+  #0000d0  #000000  #ff0000
+  #101010  #101010  #d57000
+)
+(label x______ &nbsp;)
+(label TO(_FS) ┌)
+(label TO(_FD) ╔)
+(label TO(_AS) ←)
+(label TO(_AD) ⇐)
+(label TO(_DW) w#)
+(label TO(_DC) c#)
+(label TO(_NV) ✵)
+(label MO(_NV) ✵)
+(label MO(_L5) &nbsp;)
+(label TO(_BT) b'')
+(label TO(_L3) 3)
+(label TO(_L4) 4)
+(label TO(_L5) 5)
+(label TO(_BA) b)
+(label MSEL ♫)
+(label SPC ␣)
+(label LT_FS(KC_F2) F2)
+(label LT_FD(KC_F3) F3)
+(label LT_AS(KC_F4) F4)
+(label LT_AD(KC_F5) F5)
+(label KC_PSCR PS)
+(label DM_RSTP M⏹)
+(label DM_PLY1 M₁!)
+(label DM_PLY2 M₂!)
+(label DM_REC1 M₁=)
+(label DM_REC2 M₂=)
+(label KC_SLCK SLk)
+(label RGB_TOG 🔦)
+(label CK_LMRES L0)
+(label RESET R!)
+(label CK_DBG dbg)
+(label WHOM ⌂)
+(label DE_PERC %)
+(label DE_CIRC ^)
+(label DE_QUOT ')
+(label CK_CYLAY L→)
+(label LCAG_T(APP) ≣)
+(label DE_GRV `)
+(label KC_WBAK ⇦)
+(label KC_WFWD ⇨)
+(label KM_COPY 📋+)
+(label KM_PAST 📋!)
+(label KM_CUT ✀)
+(label LALT(KC_LEFT) a←)
+(label LALT(KC_RGHT) a→)
+(label KC_HOME ⇤)
+(label KC_END ⇥)
+(label DE_LBRC [)
+(label DE_RBRC ])
+(label DE_MICR µ)
+(label DE_SECT §)
+(label DE_Y Y)
+(label DE_PIPE |)
+(label DE_HASH #)
+(label DE_LCBR {)
+(label DE_RCBR })
+(label RWIN_T(KC_D) D)
+(label CK_SB /)
+(label DE_COMM ,)
+(label CKC_BULLET •)
+(label CKC_TM ™)
+(label CKC_COPY ©)
+(label CKC_POO 💩)
+(label DE_SS ß)
+(label KC_PAUS Pau)
+(label RSA(DE_SS) ẞ)
+(label C(DE_MINS) c-)
+(label C(DE_PLUS) c+)
+(label KC_LWIN Win)
+(label KC_LALT Alt)
+(label KC_LCTL Ctrl)
+(label KC_ENTER ⮠)
+(label LT_L4(KC_G) G)
+(label C(KC_END) c⇥)
+(label KC_HOME ⇤)
+(label KC_END ⇥)
+(label C(KC_HOME) c⇤)
+(label C(KC_LEFT) c←)
+(label C(KC_RGHT) c→)
+(label S(DE_ODIA) Ö)
+(label S(DE_UDIA) Ü)
+(label S(DE_ADIA) Ä)
+(label DE_PLUS +)
+(label DE_Z Z)
+(label CK_QX ?)
+(label LT_DW(DE_MI) -)
+(label LWIN_T(KC_U) U)
+(label LALT_T(KC_I) I)
+(label LCTL_T(KC_A) A)
+(label LT_NV(KC_E) E)
+(label LT_NV(KC_N) N)
+(label RCTL_T(KC_R) R)
+(label LALT_T(KC_T) T)
+(label RWIN_T(KC_D) D)
+(label DEL ⌦)
+(label LT_BT(DEL) ⌦)
+(label DE_DOT .)
+(label CKC_ELIP …)
+(label LWIN ⊞)
+(label LT_LY(TAB) ⇆)
+(label CKC_DCIRC °)
+(label DE_AT @)
+(label DE_EURO €)
+(label DE_COLN :)
+(label CKC_DCEDI ,)
+(label CKC_DDEGR °)
+(label CKC_DGRV `)
+(label CKC_DACUT ´)
+(label CKC_DDIA '')
+(label CKC_DTILD ~)
+(label CKC_SUP0 ⁰)
+(label CKC_SUP1 ¹)
+(label CKC_SUP2 ²)
+(label CKC_SUP3 ³)
+(label CKC_SUP4 ⁴)
+(label CKC_SUP5 ⁵)
+(label CKC_SUP6 ⁶)
+(label CKC_SUP7 ⁷)
+(label CKC_SUP8 ⁸)
+(label CKC_SUP9 ⁹)
+(label CKC_SUPN ⁿ)
+(label CKC_SUB0 ₀)
+(label CKC_SUB1 ₁)
+(label CKC_SUB2 ₂)
+(label CKC_SUB3 ₃)
+(label CKC_SUB4 ₄)
+(label CKC_SUB5 ₅)
+(label CKC_SUB6 ₆)
+(label CKC_SUB7 ₇)
+(label CKC_SUB8 ₈)
+(label CKC_SUB9 ₉)
+(label CKC_SUBN ₙ)
+(label CKC_FRM_NW1 ┌)
+(label CKC_FRM_N1  ┬)
+(label CKC_FRM_NE1 ┐)
+(label CKC_FRM_W1  ├)
+(label CKC_FRM_CR1 ┼)
+(label CKC_FRM_E1  ┤)
+(label CKC_FRM_SW1 └)
+(label CKC_FRM_S1  ┴)
+(label CKC_FRM_SE1 ┘)
+(label CKC_FRM_HL1 ─)
+(label CKC_FRM_VL1 │)
+(label CKC_FRM_NW2 ╔)
+(label CKC_FRM_N2  ╦)
+(label CKC_FRM_NE2 ╗)
+(label CKC_FRM_W2  ╠)
+(label CKC_FRM_CR2 ╬)
+(label CKC_FRM_E2  ╣)
+(label CKC_FRM_SW2 ╚)
+(label CKC_FRM_S2  ╩)
+(label CKC_FRM_SE2 ┘)
+(label CKC_FRM_HL2 ═)
+(label CKC_FRM_VL2 ║)
+(label CKC_ARR_N1  ↑)
+(label CKC_ARR_S1  ↓)
+(label CKC_ARR_W1  ←)
+(label CKC_ARR_E1  →)
+(label CKC_ARR_NW1 ↖)
+(label CKC_ARR_NE1 ↗)
+(label CKC_ARR_SE1 ↘)
+(label CKC_ARR_SW1 ↙)
+(label CKC_ARR_WE1 ↔)
+(label CKC_ARR_NS1 ↕)
+(label CKC_ARR_N2  ⇑)
+(label CKC_ARR_S2  ⇓)
+(label CKC_ARR_W2  ⇐)
+(label CKC_ARR_E2  ⇒)
+(label CKC_ARR_NW2 ⇖)
+(label CKC_ARR_NE2 ⇗)
+(label CKC_ARR_SE2 ⇘)
+(label CKC_ARR_SW2 ⇙)
+(label CKC_ARR_WE2 ⇔)
+(label CKC_ARR_NS2 ⇕)
+(label DE_DLR $)
+(label DE_TILD ~)
+(label DE_LPRN ()
+(label DE_RPRN ))
+(label CKC_NEG ¬)
+(options 1  1 {y:0.375,w:1.5})
+(options 1  2 {w:1})
+(options 1  3 {y:-0.25})
+(options 1  4 {y:-0.125})
+(options 1  5 {y:0.125})
+(options 1  6 {y:0.125})
+(options 1  7})
+(options 1  8 {x:4.5})
+(options 1  9 {h:1})
+(options 1 10 {y:-0.125})
+(options 1 11 {y:-0.125})
+(options 1 12 {y:0.125})
+(options 1 13 {y:0.25})
+(options 1 14 {w:1.5})
+(options 2  1 {w:1.5})
+(options 2  2 {w:1})
+(options 2  3 {y:-0.25})
+(options 2  4 {y:-0.125})
+(options 2  5 {y:0.125})
+(options 2  6 {y:0.125})
+(options 2  7 {h:1.5})
+(options 2  8 {h:1.5,x:4.5})
+(options 2  9 {h:1})
+(options 2 10 {y:-0.125})
+(options 2 11 {y:-0.125})
+(options 2 12 {y:0.125})
+(options 2 13 {y:0.25})
+(options 2 14 {w:1.5})
+(options 3  1 {w:1.5})
+(options 3  2 {w:1})
+(options 3  3 {y:-0.25})
+(options 3  4 {y:-0.125})
+(options 3  5 {y:0.125})
+(options 3  6 {y:0.125})
+(options 3  7 {x:6.5})
+(options 3  8 {y:-0.125})
+(options 3  9 {y:-0.125})
+(options 3 10 {y:0.125})
+(options 3 11 {y:0.25})
+(options 3 12 {w:1.5})
+(options 4  1 {w:1.5})
+(options 4  2 {w:1})
+(options 4  3 {y:-0.25})
+(options 4  4 {y:-0.125})
+(options 4  5 {y:0.125})
+(options 4  6 {y:0.125})
+(options 4  7 {h:1.5,y:-0.5})
+(options 4  8 {h:1.5,x:4.5})
+(options 4  9 {h:1,y:0.5})
+(options 4 10 {y:-0.125})
+(options 4 11 {y:-0.125})
+(options 4 12 {y:0.125})
+(options 4 13 {y:0.25})
+(options 4 14 {w:1.5})
+(options 5 1 {x:0.5})
+(options 5 2)
+(options 5 3 {y:-0.25})
+(options 5 4 {y:-0.125})
+(options 5 5 {y:0.125})
+(options 5 6 {x:8.5})
+(options 5 7 {y:-0.125})
+(options 5 8 {y:0.125})
+(options 5 9 {y:0.25})
+(options 5 10)
+(options 6 1 {y:-1.875,x:7.625})
+(options 6 2)
+(options 6 3 {x:0.25})
+(options 6 4)
+(options 7 1 {x:8.625})
+(options 7 2 {x:0.25})
+(options 8 1 {x:6.625,h:2,y:-1})
+(options 8 2 {h:2})
+(options 8 3 {y:1})
+(options 8 4 {x:0.25})
+(options 8 5 {h:2,y:-1})
+(options 8 6 {h:2})
+</hardware-layout>
+*/
