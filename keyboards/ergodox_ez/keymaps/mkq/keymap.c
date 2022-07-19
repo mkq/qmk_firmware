@@ -73,6 +73,8 @@ enum custom_keycodes {
 	// - superscript and subscript digits
 	CKC_SUP0, CKC_SUP1, CKC_SUP2, CKC_SUP3, CKC_SUP4, CKC_SUP5, CKC_SUP6, CKC_SUP7, CKC_SUP8, CKC_SUP9, CKC_SUPN,
 	CKC_SUB0, CKC_SUB1, CKC_SUB2, CKC_SUB3, CKC_SUB4, CKC_SUB5, CKC_SUB6, CKC_SUB7, CKC_SUB8, CKC_SUB9, CKC_SUBN,
+	// - triangles (outline and filled)
+	CKC_TRIO_N, CKC_TRIO_S, CKC_TRIO_W, CKC_TRIO_E, CKC_TRIF_N, CKC_TRIF_S, CKC_TRIF_W, CKC_TRIF_E,
 	// - arrows and double arrows
 	CKC_ARR_N1, CKC_ARR_S1, CKC_ARR_W1, CKC_ARR_E1, CKC_ARR_NW1, CKC_ARR_NE1, CKC_ARR_SE1, CKC_ARR_SW1, CKC_ARR_WE1, CKC_ARR_NS1,
 	CKC_ARR_N2, CKC_ARR_S2, CKC_ARR_W2, CKC_ARR_E2, CKC_ARR_NW2, CKC_ARR_NE2, CKC_ARR_SE2, CKC_ARR_SW2, CKC_ARR_WE2, CKC_ARR_NS2,
@@ -283,6 +285,15 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 	case CKC_SUB8   : return pru_compose(record, "_8");
 	case CKC_SUB9   : return pru_compose(record, "_9");
 	case CKC_SUBN   : return pru_compose(record, "_n");
+	// - triangles
+	case CKC_TRIO_N : return pru_compose(record, "Tog");
+	case CKC_TRIO_S : return pru_compose(record, "Tor");
+	case CKC_TRIO_W : return pru_compose(record, "Ton");
+	case CKC_TRIO_E : return pru_compose(record, "Tot");
+	case CKC_TRIF_N : return pru_compose(record, "Tfg");
+	case CKC_TRIF_S : return pru_compose(record, "Tfr");
+	case CKC_TRIF_W : return pru_compose(record, "Tfn");
+	case CKC_TRIF_E : return pru_compose(record, "Tft");
 	// - arrows and double arrows
 	case CKC_ARR_N1 : return pru_compose(record, "ag");
 	case CKC_ARR_S1 : return pru_compose(record, "ar");
@@ -454,8 +465,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 ), [_AS] = LAYOUT_ergodox_pretty(
 // [arrows]        | U **********| I **********| A **********| E **********| O **********|                             | S **********| N **********| R **********| T **********| D **********|*************
 /*F*/ x______      ,x______      ,x______      ,x______      ,x______      ,x______      ,x______        ,x______      ,x______      ,x______      ,x______      ,x______      ,x______      ,x______
-/* */,x______      ,x______      ,x______      ,x______      ,x______      ,x______      ,x______        ,x______      ,x______      ,CKC_ARR_NW1  ,CKC_ARR_N1   ,CKC_ARR_NE1  ,x______      ,x______
-/*H*/,x______      ,x______      ,x______      ,x______      ,x______      ,x______                                    ,x______      ,CKC_ARR_W1   ,CKC_ARR_S1   ,CKC_ARR_E1   ,CKC_ARR_WE1  ,x______
+/* */,x______      ,x______      ,x______      ,CKC_TRIO_N   ,x______      ,x______      ,x______        ,x______      ,x______      ,CKC_ARR_NW1  ,CKC_ARR_N1   ,CKC_ARR_NE1  ,x______      ,x______
+/*H*/,x______      ,x______      ,CKC_TRIO_W   ,CKC_TRIO_S   ,CKC_TRIO_E   ,x______                                    ,x______      ,CKC_ARR_W1   ,CKC_ARR_S1   ,CKC_ARR_E1   ,CKC_ARR_WE1  ,x______
 /* */,x______      ,x______      ,x______      ,x______      ,x______      ,x______      ,x______        ,x______      ,x______      ,CKC_ARR_SW1  ,CKC_ARR_NS1  ,CKC_ARR_SE1  ,x______      ,x______
 /* */,x______      ,x______      ,x______      ,x______      ,x______                                                                ,x______      ,x______      ,x______      ,x______      ,x______
 /*T*/                                                                      ,x______      ,x______        ,x______      ,x______
@@ -464,8 +475,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 ), [_AD] = LAYOUT_ergodox_pretty(
 // [double arrows] | U **********| I **********| A **********| E **********| O **********|                             | S **********| N **********| R **********| T **********| D **********|*************
 /*F*/ x______      ,x______      ,x______      ,x______      ,x______      ,x______      ,x______        ,x______      ,x______      ,x______      ,x______      ,x______      ,x______      ,x______
-/* */,x______      ,x______      ,x______      ,x______      ,x______      ,x______      ,x______        ,x______      ,x______      ,CKC_ARR_NW2  ,CKC_ARR_N2   ,CKC_ARR_NE2  ,x______      ,x______
-/*H*/,x______      ,x______      ,x______      ,x______      ,x______      ,x______                                    ,x______      ,CKC_ARR_W2   ,CKC_ARR_S2   ,CKC_ARR_E2   ,CKC_ARR_WE2  ,x______
+/* */,x______      ,x______      ,x______      ,CKC_TRIF_N   ,x______      ,x______      ,x______        ,x______      ,x______      ,CKC_ARR_NW2  ,CKC_ARR_N2   ,CKC_ARR_NE2  ,x______      ,x______
+/*H*/,x______      ,x______      ,CKC_TRIF_W   ,CKC_TRIF_S   ,CKC_TRIF_E   ,x______                                    ,x______      ,CKC_ARR_W2   ,CKC_ARR_S2   ,CKC_ARR_E2   ,CKC_ARR_WE2  ,x______
 /* */,x______      ,x______      ,x______      ,x______      ,x______      ,x______      ,x______        ,x______      ,x______      ,CKC_ARR_SW2  ,CKC_ARR_NS2  ,CKC_ARR_SE2  ,x______      ,x______
 /* */,x______      ,x______      ,x______      ,x______      ,x______                                                                ,x______      ,x______      ,x______      ,x______      ,x______
 /*T*/                                                                      ,x______      ,x______        ,x______      ,x______
