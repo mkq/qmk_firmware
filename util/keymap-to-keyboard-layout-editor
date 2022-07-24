@@ -1,0 +1,224 @@
+#!/usr/bin/env perl
+use strict;
+$^W = 1;
+
+# === read config ===
+# try basename of $ARGV[0] + ".k2kle":
+my $cfgFound = 0;
+if (@ARGV > 0) {
+	(my $cfgFile = $ARGV[0]) =~ s{\.[^.]+$}{};
+	$cfgFile .= '.k2kle';
+	printf STDERR "checking config %s\n", $cfgFile;
+	if (-e $cfgFile) {
+		require($cfgFile) or die;
+		printf STDERR "read config %s\n", $cfgFile;
+		$cfgFound = 1;
+	}
+}
+# try this program's name + ".k2kle":
+require(sprintf "%s.cfg", $0) unless $cfgFound;
+
+# === config defaults ===
+my $LAYER_SRC_START_PATTERN = qr{\[(.+?)\]\s*=\s*\w*layout}i;
+my $LAYER_SRC_END_PATTERN = qr{^\s*\)};
+my $KLE_LAYOUT_NAME = '<KLE>';
+my $KEY_SEP = ',';
+my $PLACEHOLDER_PATTERN = '"([^"]+)"';
+my $LABEL_SEP = qr{\t}o;
+my $EMPTY_CAP_LAYER_PATTERN = qr/^-*$/o;
+my $SHIFT_CAP_LAYER_PREFIX = '+';
+my $HOLD_CAP_LAYER_PREFIX = '^';
+
+# === util ===
+sub indexOf {
+	my $elem = shift @_;
+	my @array = @{shift @_};
+	for (my $i = 0; $i < scalar @array; $i++) {
+		 return $i if $array[$i] eq $elem;
+	}
+	return -1;
+}
+
+sub trim { my $s = shift @_; $s =~ s{^\s+}{}; $s =~ s{\s+$}{}; return $s; }
+
+sub stripComments {
+	my $s = shift @_;
+	$s =~ s{//.*\r?\n}{}gm;
+	$s =~ s{/[*].*?[*]/\s*}{}gs;
+	$s;
+}
+
+sub splitLayerSrc {
+	my $src = shift @_;
+	# hack: replace commas inside parens in order to not treat them as $KEY_SEP
+	my $ph = '§//#4973§'; # a temp. placeholder (w/o regex specials chars) probably not contained in $src
+	my @parenContents = ();
+	$src =~ s{(\([^)]+\))}{push @parenContents, $1; $ph;}ge;
+	my @parts = split $KEY_SEP, $src;
+	return map { (my $r = $_) =~ s{$ph}{shift(@parenContents)}ge; $r; } @parts;
+}
+
+# === read config ===
+my %labels = ();
+my $outputTemplate = '';
+my $dataSection = '';
+my $capLayerNames = '';
+while (<DATA>) {
+	$_ =~ s=\r?\n$==;	#chomp
+	next if m{^\s*$};
+	if (m{={2,}\s*(.+?)\s*=+$}) {
+		$dataSection = $1;
+		$dataSection = 'template' if $dataSection =~ m{^output template\b};
+	} elsif ($dataSection eq 'cap format') {
+		$capLayerNames .= $_ . ' ';
+	} elsif ($dataSection eq 'labels') {
+		die "invalid label: $_" unless m{(.+?)${LABEL_SEP}(.+)$};
+#		printf STDERR "label: [%s]\t-> [%s]\n", $1, $2;
+		my $oldLabel = $labels{$1};
+		warn "duplicate label $1 -> $oldLabel / $2\n" if defined $oldLabel;
+		$labels{$1} = $2;
+	} elsif ($dataSection eq 'template') {
+		$outputTemplate .= $_;
+		$outputTemplate .= "\n";
+	}
+}
+my %unusedLabels = %labels;
+printf STDERR "outputTemplate: %s\n", $outputTemplate;
+$capLayerNames = trim($capLayerNames);
+my @capLayerNames = split /\s+/s, $capLayerNames;
+printf STDERR "\$capLayerNames: %s\n", $capLayerNames;
+printf STDERR "\@capLayerNames: [%s]\n", join(', ', @capLayerNames);
+die "invalid cap format\n" if @capLayerNames != 12;
+@capLayerNames = map { $capLayerNames[$_] } (0, 6, 2, 8, 9, 11, 3, 5, 1, 4, 7, 10);
+printf STDERR "reordered \@capLayerNames: [%s]\n", join(', ', @capLayerNames);
+
+# === read keymap input ===
+my %layers = ();
+my $currLayerName;
+while (<>) {
+	my $endPattern = 0;
+	if (m{$LAYER_SRC_END_PATTERN}) {
+		$endPattern = 1;
+		$currLayerName = undef;
+	} # no else
+	if (m{$LAYER_SRC_START_PATTERN}) {
+		$currLayerName = $1;
+	} elsif (defined $currLayerName && !$endPattern && $_ !~ m{^\s*$}) {
+		$layers{$currLayerName} = ($layers{$currLayerName} || '') . $_;
+	}
+}
+while (my($n, $c) = each %layers) { printf STDERR "=== %s ===\n[%s]\n", $n, $c; }
+die "no layer \"$KLE_LAYOUT_NAME\" recognized\n" unless $layers{$KLE_LAYOUT_NAME};
+my @kleLayoutParts = splitLayerSrc($layers{$KLE_LAYOUT_NAME});
+@kleLayoutParts = map { trim($_) } @kleLayoutParts;
+printf STDERR "\@kleLayoutParts:\t%s\n", join("\t", @kleLayoutParts);
+for my $layerNameRef (grep { $_ !~ $EMPTY_CAP_LAYER_PATTERN } @capLayerNames) {
+	my $layerName = $layerNameRef;
+	if (substr($layerName, 0, length $SHIFT_CAP_LAYER_PREFIX) eq $SHIFT_CAP_LAYER_PREFIX) {
+		$layerName = substr($layerName, length $SHIFT_CAP_LAYER_PREFIX);
+	} elsif (substr($layerName, 0, length $HOLD_CAP_LAYER_PREFIX) eq $HOLD_CAP_LAYER_PREFIX) {
+		$layerName = substr($layerName, length $HOLD_CAP_LAYER_PREFIX);
+	}
+	die "layer \"$layerName\" not found" if !defined $layers{$layerName};
+}
+
+# === determine placeholders in $outputTemplate ===
+my @placeholders = $outputTemplate =~ m{$PLACEHOLDER_PATTERN}g;
+printf STDERR "placeholders: [%s]\n", join(', ', @placeholders);
+
+# === convert each layer from source code to array ===
+# For special $KLE_LAYOUT_NAME layer, an array of placeholders;
+# for each normal layer, an array of key codes.
+for my $layerName (keys %layers) {
+	next if $layerName eq $KLE_LAYOUT_NAME;
+	my $src = $layers{$layerName};
+	$src = stripComments($src);
+	my @parts = splitLayerSrc($src);
+	printf STDERR "layer %s parts:\t%s\n", $layerName, join("\t", @parts);
+	$layers{$layerName} = \@parts;
+}
+
+# === compute ===
+(my $output = $outputTemplate) =~ s{$PLACEHOLDER_PATTERN}{placeHolderToLabels($&, $1)}seg;
+printf STDERR "\n";
+
+sub placeHolderToLabels {
+	my $fullMatch = shift @_;
+	my $ph = shift @_;
+	printf STDERR "P\"%s\"", $ph;
+	my $phIndex = indexOf($ph, \@kleLayoutParts);
+	printf STDERR "[%d]", $phIndex;
+	return $fullMatch if $phIndex lt 0;
+	my $labels = '';
+	for (my $layerIndex = 0; $layerIndex < @capLayerNames; $layerIndex++) {
+		my $layerName = $capLayerNames[$layerIndex];
+		printf STDERR " L[%s]", $layerName;
+
+		my $useShiftFunction = 0;
+		my $useHoldFunction = 0;
+		if (substr($layerName, 0, length $SHIFT_CAP_LAYER_PREFIX) eq $SHIFT_CAP_LAYER_PREFIX) {
+			$useShiftFunction = 1;
+			$layerName = substr $layerName, length $SHIFT_CAP_LAYER_PREFIX;
+		} elsif (substr($layerName, 0, length $HOLD_CAP_LAYER_PREFIX) eq $HOLD_CAP_LAYER_PREFIX) {
+			$useHoldFunction = 1;
+			$layerName = substr $layerName, length $HOLD_CAP_LAYER_PREFIX;
+		}
+
+		$labels .= '\n' if $layerIndex > 0;
+		next if $layerName =~ $EMPTY_CAP_LAYER_PATTERN;
+		my @layerKeyCodes = @{$layers{$layerName}};
+		my $kc = $layerKeyCodes[$phIndex];
+		my $label = keycodeToLabel($kc, $useShiftFunction, $useHoldFunction);
+		$label =~ s{(["\\])}{\\$1}g;
+		printf STDERR "→\"%s\"", $label;
+		$labels .= $label;
+	}
+	printf STDERR "⇒\"%s\"\n", $labels;
+	sprintf '"%s"', $labels;
+}
+
+sub keycodeToLabel {
+	my $kc = shift @_;
+	my $useShiftFunction = shift @_;
+	my $useHoldFunction = shift @_;
+
+	$kc = trim $kc;
+	printf STDERR "k2l(%s,%s,%s) ", $kc, $useShiftFunction, $useHoldFunction;
+	if ($kc =~ m{^\w+\((.+),\s*(.+)\)$}) { # hold-tap, e.g. LT(layer,keyCode)
+		printf STDERR "(hold:%s,%s,%s)", $useHoldFunction, $1, $2;
+#		return $useHoldFunction ? keycodeToLabel($1, $useShiftFunction, $useHoldFunction) : keycodeToLabel($2, $useShiftFunction, $useHoldFunction);
+		$kc = $useHoldFunction ? $1 : $2;
+	} elsif ($kc =~ m{^(\w+)_T\s*\((.+)\)$}) { # hold-tab alias, e.g. LCTL_T(keyCode)
+		printf STDERR "(holdA:%s,%s,%s)", $useHoldFunction, $1, $2;
+		$kc = $useHoldFunction ? $1 : $2;
+	} elsif ($useHoldFunction) { # cap position should show hold function, but key is no hold-tap
+		return '';               # => empty
+	}
+	my $label;
+	my $isLetter = 0;
+	my $configuredLabel = 0;
+	if ($kc =~ m{^TO\s*\((.+)\)$}) { # TO(layer) -> layer
+		$kc = $1;
+	}
+	if (defined($label = $labels{$kc})) {
+		$unusedLabels{$kc} = undef;
+		$configuredLabel = 1;
+	} else {
+		($label = $kc) =~ s{^[[:upper:][:digit:]]+_}{}; # remove e.g. KC_ prefix
+		$isLetter = 1 if $label =~ m{^[[:alpha:]]$};
+	}
+	my $hasShiftLabel = 0;
+	if ($label =~ m{(.+?)${LABEL_SEP}(.+)$}) { # multiple labels: 2nd is for shift
+		printf STDERR "(sh:%s,%s,%s)", $useShiftFunction, $1, $2;
+		$hasShiftLabel = 1;
+		$label = $useShiftFunction ? $2 : $1;
+	}
+	$label = '' if $useShiftFunction && !$hasShiftLabel && !$isLetter;
+	$label = lc($label) unless $configuredLabel || $useShiftFunction || $label =~ /^F\d+$/; # automatic lower case
+	return $label;
+}
+
+
+warn sprintf("unused labels: %s\n", join(', ', keys %unusedLabels)) if %unusedLabels > 0;
+printf STDERR "=====================================================================================\n\n";
+printf "%s\n", $output;

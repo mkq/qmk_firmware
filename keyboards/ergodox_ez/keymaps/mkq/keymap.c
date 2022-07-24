@@ -439,7 +439,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /* */,x______      ,x______      ,x______      ,x______      ,x______                                                                ,XXXXXXX      ,KC_MSEL      ,KC_MPLY      ,KC_MPRV      ,KC_MNXT
 /*T*/                                                                      ,KC_WBAK      ,KC_WFWD        ,LALT(KC_LEFT),LALT(KC_RGHT)
 /*T*/                                                                                    ,x______        ,x______
-/*T*/                                                        ,KC_LSFT      ,x______      ,x______        ,x______      ,x______      ,KC_RSFT
+/*T*/                                                        ,XXXXXXX      ,x______      ,x______        ,x______      ,x______      ,XXXXXXX
 
 ) ,[_DC] = LAYOUT_ergodox_pretty(
 // [ctrl+digits]   | U **********| I **********| A **********| E **********| O **********|                             | S **********| N **********| R **********| T **********| D **********|*************
@@ -504,3 +504,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /*T*/                                                                                    ,x______        ,x______
 /*T*/                                                        ,x______      ,x______      ,x______        ,x______      ,x______      ,x______
 )};
+/* [<KLE>] = layout(
+      AA           ,AB           ,AC           ,AD           ,AE           ,AF           ,AG             ,AH           ,AI           ,AJ           ,AK           ,AL           ,AM           ,AN
+     ,BA           ,BB           ,BC           ,BD           ,BE           ,BF           ,BG             ,BH           ,BI           ,BJ           ,BK           ,BL           ,BM           ,BN
+     ,CA           ,CB           ,CC           ,CD           ,CE           ,CF                                         ,CG           ,CH           ,CI           ,CJ           ,CK           ,CL
+     ,DA           ,DB           ,DC           ,DD           ,DE           ,DF           ,DG             ,DH           ,DI           ,DJ           ,DK           ,DL           ,DM           ,DN
+     ,EA           ,EB           ,EC           ,ED           ,EE                                                                     ,EJ           ,EK           ,EL           ,EM           ,EN
+                                                                           ,TL3          ,TL4            ,TR4          ,TR3
+                                                                                         ,TL5            ,TR5
+                                                             ,TL1          ,TL2          ,TL6            ,TR6          ,TR2          ,TR1
+) */

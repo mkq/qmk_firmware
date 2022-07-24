@@ -1,0 +1,276 @@
+# -*- tab-width: 16 -*-
+$KEY_SEP = qr{(?:\s+,|,\s+)}os;
+$KLE_LAYOUT_ID = '<KLE>';
+return 1;
+
+__DATA__
+=== cap format ===
+ _BA +_BA  _L3
+ _L4  _L5  _AS
+ ---  _FS  ---
+^_BA  _LY  _NV
+
+=== output template (copied from http://www.keyboard-layout-editor.com/ using ErgoDox preset) ===
+[{x:3.5,a:0,t:"#000000\n#404040\n#000000\n#404040\n#000000\n#000000\n#000000\n#404040\n#404040\n#000000\n#404040\n#0000b0"},"AD",{x:10.5,a:0},"AK"],
+[{y:-0.875,x:2.5,a:0},"AC",{x:1,a:0},"AE",{x:8.5,a:0},"AJ",{x:1,a:0},"AL"],
+[{y:-0.875,x:5.5,a:0},"AF","AG",{x:4.5,a:0},"AH","AI"],
+[{y:-0.875,w:1.5,a:0},"AA","AB",{x:14.5,a:0},"AM",{w:1.5,a:0},"AN"],
+[{y:-0.375,x:3.5,a:0},"BD",{x:10.5,a:0},"BK"],
+[{y:-0.875,x:2.5,a:0},"BC",{x:1,a:0},"BE",{x:8.5,a:0},"BJ",{x:1,a:0},"BL"],
+[{y:-0.875,x:5.5,a:0},"BF",{h:1.5,a:0},"BG",{x:4.5,h:1.5,a:0},"BH","BI"],
+[{y:-0.875,w:1.5,a:0},"BA","BB",{x:14.5,a:0},"BM",{w:1.5,a:0},"BN"],
+[{y:-0.375,x:3.5,a:0},"CD",{x:10.5,a:0},"CI"],
+[{y:-0.875,x:2.5,a:0},"CC",{x:1,a:0},"CE",{x:8.5,a:0},"CH",{x:1,a:0},"CJ"],
+[{y:-0.875,x:5.5,a:0},"CF",{x:6.5,a:0},"CG"],
+[{y:-0.875,w:1.5,a:0},"CA","CB",{x:14.5,a:0},"CK",{w:1.5,a:0},"CL"],
+[{y:-0.625,x:6.5,h:1.5,a:0},"DG",{x:4.5,h:1.5,a:0},"DH"],
+[{y:-0.75,x:3.5,a:0},"DD",{x:10.5,a:0},"DK"],
+[{y:-0.875,x:2.5,a:0},"DC",{x:1,a:0},"DE",{x:8.5,a:0},"DJ",{x:1,a:0},"DL"],
+[{y:-0.875,x:5.5,a:0},"DF",{x:6.5,a:0},"DI"],
+[{y:-0.875,w:1.5,a:0},"DA","DB",{x:14.5,a:0},"DM",{w:1.5,a:0},"DN"],
+[{y:-0.375,x:3.5,a:0},"ED",{x:10.5,a:0},"EK"],
+[{y:-0.875,x:2.5,a:0},"EC",{x:1,a:0},"EE",{x:8.5,a:0},"EJ",{x:1,a:0},"EL"],
+[{y:-0.75,x:0.5,a:0},"EA","EB",{x:14.5,a:0},"EM","EN"],
+[{r:30,rx:6.5,ry:4.25,y:-1,x:1,a:0},"TL3","TL4"],
+[{h:2,a:0},"TL1",{h:2,a:0},"TL2","TL5"],
+[{x:2,a:0},"TL6"],
+[{r:-30,rx:13,y:-1,x:-3,a:0},"TR4","TR3"],
+[{x:-3,a:0},"TR5",{h:2,a:0},"TR2",{h:2,a:0},"TR1"],
+[{x:-3,a:0},"TR6"]
+
+=== labels ===
+APP	≣
+BSPC	⌫
+C(DE_MINS)	-<sup>c</sup>
+C(DE_PLUS)	+<sup>c</sup>
+C(KC_END)	⭲<sup>c</sup>
+C(KC_HOME)	⭰<sup>c</sup>
+C(KC_LEFT)	⭠<sup>c</sup>
+C(KC_RGHT)	⭢<sup>c</sup>
+CKC_AEQ	≠
+CKC_ARR_E1	→
+CKC_ARR_E2	⇒
+CKC_ARR_N1	↑
+CKC_ARR_N2	⇑
+CKC_ARR_NE1	↗
+CKC_ARR_NE2	⇗
+CKC_ARR_NS1	↕
+CKC_ARR_NS2	⇕
+CKC_ARR_NW1	↖
+CKC_ARR_NW2	⇖
+CKC_ARR_S1	↓
+CKC_ARR_S2	⇓
+CKC_ARR_SE1	↘
+CKC_ARR_SE2	⇘
+CKC_ARR_SW1	↙
+CKC_ARR_SW2	⇙
+CKC_ARR_W1	←
+CKC_ARR_W2	⇐
+CKC_ARR_WE1	↔
+CKC_ARR_WE2	⇔
+CKC_BULLET	•
+CKC_COPY	©
+CKC_DACUT	´
+CKC_DCEDI	,
+CKC_DCIRC	°
+CKC_DDEGR	°
+CKC_DDIA	''
+CKC_DGRV	`
+CKC_DTILD	~
+CKC_ELIP	…
+CKC_FRM_CR1	┼
+CKC_FRM_CR2	╬
+CKC_FRM_E1	┤
+CKC_FRM_E2	╣
+CKC_FRM_HL1	─
+CKC_FRM_HL2	═
+CKC_FRM_N1	┬
+CKC_FRM_N2	╦
+CKC_FRM_NE1	┐
+CKC_FRM_NE2	╗
+CKC_FRM_NW1	┌
+CKC_FRM_NW2	╔
+CKC_FRM_S1	┴
+CKC_FRM_S2	╩
+CKC_FRM_SE1	┘
+CKC_FRM_SE2	┘
+CKC_FRM_SW1	└
+CKC_FRM_SW2	╚
+CKC_FRM_VL1	│
+CKC_FRM_VL2	║
+CKC_FRM_W1	├
+CKC_FRM_W2	╠
+CKC_NEG	¬
+CKC_NEQ	≈
+CKC_NOT	¬
+CKC_POO	💩
+CKC_POUND	£
+CKC_SUB0	₀
+CKC_SUB1	₁
+CKC_SUB2	₂
+CKC_SUB3	₃
+CKC_SUB4	₄
+CKC_SUB5	₅
+CKC_SUB6	₆
+CKC_SUB7	₇
+CKC_SUB8	₈
+CKC_SUB9	₉
+CKC_SUBN	ₙ
+CKC_SUP0	⁰
+CKC_SUP1	¹
+CKC_SUP2	²
+CKC_SUP3	³
+CKC_SUP4	⁴
+CKC_SUP5	⁵
+CKC_SUP6	⁶
+CKC_SUP7	⁷
+CKC_SUP8	⁸
+CKC_SUP9	⁹
+CKC_SUPN	ⁿ
+CKC_TM	™
+CKC_TRIF_E	▶
+CKC_TRIF_N	▲
+CKC_TRIF_S	▼
+CKC_TRIF_W	◀
+CKC_TRIO_E	▷
+CKC_TRIO_N	△
+CKC_TRIO_S	▽
+CKC_TRIO_W	◁
+CK_CYLAY	L<sup>→</sup>
+CK_DBG	D!
+CK_LMRES	L0
+CK_NEQ	!=
+CK_QX	?	!
+CK_SB	/	\
+DEL	⌦
+DE_ACUT	´
+DE_ADIA	ä
+DE_AMPR	&
+DE_ASTR	*
+DE_AT	@
+DE_CIRC	^
+DE_COLN	:
+DE_COMM	,
+DE_DLR	$
+DE_DOT	.
+DE_DQUO	"
+DE_EQL	=
+DE_EURO	€
+DE_GRV	`
+DE_HASH	#
+DE_LABK	<
+DE_LBRC	[
+DE_LCBR	{
+DE_LPRN	(
+DE_MI	-
+DE_MICR	µ
+DE_ODIA	ö
+DE_PERC	%
+DE_PIPE	|
+DE_PLUS	+
+DE_QUOT	'
+DE_RABK	>
+DE_RBRC	]
+DE_RCBR	}
+DE_RPRN	)
+DE_SECT	§
+DE_SS	ß
+DE_TILD	~
+DE_UDIA	ü
+DE_Y	y	Y
+DE_Z	z	Z
+DM_PLY1	<sup>m▶1</sup>
+DM_PLY2	<sup>m▶2</sup>
+DM_REC1	<sup>m•1</sup>
+DM_REC2	<sup>m•2</sup>
+DM_RSTP	<sup>m⏹</sup>
+END	⭲
+ESC	Esc
+HOME	⭰
+KC_CAPS	⇧<sup>⭳</sup>
+KC_DEL	⌦
+KC_DOWN	⭣
+KC_END	⭲
+KC_ENTER	⮠
+KC_ESC	Esc
+KC_HOME	⭰
+KC_LALT	<b>Alt</b>
+KC_LCTL	<b>Ctl</b>
+KC_LEFT	⭠
+KC_LSFT	⇧
+KC_LWIN	<b>⊞</b>
+KC_MNXT	⏭
+KC_MPLY	⏯
+KC_MPRV	⏮
+KC_MSEL	♫
+KC_MUTE	🔇
+KC_PAST	*<sup>p</sup>
+KC_PAUS	Pau
+KC_PGDN	⭳
+KC_PGUP	⭱
+KC_PMNS	-<sup>p</sup>
+KC_PPLS	+<sup>p</sup>
+KC_PSCR	Pr
+KC_PSLS	/<sup>p</sup>
+KC_RGHT	⭢
+KC_RSFT	⇧
+KC_RWIN	<b>⊞</b>
+KC_SLCK	S<sup>⭳</sup>
+KC_UP	⭡
+KC_VOLD	🔉
+KC_VOLU	🔊
+KC_WBAK	⇦
+KC_WFWD	⇨
+KC_WHOM	⌂
+KM_COPY	📋+
+KM_CUT	✀
+KM_PAST	📋!
+LALT	<b>Alt</b>
+LALT(KC_LEFT)	←<sup>a</sup>
+LALT(KC_RGHT)	→<sup>a</sup>
+LCAG	<b>wac</b>
+LCAG_T(APP)	≣
+LCTL	<b>Ctl</b>
+LSFT	⇧
+LT_AD(KC_F5)	F5
+LT_AS(KC_F4)	F4
+LT_FD(KC_F3)	F3
+LT_FS(KC_F2)	F2
+LWIN	<b>⊞</b>
+MO(_L5)	&nbsp;
+MO(_NV)	<b>N</b>
+PAST	📋!
+RCTL	<b>Ctl</b>
+RESET	R!
+RGB_TOG	🔦
+RSA(DE_SS)	ẞ
+RSFT	⇧
+RWIN	<b>⊞</b>
+S(DE_ADIA)	Ä
+S(DE_ODIA)	Ö
+S(DE_UDIA)	Ü
+SPC	<font size="+3"><sup>␣</sup></font>
+TAB	⭾
+TO(_AD)	⇐
+TO(_AS)	←
+TO(_DC)	#<sup>c</sup>
+TO(_DW)	#<sup>w</sup>
+TO(_FD)	╔
+TO(_FS)	┌
+WHOM	⌂
+WIN	⊞
+XXXXXXX	&nbsp;
+x______	&nbsp;
+_AD	⇐
+_AS	←
+_BA	b
+_BT	b'
+_DC	#<sup>c</sup>
+_DW	#<sup>w</sup>
+_FD	╬
+_FS	┼
+_L3	3
+_L4	4
+_L5	5
+_LY	<b>L</b>
+_NV	<b>N</b>
