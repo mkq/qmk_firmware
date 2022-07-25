@@ -439,7 +439,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /* */,x______      ,x______      ,x______      ,x______      ,x______                                                                ,XXXXXXX      ,KC_MSEL      ,KC_MPLY      ,KC_MPRV      ,KC_MNXT
 /*T*/                                                                      ,KC_WBAK      ,KC_WFWD        ,LALT(KC_LEFT),LALT(KC_RGHT)
 /*T*/                                                                                    ,x______        ,x______
-/*T*/                                                        ,XXXXXXX      ,x______      ,x______        ,x______      ,x______      ,XXXXXXX
+/*T*/                                                        ,KC_LSFT      ,x______      ,x______        ,x______      ,x______      ,KC_RSFT
 
 ) ,[_DC] = LAYOUT_ergodox_pretty(
 // [ctrl+digits]   | U **********| I **********| A **********| E **********| O **********|                             | S **********| N **********| R **********| T **********| D **********|*************
