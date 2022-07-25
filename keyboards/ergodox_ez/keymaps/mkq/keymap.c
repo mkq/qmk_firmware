@@ -424,7 +424,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /*F*/ CKC_SUB1     ,CKC_SUB2     ,CKC_SUB3     ,CKC_SUB4     ,CKC_SUB5     ,CKC_SUB6     ,x______        ,x______      ,CKC_SUB7     ,CKC_SUB8     ,CKC_SUB9     ,CKC_SUB0     ,CKC_SUBN     ,XXXXXXX
 /* */,CKC_DDEGR    ,CKC_DCEDI    ,CKC_DTILD    ,CKC_DDIA     ,CKC_DACUT    ,CKC_DGRV     ,x______        ,x______      ,x______      ,x______      ,x______      ,x______      ,x______      ,x______
 /*H*/,x______      ,S(DE_UDIA)   ,CKC_AEQ      ,S(DE_ADIA)   ,x______      ,S(DE_ODIA)                                 ,x______      ,CKC_NOT      ,CKC_COPY     ,CKC_TM       ,x______      ,x______
-/* */,x______      ,x______      ,x______      ,x______      ,CKC_POO      ,RSA(DE_SS)   ,x______        ,x______      ,DE_MICR      ,x______      ,CKC_BULLET   ,x______      ,x______      ,x______
+/* */,x______      ,x______      ,x______      ,x______      ,CKC_POO      ,RSA(DE_SS)   ,x______        ,x______      ,x______      ,DE_MICR      ,CKC_BULLET   ,x______      ,x______      ,x______
 /* */,x______      ,x______      ,x______      ,x______      ,x______                                                                ,x______      ,x______      ,x______      ,x______      ,x______
 /*T*/                                                                      ,x______      ,x______        ,x______      ,x______
 /*T*/                                                                                    ,x______        ,x______
