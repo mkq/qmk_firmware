@@ -183,6 +183,7 @@ sub keycodeToLabel {
 	my $useHoldFunction = shift @_;
 
 	$kc = trim $kc;
+	my $origKc = $kc;
 	printf STDERR "k2l(%s,%s,%s) ", $kc, $useShiftFunction, $useHoldFunction;
 	if ($kc =~ m{^\w+\((.+),\s*(.+)\)$}) { # hold-tap, e.g. LT(layer,keyCode)
 		printf STDERR "(hold:%s,%s,%s)", $useHoldFunction, $1, $2;
@@ -197,10 +198,10 @@ sub keycodeToLabel {
 	my $label;
 	my $isLetter = 0;
 	my $configuredLabel = 0;
-	if ($kc =~ m{^TO\s*\((.+)\)$}) { # TO(layer) -> layer
+	if ($kc =~ m{^(?:TO|OSL)\s*\((.+)\)$}) { # TO(layer) or OSL(layer) -> layer
 		$kc = $1;
 	}
-	if (defined($label = $labels{$kc})) {
+	if (defined($label = $labels{$origKc}) || defined($label = $labels{$kc})) {
 		$unusedLabels{$kc} = undef;
 		$configuredLabel = 1;
 	} else {
@@ -222,3 +223,4 @@ sub keycodeToLabel {
 warn sprintf("unused labels: %s\n", join(', ', keys %unusedLabels)) if %unusedLabels > 0;
 printf STDERR "=====================================================================================\n\n";
 printf "%s\n", $output;
+printf STDERR "\nPaste this into \"Raw data\" tab on http://www.keyboard-layout-editor.com\n";

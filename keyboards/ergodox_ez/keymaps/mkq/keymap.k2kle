@@ -142,6 +142,7 @@ CK_LMRES	L0
 CK_NEQ	!=
 CK_QX	?	!
 CK_SB	/	\
+DE_BSLS	\
 DEL	⌦
 DE_ACUT	´
 DE_ADIA	ä
@@ -174,6 +175,7 @@ DE_RBRC	]
 DE_RCBR	}
 DE_RPRN	)
 DE_SECT	§
+DE_SLSH	/
 DE_SS	ß
 DE_TILD	~
 DE_UDIA	ü
@@ -237,7 +239,6 @@ LT_AS(KC_F4)	F4
 LT_FD(KC_F3)	F3
 LT_FS(KC_F2)	F2
 LWIN	<b>⊞</b>
-MO(_L5)	&nbsp;
 MO(_NV)	<b>N</b>
 PAST	📋!
 RCTL	<b>Ctl</b>
@@ -263,14 +264,15 @@ XXXXXXX	&nbsp;
 x______	&nbsp;
 _AD	⇐
 _AS	←
-_BA	b
-_BT	b'
+_BA	<b>1</b>
+_BT	<b>1'</b>
 _DC	#<sup>c</sup>
 _DW	#<sup>w</sup>
 _FD	╬
 _FS	┼
-_L3	3
-_L4	4
-_L5	5
+_L3	<b>3</b>
+_L4	<b>4</b>
+_L5	<b>5</b>
 _LY	<b>L</b>
 _NV	<b>N</b>
+OSL(_L4)	<b>4¹</b>

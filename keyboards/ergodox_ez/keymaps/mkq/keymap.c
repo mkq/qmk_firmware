@@ -59,7 +59,8 @@ const uint8_t layer_leds_length = sizeof(layer_leds) / sizeof(layer_leds[0]);
 
 enum custom_keycodes {
 	CK_NEQ = SAFE_RANGE,
-	CK_SB,
+	CK_SB, // slash / backslash
+//	CK_O4S, // OSL(_L4) / slash
 	CK_QX,
 	CK_LMRES,
 	CK_CYLAY, // cycle layers
@@ -219,6 +220,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 		return pru_mod_sensitive_key(record, MOD_MASK_SHIFT, DE_SLSH, RALT(DE_BSLS));
 	case CK_QX:	// DE question mark; with shift: DE exclamation mark
 		return pru_mod_sensitive_key(record, MOD_MASK_SHIFT, S(DE_QUES), DE_EXLM);
+//	case CK_O4S:	// OSL(_L4); with shift: DE slash
+//		return pru_mod_sensitive_key(record, MOD_MASK_SHIFT, OSL(_L4), DE_SLSH);
 	case CK_NEQ:
 		if (pressed) { SEND_STRING("!="); }
 		return false;
@@ -382,7 +385,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 // [base]          | U **********| I **********| A **********| E **********| O **********|                             | S **********| N **********| R **********| T **********| D **********|*************
 /*F*/ KC_F1        ,LT(_FS,KC_F2),LT(_FD,KC_F3),LT(_AS,KC_F4),LT(_AD,KC_F5),KC_F6        ,KC_PSCR        ,SPC          ,KC_F7        ,KC_F8        ,KC_F9        ,KC_F10       ,KC_F11       ,KC_F12
 /* */,DE_CIRC      ,KC_X         ,KC_V         ,LT(_L4,SPC)  ,KC_C         ,KC_W         ,CK_CYLAY       ,LCAG_T(APP)  ,KC_K         ,KC_H         ,LT(_L4,KC_G) ,KC_F         ,DE_Y         ,KC_PGUP
-/*H*/,LT(_LY,TAB)  ,LWIN_T(KC_U) ,LALT_T(KC_I) ,LCTL_T(KC_A) ,LT(_NV,KC_E) ,KC_O                                       ,KC_S         ,LT(_NV,KC_N) ,RCTL_T(KC_R) ,LALT_T(KC_T) ,RWIN_T(KC_D) ,CK_SB
+/*H*/,LT(_LY,TAB)  ,LWIN_T(KC_U) ,LALT_T(KC_I) ,LCTL_T(KC_A) ,LT(_NV,KC_E) ,KC_O                                       ,KC_S         ,LT(_NV,KC_N) ,RCTL_T(KC_R) ,LALT_T(KC_T) ,RWIN_T(KC_D) ,OSL(_L4)
 /* */,KC_Q         ,LT(_DW,DE_MI),CK_QX        ,LT(_DC,KC_L) ,KC_P         ,DE_Z         ,KC_INS         ,DEL          ,KC_B         ,KC_M         ,DE_COMM      ,DE_DOT       ,KC_J         ,KC_PGDN
 /* */,KC_LWIN      ,KC_LALT      ,KC_LCTL      ,DE_PLUS      ,ESC                                                                    ,MO(_NV)      ,KC_UP        ,KC_DOWN      ,KC_LEFT      ,KC_RGHT
 /*T*/                                                                      ,LT(_BT,DEL)  ,KM_CUT         ,LALT_T(HOME) ,LCTL_T(END)
@@ -403,7 +406,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 // [layer 3]       | U **********| I **********| A **********| E **********| O **********|                             | S **********| N **********| R **********| T **********| D **********|*************
 /*F*/ XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX        ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX
 /* */,x______      ,DE_PERC      ,DE_AMPR      ,DE_DQUO      ,DE_QUOT      ,DE_GRV       ,x______        ,x______      ,DE_HASH      ,DE_LCBR      ,DE_RCBR      ,DE_PIPE      ,x______      ,x______
-/*H*/,x______      ,DE_AT        ,DE_EQL       ,DE_LABK      ,DE_RABK      ,x______                                    ,DE_ASTR      ,DE_LPRN      ,DE_RPRN      ,DE_TILD      ,DE_DLR       ,x______
+/*H*/,x______      ,DE_AT        ,DE_EQL       ,DE_LABK      ,DE_RABK      ,x______                                    ,DE_ASTR      ,DE_LPRN      ,DE_RPRN      ,DE_TILD      ,DE_DLR       ,DE_BSLS
 /* */,x______      ,x______      ,CK_NEQ       ,x______      ,DE_PLUS      ,x______      ,x______        ,x______      ,x______      ,DE_LBRC      ,DE_RBRC      ,CKC_ELIP     ,DE_SECT      ,x______
 /* */,x______      ,x______      ,x______      ,x______      ,x______                                                                ,x______      ,x______      ,x______      ,x______      ,x______
 /*T*/                                                                      ,x______      ,x______        ,x______      ,x______
@@ -412,19 +415,19 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 ), [_L4] = LAYOUT_ergodox_pretty(
 // [layer 4]       | U **********| I **********| A **********| E **********| O **********|                             | S **********| N **********| R **********| T **********| D **********|*************
 /*F*/ CKC_SUP1     ,CKC_SUP2     ,CKC_SUP3     ,CKC_SUP4     ,CKC_SUP5     ,CKC_SUP6     ,x______        ,x______      ,CKC_SUP7     ,CKC_SUP8     ,CKC_SUP9     ,CKC_SUP0     ,CKC_SUPN     ,XXXXXXX
-/* */,CKC_DCIRC    ,x______      ,x______      ,x______      ,DE_ACUT      ,x______      ,x______        ,x______      ,KC_PSLS      ,KC_7         ,KC_8         ,KC_9         ,DE_COLN      ,x______
-/*H*/,x______      ,DE_UDIA      ,CKC_NEQ      ,DE_ADIA      ,DE_EURO      ,DE_ODIA                                    ,KC_PAST      ,KC_4         ,KC_5         ,KC_6         ,DE_DOT       ,x______
-/* */,DE_PERC      ,KC_PMNS      ,KC_PPLS      ,DE_EQL       ,CKC_POUND    ,DE_SS        ,x______        ,x______      ,KC_0         ,KC_1         ,KC_2         ,KC_3         ,DE_COMM      ,x______
+/* */,CKC_DCIRC    ,x______      ,x______      ,x______      ,DE_ACUT      ,x______      ,x______        ,x______      ,KC_PSLS      ,KC_7         ,KC_8         ,KC_9         ,DE_COLN      ,KC_HOME
+/*H*/,x______      ,DE_UDIA      ,DE_BSLS      ,DE_ADIA      ,DE_EURO      ,DE_ODIA                                    ,KC_PAST      ,KC_4         ,KC_5         ,KC_6         ,DE_DOT       ,DE_SLSH
+/* */,DE_PERC      ,KC_PMNS      ,KC_PPLS      ,DE_EQL       ,CKC_POUND    ,DE_SS        ,x______        ,x______      ,KC_0         ,KC_1         ,KC_2         ,KC_3         ,DE_COMM      ,KC_END
 /* */,x______      ,x______      ,x______      ,x______      ,x______                                                                ,x______      ,x______      ,x______      ,x______      ,x______
 /*T*/                                                                      ,x______      ,x______        ,x______      ,x______
 /*T*/                                                                                    ,x______        ,x______
-/*T*/                                                        ,MO(_L5)      ,x______      ,x______        ,x______      ,x______      ,MO(_L5)
+/*T*/                                                        ,x______      ,x______      ,x______        ,x______      ,x______      ,x______
 ), [_L5] = LAYOUT_ergodox_pretty(
 // [layer 5]       | U **********| I **********| A **********| E **********| O **********|                             | S **********| N **********| R **********| T **********| D **********|*************
 /*F*/ CKC_SUB1     ,CKC_SUB2     ,CKC_SUB3     ,CKC_SUB4     ,CKC_SUB5     ,CKC_SUB6     ,x______        ,x______      ,CKC_SUB7     ,CKC_SUB8     ,CKC_SUB9     ,CKC_SUB0     ,CKC_SUBN     ,XXXXXXX
 /* */,CKC_DDEGR    ,CKC_DCEDI    ,CKC_DTILD    ,CKC_DDIA     ,CKC_DACUT    ,CKC_DGRV     ,x______        ,x______      ,x______      ,x______      ,x______      ,x______      ,x______      ,x______
 /*H*/,x______      ,S(DE_UDIA)   ,CKC_AEQ      ,S(DE_ADIA)   ,x______      ,S(DE_ODIA)                                 ,x______      ,CKC_NOT      ,CKC_COPY     ,CKC_TM       ,x______      ,x______
-/* */,x______      ,x______      ,x______      ,x______      ,CKC_POO      ,RSA(DE_SS)   ,x______        ,x______      ,x______      ,DE_MICR      ,CKC_BULLET   ,x______      ,x______      ,x______
+/* */,x______      ,x______      ,CKC_NEQ      ,x______      ,CKC_POO      ,RSA(DE_SS)   ,x______        ,x______      ,x______      ,DE_MICR      ,CKC_BULLET   ,x______      ,x______      ,x______
 /* */,x______      ,x______      ,x______      ,x______      ,x______                                                                ,x______      ,x______      ,x______      ,x______      ,x______
 /*T*/                                                                      ,x______      ,x______        ,x______      ,x______
 /*T*/                                                                                    ,x______        ,x______
