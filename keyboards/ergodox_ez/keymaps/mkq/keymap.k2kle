@@ -70,13 +70,13 @@ CKC_ARR_WE1	↔
 CKC_ARR_WE2	⇔
 CKC_BULLET	•
 CKC_COPY	©
-CKC_DACUT	´
-CKC_DCEDI	,
-CKC_DCIRC	°
-CKC_DDEGR	°
-CKC_DDIA	''
-CKC_DGRV	`
-CKC_DTILD	~
+CKC_DACUT	<font color="red">´</font>
+CKC_DCEDI	<font color="red">,</font>
+CKC_DCIRC	<font color="red">^</font>
+CKC_DDEGR	<font color="red">°</font>
+CKC_DDIA	<font color="red">''</font>
+CKC_DGRV	<font color="red">`</font>
+CKC_DTILD	<font color="red">~</font>
 CKC_ELIP	…
 CKC_FRM_CR1	┼
 CKC_FRM_CR2	╬
@@ -149,11 +149,11 @@ DE_ADIA	ä
 DE_AMPR	&
 DE_ASTR	*
 DE_AT	@
-DE_CIRC	^
+DE_CIRC	^	°
 DE_COLN	:
-DE_COMM	,
+DE_COMM	,	;
 DE_DLR	$
-DE_DOT	.
+DE_DOT	.	:
 DE_DQUO	"
 DE_EQL	=
 DE_EURO	€
@@ -163,7 +163,7 @@ DE_LABK	<
 DE_LBRC	[
 DE_LCBR	{
 DE_LPRN	(
-DE_MI	-
+DE_MI	-	_
 DE_MICR	µ
 DE_ODIA	ö
 DE_PERC	%

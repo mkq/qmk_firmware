@@ -442,8 +442,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /*F*/ DM_RSTP      ,DM_REC1      ,DM_REC2      ,DM_PLY1      ,DM_PLY2      ,x______      ,KC_SLCK        ,x______      ,RGB_TOG      ,CK_LMRES     ,RESET        ,CK_DBG       ,x______      ,KC_WHOM
 /* */,x______      ,x______      ,x______      ,x______      ,KC_CAPS      ,x______      ,x______        ,KM_COPY      ,C(KC_HOME)   ,KC_HOME      ,KC_UP        ,KC_END       ,C(KC_END)    ,KC_VOLU
 /*H*/,x______      ,x______      ,x______      ,x______      ,x______      ,x______                                    ,KM_PAST      ,KC_LEFT      ,KC_DOWN      ,KC_RGHT      ,KC_PGUP      ,KC_VOLD
-/* */,x______      ,C(DE_MINS)   ,C(DE_PLUS)   ,x______      ,KC_PAUS      ,x______      ,x______        ,KM_CUT       ,KC_INS       ,C(KC_LEFT)   ,KC_DEL       ,C(KC_RGHT)   ,KC_PGDN      ,KC_MUTE
-/* */,KC_PSCR      ,KC_SLCK      ,x______      ,x______      ,x______                                                                ,XXXXXXX      ,KC_MSEL      ,KC_MPLY      ,KC_MPRV      ,KC_MNXT
+/* */,x______      ,C(DE_MINS)   ,C(DE_PLUS)   ,x______      ,KC_PAUS      ,KC_PSCR      ,KC_SLCK        ,KM_CUT       ,KC_INS       ,C(KC_LEFT)   ,KC_DEL       ,C(KC_RGHT)   ,KC_PGDN      ,KC_MUTE
+/* */,x______      ,x______      ,x______      ,x______      ,x______                                                                ,XXXXXXX      ,KC_MSEL      ,KC_MPLY      ,KC_MPRV      ,KC_MNXT
 /*T*/                                                                      ,KC_WBAK      ,KC_WFWD        ,LALT(KC_LEFT),LALT(KC_RGHT)
 /*T*/                                                                                    ,x______        ,x______
 /*T*/                                                        ,KC_LSFT      ,x______      ,x______        ,x______      ,x______      ,KC_RSFT
