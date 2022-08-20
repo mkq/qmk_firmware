@@ -192,6 +192,10 @@ bool pru_compose(keyrecord_t *record, const char *s) {
 	if (record->event.pressed) {
 		SEND_STRING(SS_LSFT("3"));
 		send_string(s);
+
+		// Workaround against locked shift in Microsoft Teams
+		unregister_code(KC_LSFT);
+		unregister_code(KC_RSFT);
 	}
 	return false;
 }
@@ -383,10 +387,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 ) ,[_BA] = LAYOUT_ergodox_pretty(
 // [base]          | U **********| I **********| A **********| E **********| O **********|                             | S **********| N **********| R **********| T **********| D **********|*************
-/*F*/ KC_F1        ,LT(_FS,KC_F2),LT(_FD,KC_F3),LT(_AS,KC_F4),LT(_AD,KC_F5),KC_F6        ,KC_PSCR        ,SPC          ,KC_F7        ,KC_F8        ,KC_F9        ,KC_F10       ,KC_F11       ,KC_F12
-/* */,DE_CIRC      ,KC_X         ,KC_V         ,LT(_L4,SPC)  ,KC_C         ,KC_W         ,CK_CYLAY       ,LCAG_T(APP)  ,KC_K         ,KC_H         ,LT(_L4,KC_G) ,KC_F         ,DE_Y         ,KC_PGUP
+/*F*/ KC_F1        ,LT(_FS,KC_F2),LT(_FD,KC_F3),LT(_AS,KC_F4),LT(_AD,KC_F5),KC_F6        ,CK_CYLAY       ,SPC          ,KC_F7        ,KC_F8        ,KC_F9        ,KC_F10       ,KC_F11       ,KC_F12
+/* */,DE_CIRC      ,KC_X         ,KC_V         ,LT(_L4,SPC)  ,KC_C         ,KC_W         ,KC_APP         ,LCAG_T(KC_Q) ,KC_K         ,KC_H         ,LT(_L4,KC_G) ,KC_F         ,DE_Y         ,KC_PGUP
 /*H*/,LT(_LY,TAB)  ,LWIN_T(KC_U) ,LALT_T(KC_I) ,LCTL_T(KC_A) ,LT(_NV,KC_E) ,KC_O                                       ,KC_S         ,LT(_NV,KC_N) ,RCTL_T(KC_R) ,LALT_T(KC_T) ,RWIN_T(KC_D) ,OSL(_L4)
-/* */,KC_Q         ,LT(_DW,DE_MI),CK_QX        ,LT(_DC,KC_L) ,KC_P         ,DE_Z         ,KC_INS         ,DEL          ,KC_B         ,KC_M         ,DE_COMM      ,DE_DOT       ,KC_J         ,KC_PGDN
+/* */,KC_J         ,LT(_DW,DE_MI),CK_QX        ,LT(_DC,KC_L) ,KC_P         ,DE_Z         ,KC_INS         ,DEL          ,KC_B         ,KC_M         ,DE_COMM      ,DE_DOT       ,CK_SB        ,KC_PGDN
 /* */,KC_LWIN      ,KC_LALT      ,KC_LCTL      ,DE_PLUS      ,ESC                                                                    ,MO(_NV)      ,KC_UP        ,KC_DOWN      ,KC_LEFT      ,KC_RGHT
 /*T*/                                                                      ,LT(_BT,DEL)  ,KM_CUT         ,LALT_T(HOME) ,LCTL_T(END)
 /*T*/                                                                                    ,KM_COPY        ,KC_PGUP
@@ -394,7 +398,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 ), [_BT] = LAYOUT_ergodox_pretty(
 // [base, tap only]| U **********| I **********| A **********| E **********| O **********|                             | S **********| N **********| R **********| T **********| D **********|*************
 /*F*/ KC_F1        ,KC_F2        ,KC_F3        ,KC_F4        ,KC_F5        ,KC_F6        ,x______        ,x______      ,KC_F7        ,KC_F8        ,KC_F9        ,KC_F10       ,KC_F11       ,KC_F12
-/* */,x______      ,x______      ,x______      ,SPC          ,x______      ,x______      ,x______        ,APP          ,x______      ,x______      ,KC_G         ,x______      ,x______      ,x______
+/* */,x______      ,x______      ,x______      ,SPC          ,x______      ,x______      ,x______        ,KC_Q         ,x______      ,x______      ,KC_G         ,x______      ,x______      ,x______
 /*H*/,KC_TAB       ,KC_U         ,KC_I         ,KC_A         ,KC_E         ,x______                                    ,x______      ,KC_N         ,KC_R         ,KC_T         ,KC_D         ,x______
 /* */,x______      ,DE_MI        ,x______      ,KC_L         ,x______      ,x______      ,x______        ,x______      ,x______      ,x______      ,x______      ,x______      ,x______      ,x______
 /* */,x______      ,x______      ,x______      ,x______      ,x______                                                                ,x______      ,x______      ,x______      ,x______      ,x______
@@ -406,8 +410,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 // [layer 3]       | U **********| I **********| A **********| E **********| O **********|                             | S **********| N **********| R **********| T **********| D **********|*************
 /*F*/ XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX        ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX
 /* */,x______      ,DE_PERC      ,DE_AMPR      ,DE_DQUO      ,DE_QUOT      ,DE_GRV       ,x______        ,x______      ,DE_HASH      ,DE_LCBR      ,DE_RCBR      ,DE_PIPE      ,x______      ,x______
-/*H*/,x______      ,DE_AT        ,DE_EQL       ,DE_LABK      ,DE_RABK      ,x______                                    ,DE_ASTR      ,DE_LPRN      ,DE_RPRN      ,DE_TILD      ,DE_DLR       ,DE_BSLS
-/* */,x______      ,x______      ,CK_NEQ       ,x______      ,DE_PLUS      ,x______      ,x______        ,x______      ,x______      ,DE_LBRC      ,DE_RBRC      ,CKC_ELIP     ,DE_SECT      ,x______
+/*H*/,x______      ,DE_AT        ,DE_EQL       ,DE_LABK      ,DE_RABK      ,x______                                    ,DE_ASTR      ,DE_LPRN      ,DE_RPRN      ,DE_TILD      ,DE_DLR       ,x______
+/* */,DE_SECT      ,x______      ,CK_NEQ       ,x______      ,DE_PLUS      ,x______      ,x______        ,x______      ,x______      ,DE_LBRC      ,DE_RBRC      ,CKC_ELIP     ,x______      ,x______
 /* */,x______      ,x______      ,x______      ,x______      ,x______                                                                ,x______      ,x______      ,x______      ,x______      ,x______
 /*T*/                                                                      ,x______      ,x______        ,x______      ,x______
 /*T*/                                                                                    ,x______        ,x______
@@ -416,7 +420,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 // [layer 4]       | U **********| I **********| A **********| E **********| O **********|                             | S **********| N **********| R **********| T **********| D **********|*************
 /*F*/ CKC_SUP1     ,CKC_SUP2     ,CKC_SUP3     ,CKC_SUP4     ,CKC_SUP5     ,CKC_SUP6     ,x______        ,x______      ,CKC_SUP7     ,CKC_SUP8     ,CKC_SUP9     ,CKC_SUP0     ,CKC_SUPN     ,XXXXXXX
 /* */,CKC_DCIRC    ,x______      ,x______      ,x______      ,DE_ACUT      ,x______      ,x______        ,x______      ,KC_PSLS      ,KC_7         ,KC_8         ,KC_9         ,DE_COLN      ,KC_HOME
-/*H*/,x______      ,DE_UDIA      ,DE_BSLS      ,DE_ADIA      ,DE_EURO      ,DE_ODIA                                    ,KC_PAST      ,KC_4         ,KC_5         ,KC_6         ,DE_DOT       ,DE_SLSH
+/*H*/,x______      ,DE_UDIA      ,DE_BSLS      ,DE_ADIA      ,DE_EURO      ,DE_ODIA                                    ,KC_PAST      ,KC_4         ,KC_5         ,KC_6         ,DE_DOT       ,OSL(_L5)
 /* */,DE_PERC      ,KC_PMNS      ,KC_PPLS      ,DE_EQL       ,CKC_POUND    ,DE_SS        ,x______        ,x______      ,KC_0         ,KC_1         ,KC_2         ,KC_3         ,DE_COMM      ,KC_END
 /* */,x______      ,x______      ,x______      ,x______      ,x______                                                                ,x______      ,x______      ,x______      ,x______      ,x______
 /*T*/                                                                      ,x______      ,x______        ,x______      ,x______
@@ -439,7 +443,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /* */,x______      ,x______      ,x______      ,x______      ,KC_CAPS      ,x______      ,x______        ,KM_COPY      ,C(KC_HOME)   ,KC_HOME      ,KC_UP        ,KC_END       ,C(KC_END)    ,KC_VOLU
 /*H*/,x______      ,x______      ,x______      ,x______      ,x______      ,x______                                    ,KM_PAST      ,KC_LEFT      ,KC_DOWN      ,KC_RGHT      ,KC_PGUP      ,KC_VOLD
 /* */,x______      ,C(DE_MINS)   ,C(DE_PLUS)   ,x______      ,KC_PAUS      ,x______      ,x______        ,KM_CUT       ,KC_INS       ,C(KC_LEFT)   ,KC_DEL       ,C(KC_RGHT)   ,KC_PGDN      ,KC_MUTE
-/* */,x______      ,x______      ,x______      ,x______      ,x______                                                                ,XXXXXXX      ,KC_MSEL      ,KC_MPLY      ,KC_MPRV      ,KC_MNXT
+/* */,KC_PSCR      ,KC_SLCK      ,x______      ,x______      ,x______                                                                ,XXXXXXX      ,KC_MSEL      ,KC_MPLY      ,KC_MPRV      ,KC_MNXT
 /*T*/                                                                      ,KC_WBAK      ,KC_WFWD        ,LALT(KC_LEFT),LALT(KC_RGHT)
 /*T*/                                                                                    ,x______        ,x______
 /*T*/                                                        ,KC_LSFT      ,x______      ,x______        ,x______      ,x______      ,KC_RSFT

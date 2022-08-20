@@ -231,7 +231,7 @@ LALT	<b>Alt</b>
 LALT(KC_LEFT)	←<sup>a</sup>
 LALT(KC_RGHT)	→<sup>a</sup>
 LCAG	<b>wac</b>
-LCAG_T(APP)	≣
+KC_APP	≣
 LCTL	<b>Ctl</b>
 LSFT	⇧
 LT_AD(KC_F5)	F5
@@ -276,3 +276,4 @@ _L5	<b>5</b>
 _LY	<b>L</b>
 _NV	<b>N</b>
 OSL(_L4)	<b>4¹</b>
+OSL(_L5)	<b>5¹</b>
