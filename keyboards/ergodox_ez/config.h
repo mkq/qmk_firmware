@@ -60,6 +60,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //#define MATRIX_HAS_GHOST
 
 #define TAPPING_TERM    300
+#define TAPPING_TERM_PER_KEY
 #define IGNORE_MOD_TAP_INTERRUPT // this makes it possible to do rolling combos (zx) with keys that convert to other keys on hold (z becomes ctrl when you hold it, and when this option isn't enabled, z rapidly followed by x actually sends Ctrl-x. That's bad.)
 #define PERMISSIVE_HOLD
 #define DYNAMIC_MACRO_NO_NESTING
@@ -209,5 +210,5 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define NO_ACTION_MACRO
 #define NO_ACTION_FUNCTION
 //#define DEBUG_MATRIX_SCAN_RATE
-#define ONESHOT_TIMEOUT 500
-#define ONESHOT_TAP_TOGGLE 3
+#define ONESHOT_TIMEOUT 5000
+//#define ONESHOT_TAP_TOGGLE 3

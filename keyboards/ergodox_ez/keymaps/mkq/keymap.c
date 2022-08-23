@@ -25,6 +25,7 @@ enum custom_layers {
 	_L3,	//layer 3 (counting base as 1 and shift as 2; activation: both shift keys)
 	_L4,	//layer 4
 	_L5,	//layer 5 (activation: shift + layer 4)
+	_L5b,	//= layer 5, but needed for OSL on _L4 to work (because of my special handling shift + _L4 = _L5?)
 	_FS,	//frames
 	_FD,	//double frames
 	_AS,	//arrows
@@ -38,7 +39,7 @@ enum custom_layers {
 };
 
 #define _DS   _L3	//double shift = _L3
-#define _S_L4 _L5	//shift + layer 4 = layer 5
+#define _S_L4 _L5b	//shift + layer 4 = layer 5b
 
 const uint8_t layer_leds[] = {
 	// These values (1 = blue, 2 = green, 4 = red) are chosen here for readability in binary literals.
@@ -48,6 +49,7 @@ const uint8_t layer_leds[] = {
 	[_L3] = 0b001,
 	[_L4] = 0b001,
 	[_L5] = 0b101,
+	[_L5b]= 0b101,
 	[_AS] = 0b011,
 	[_AD] = 0b011,
 	[_FS] = 0b011,
@@ -83,6 +85,15 @@ enum custom_keycodes {
 	CKC_FRM_N1, CKC_FRM_S1, CKC_FRM_W1, CKC_FRM_E1, CKC_FRM_NW1, CKC_FRM_NE1, CKC_FRM_SE1, CKC_FRM_SW1, CKC_FRM_HL1, CKC_FRM_VL1, CKC_FRM_CR1,
 	CKC_FRM_N2, CKC_FRM_S2, CKC_FRM_W2, CKC_FRM_E2, CKC_FRM_NW2, CKC_FRM_NE2, CKC_FRM_SE2, CKC_FRM_SW2, CKC_FRM_HL2, CKC_FRM_VL2, CKC_FRM_CR2
 };
+
+uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+	case OSL(_L4):
+		return 1;
+	default:
+		return TAPPING_TERM;
+    }
+}
 
 static layer_state_t prev_layer_state;
 layer_state_t layer_state_set_user_impl(layer_state_t state) {
@@ -366,10 +377,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 // - not as readabe as _______, but editor navigation-friendlier (word boundary)
 #define x______   _______
 // - temporary key codes for testing
-#define TEST_1    KC_A
-#define TEST_2    KC_B
-#define TEST_3    KC_C
-#define TEST_4    KC_D
+//#define TEST_A    KC_A
+//#define TEST_B    KC_B
 
 // ____________________ layers ____________________
 // Row label comments: F = function keys; H = home; T = thumb
@@ -432,6 +441,16 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /* */,CKC_DDEGR    ,CKC_DCEDI    ,CKC_DTILD    ,CKC_DDIA     ,CKC_DACUT    ,CKC_DGRV     ,x______        ,x______      ,x______      ,x______      ,x______      ,x______      ,x______      ,x______
 /*H*/,x______      ,S(DE_UDIA)   ,CKC_AEQ      ,S(DE_ADIA)   ,x______      ,S(DE_ODIA)                                 ,x______      ,CKC_NOT      ,CKC_COPY     ,CKC_TM       ,x______      ,x______
 /* */,x______      ,x______      ,CKC_NEQ      ,x______      ,CKC_POO      ,RSA(DE_SS)   ,x______        ,x______      ,x______      ,DE_MICR      ,CKC_BULLET   ,x______      ,x______      ,x______
+/* */,x______      ,x______      ,x______      ,x______      ,x______                                                                ,x______      ,x______      ,x______      ,x______      ,x______
+/*T*/                                                                      ,x______      ,x______        ,x______      ,x______
+/*T*/                                                                                    ,x______        ,x______
+/*T*/                                                        ,x______      ,x______      ,x______        ,x______      ,x______      ,x______
+) ,[_L5b] = LAYOUT_ergodox_pretty(
+// [TRANS to layer 5]            | I **********| A **********| E **********| O **********|                             | S **********| N **********| R **********| T **********| D **********|*************
+/*F*/ x______      ,x______      ,x______      ,x______      ,x______      ,x______      ,x______        ,x______      ,x______      ,x______      ,x______      ,x______      ,x______      ,x______
+/* */,x______      ,x______      ,x______      ,x______      ,x______      ,x______      ,x______        ,x______      ,x______      ,x______      ,x______      ,x______      ,x______      ,x______
+/*H*/,x______      ,x______      ,x______      ,x______      ,x______      ,x______                                    ,x______      ,x______      ,x______      ,x______      ,x______      ,x______
+/* */,x______      ,x______      ,x______      ,x______      ,x______      ,x______      ,x______        ,x______      ,x______      ,x______      ,x______      ,x______      ,x______      ,x______
 /* */,x______      ,x______      ,x______      ,x______      ,x______                                                                ,x______      ,x______      ,x______      ,x______      ,x______
 /*T*/                                                                      ,x______      ,x______        ,x______      ,x______
 /*T*/                                                                                    ,x______        ,x______
