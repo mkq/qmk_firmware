@@ -434,7 +434,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /* */,x______      ,x______      ,x______      ,x______      ,x______                                                                ,x______      ,x______      ,x______      ,x______      ,x______
 /*T*/                                                                      ,x______      ,x______        ,x______      ,x______
 /*T*/                                                                                    ,x______        ,x______
-/*T*/                                                        ,x______      ,x______      ,x______        ,x______      ,x______      ,x______
+/*T*/                                                        ,x______      ,x______      ,x______        ,x______      ,x______      ,SPC
 ), [_L5] = LAYOUT_ergodox_pretty(
 // [layer 5]       | U **********| I **********| A **********| E **********| O **********|                             | S **********| N **********| R **********| T **********| D **********|*************
 /*F*/ CKC_SUB1     ,CKC_SUB2     ,CKC_SUB3     ,CKC_SUB4     ,CKC_SUB5     ,CKC_SUB6     ,x______        ,x______      ,CKC_SUB7     ,CKC_SUB8     ,CKC_SUB9     ,CKC_SUB0     ,CKC_SUBN     ,XXXXXXX
