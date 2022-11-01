@@ -401,8 +401,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 // [base]          | U **********| I **********| A **********| E **********| O **********|                             | S **********| N **********| R **********| T **********| D **********|*************
 /*F*/ KC_F1        ,LT(_FS,KC_F2),LT(_FD,KC_F3),LT(_AS,KC_F4),LT(_AD,KC_F5),KC_F6        ,CK_CYLAY       ,SPC          ,KC_F7        ,KC_F8        ,KC_F9        ,KC_F10       ,KC_F11       ,KC_F12
 /* */,DE_CIRC      ,KC_X         ,KC_V         ,LT(_L4,SPC)  ,KC_C         ,KC_W         ,KC_Q           ,LCAG_T(APP)  ,KC_K         ,KC_H         ,LT(_L4,KC_G) ,KC_F         ,DE_Y         ,KC_PGUP
-/*H*/,CK_SB        ,LWIN_T(KC_U) ,LALT_T(KC_I) ,LCTL_T(KC_A) ,LT(_NV,KC_E) ,KC_O                                       ,KC_S         ,LT(_NV,KC_N) ,RCTL_T(KC_R) ,LALT_T(KC_T) ,RWIN_T(KC_D) ,OSL(_L4)
-/* */,LT(_LY,TAB)  ,LT(_DW,DE_MI),CK_QX        ,LT(_DC,KC_L) ,KC_P         ,DE_Z         ,KC_INS         ,DEL          ,KC_B         ,KC_M         ,DE_COMM      ,DE_DOT       ,KC_J         ,KC_PGDN
+/*H*/,LT(_LY,TAB)  ,LWIN_T(KC_U) ,LALT_T(KC_I) ,LCTL_T(KC_A) ,LT(_NV,KC_E) ,KC_O                                       ,KC_S         ,LT(_NV,KC_N) ,RCTL_T(KC_R) ,LALT_T(KC_T) ,RWIN_T(KC_D) ,OSL(_L4)
+/* */,KC_J         ,LT(_DW,DE_MI),CK_QX        ,LT(_DC,KC_L) ,KC_P         ,DE_Z         ,KC_INS         ,DEL          ,KC_B         ,KC_M         ,DE_COMM      ,DE_DOT       ,CK_SB        ,KC_PGDN
 /* */,KC_LWIN      ,KC_LALT      ,KC_LCTL      ,DE_PLUS      ,ESC                                                                    ,MO(_NV)      ,KC_UP        ,KC_DOWN      ,KC_LEFT      ,KC_RGHT
 /*T*/                                                                      ,LT(_BT,DEL)  ,KM_CUT         ,LALT_T(HOME) ,LCTL_T(END)
 /*T*/                                                                                    ,KM_COPY        ,KC_PGUP
@@ -411,8 +411,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 // [base, tap only]| U **********| I **********| A **********| E **********| O **********|                             | S **********| N **********| R **********| T **********| D **********|*************
 /*F*/ KC_F1        ,KC_F2        ,KC_F3        ,KC_F4        ,KC_F5        ,KC_F6        ,CK_CYLAY_      ,x______      ,KC_F7        ,KC_F8        ,KC_F9        ,KC_F10       ,KC_F11       ,KC_F12
 /* */,x______      ,x______      ,x______      ,SPC          ,x______      ,x______      ,x______        ,APP          ,x______      ,x______      ,KC_G         ,x______      ,x______      ,x______
-/*H*/,x______      ,KC_U         ,KC_I         ,KC_A         ,KC_E         ,x______                                    ,x______      ,KC_N         ,KC_R         ,KC_T         ,KC_D         ,x______
-/* */,KC_TAB       ,DE_MI        ,x______      ,KC_L         ,x______      ,x______      ,x______        ,x______      ,x______      ,x______      ,x______      ,x______      ,x______      ,x______
+/*H*/,KC_TAB       ,KC_U         ,KC_I         ,KC_A         ,KC_E         ,x______                                    ,x______      ,KC_N         ,KC_R         ,KC_T         ,KC_D         ,x______
+/* */,x______      ,DE_MI        ,x______      ,KC_L         ,x______      ,x______      ,x______        ,x______      ,x______      ,x______      ,x______      ,x______      ,x______      ,x______
 /* */,x______      ,x______      ,x______      ,x______      ,x______                                                                ,x______      ,x______      ,x______      ,x______      ,x______
 /*T*/                                                                      ,DEL          ,x______        ,HOME         ,END
 /*T*/                                                                                    ,x______        ,x______
@@ -423,7 +423,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /*F*/ XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,x______        ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX
 /* */,x______      ,DE_PERC      ,DE_AMPR      ,DE_DQUO      ,DE_QUOT      ,DE_GRV       ,x______        ,x______      ,DE_HASH      ,DE_LCBR      ,DE_RCBR      ,DE_PIPE      ,x______      ,x______
 /*H*/,x______      ,DE_AT        ,DE_EQL       ,DE_LABK      ,DE_RABK      ,x______                                    ,DE_ASTR      ,DE_LPRN      ,DE_RPRN      ,DE_TILD      ,DE_DLR       ,x______
-/* */,x______      ,x______      ,CK_NEQ       ,x______      ,DE_PLUS      ,x______      ,x______        ,x______      ,x______      ,DE_LBRC      ,DE_RBRC      ,CKC_ELIP     ,DE_SECT      ,x______
+/* */,DE_SECT      ,x______      ,CK_NEQ       ,x______      ,DE_PLUS      ,x______      ,x______        ,x______      ,x______      ,DE_LBRC      ,DE_RBRC      ,CKC_ELIP     ,x______      ,x______
 /* */,x______      ,x______      ,x______      ,x______      ,x______                                                                ,x______      ,x______      ,x______      ,x______      ,x______
 /*T*/                                                                      ,x______      ,x______        ,x______      ,x______
 /*T*/                                                                                    ,x______        ,x______
@@ -463,7 +463,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 // [navigation & settings] ******| I **********| A **********| E **********| O **********|                             | S **********| N **********| R **********| T **********| D **********|*************
 /*F*/ DM_RSTP      ,DM_REC1      ,DM_REC2      ,DM_PLY1      ,DM_PLY2      ,x______      ,CK_CYLAY_      ,x______      ,RGB_TOG      ,CK_LMRES     ,KC_TAB       ,RESET        ,CK_DBG       ,KC_WHOM
 /* */,x______      ,x______      ,x______      ,x______      ,KC_CAPS      ,x______      ,x______        ,KM_COPY      ,C(KC_HOME)   ,KC_HOME      ,KC_UP        ,KC_END       ,C(KC_END)    ,KC_VOLU
-/*H*/,x______      ,x______      ,x______      ,x______      ,x______      ,x______                                    ,KM_PAST      ,KC_LEFT      ,KC_DOWN      ,KC_RGHT      ,KC_PGUP      ,KC_VOLD
+/*H*/,x______      ,KC_LWIN      ,KC_LALT      ,KC_LCTL      ,KC_LSFT      ,x______                                    ,KM_PAST      ,KC_LEFT      ,KC_DOWN      ,KC_RGHT      ,KC_PGUP      ,KC_VOLD
 /* */,x______      ,C(DE_MINS)   ,C(DE_PLUS)   ,x______      ,KC_PAUS      ,KC_PSCR      ,KC_SLCK        ,KM_CUT       ,KC_INS       ,C(KC_LEFT)   ,KC_DEL       ,C(KC_RGHT)   ,KC_PGDN      ,KC_MUTE
 /* */,x______      ,x______      ,x______      ,x______      ,x______                                                                ,XXXXXXX      ,KC_MSEL      ,KC_MPLY      ,KC_MPRV      ,KC_MNXT
 /*T*/                                                                      ,KC_WBAK      ,KC_WFWD        ,LALT(KC_LEFT),LALT(KC_RGHT)
