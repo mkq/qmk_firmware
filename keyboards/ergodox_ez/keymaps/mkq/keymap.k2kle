@@ -169,7 +169,8 @@ DE_MICR	µ
 DE_ODIA	ö
 DE_PERC	%
 DE_PIPE	|
-DE_PLUS	+
+DE_PL	+	*
+DE_PLUS	+	*
 DE_QUOT	'
 DE_RABK	>
 DE_RBRC	]
@@ -213,7 +214,7 @@ KC_PGDN	⭳
 KC_PGUP	⭱
 KC_PMNS	-<sup>p</sup>
 KC_PPLS	+<sup>p</sup>
-KC_PSCR	Pr
+KC_PSCR	PrS
 KC_PSLS	/<sup>p</sup>
 KC_RGHT	⭢
 KC_RSFT	⇧
