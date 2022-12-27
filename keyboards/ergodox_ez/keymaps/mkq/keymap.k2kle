@@ -252,7 +252,7 @@ RWIN	<b>⊞</b>
 S(DE_ADIA)	Ä
 S(DE_ODIA)	Ö
 S(DE_UDIA)	Ü
-SPC	<font size="+3"><sup>␣</sup></font>
+SPC	<font size="+1"><sup>␣</sup></font>
 TAB	⭾
 TO(_AD)	⇐
 TO(_AS)	←
