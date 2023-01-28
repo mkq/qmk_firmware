@@ -64,7 +64,7 @@ const uint8_t layer_leds[] = {
 const uint8_t layer_leds_length = sizeof(layer_leds) / sizeof(layer_leds[0]);
 
 // maximum delay between key presses to be considered simultaneous
-#define SIMULTANEOUS_TERM 45
+#define SIMULTANEOUS_TERM 85
 
 enum custom_keycodes {
 	CK_NEQ = SAFE_RANGE,
@@ -476,9 +476,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 ), [_NV] = LAYOUT_ergodox_pretty(
 // [navigation & settings] ******| I **********| A **********| E **********| O **********|                             | S **********| N **********| R **********| T **********| D **********|*************
 /*F*/ DM_RSTP      ,DM_REC1      ,DM_REC2      ,DM_PLY1      ,DM_PLY2      ,CK_DBG       ,CK_CYLAY_      ,x______      ,RGB_TOG      ,CK_LMRES     ,KC_TAB       ,x______      ,x______      ,KC_WHOM
-/* */,x______      ,x______      ,x______      ,x______      ,KC_CAPS      ,x______      ,RESET          ,KM_COPY      ,C(KC_HOME)   ,KC_HOME      ,KC_UP        ,KC_END       ,C(KC_END)    ,KC_VOLU
+/* */,x______      ,x______      ,x______      ,x______      ,KC_CAPS      ,x______      ,QK_BOOT        ,KM_COPY      ,C(KC_HOME)   ,KC_HOME      ,KC_UP        ,KC_END       ,C(KC_END)    ,KC_VOLU
 /*H*/,x______      ,KC_LWIN      ,KC_LALT      ,KC_LCTL      ,KC_LSFT      ,x______                                    ,KM_PAST      ,KC_LEFT      ,KC_DOWN      ,KC_RGHT      ,KC_PGUP      ,KC_VOLD
-/* */,x______      ,C(DE_MINS)   ,C(DE_PLUS)   ,x______      ,KC_PAUS      ,KC_PSCR      ,KC_SLCK        ,KM_CUT       ,KC_INS       ,C(KC_LEFT)   ,KC_DEL       ,C(KC_RGHT)   ,KC_PGDN      ,KC_MUTE
+/* */,x______      ,C(DE_MINS)   ,C(DE_PLUS)   ,x______      ,KC_PAUS      ,KC_PSCR      ,KC_SCRL        ,KM_CUT       ,KC_INS       ,C(KC_LEFT)   ,KC_DEL       ,C(KC_RGHT)   ,KC_PGDN      ,KC_MUTE
 /* */,x______      ,x______      ,x______      ,x______      ,x______                                                                ,XXXXXXX      ,KC_MSEL      ,KC_MPLY      ,KC_MPRV      ,KC_MNXT
 /*T*/                                                                      ,KC_WBAK      ,KC_WFWD        ,LALT(KC_LEFT),LALT(KC_RGHT)
 /*T*/                                                                                    ,x______        ,x______
