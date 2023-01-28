@@ -1,7 +1,13 @@
 {
     "keyboard_name": "DogTag",
+    "manufacturer": "takashicompany",
     "url": "https://github.com/takashicompany/dogtag",
     "maintainer": "takashicompany",
+    "usb": {
+        "vid": "0x7463",
+        "pid": "0x0018",
+        "device_version": "0.0.1"
+    },
     "layouts": {
         "LAYOUT": {
             "layout": [
@@ -54,6 +60,14 @@
                     "y": 1
                 },
                 {
+                    "x": 4,
+                    "y": 2
+                },
+                {
+                    "x": 7,
+                    "y": 2
+                },
+                {
                     "x": 8,
                     "y": 1
                 },
@@ -68,14 +82,6 @@
                 {
                     "x": 11,
                     "y": 1
-                },
-                {
-                    "x": 4,
-                    "y": 2
-                },
-                {
-                    "x": 7,
-                    "y": 2
                 },
                 {
                     "x": 3.5,
