@@ -38,7 +38,11 @@ enum custom_layers {
 	LAYER_COUNT
 };
 
-#define _DS   _L3	//double shift = _L3
+// double shift layers
+#define _DSS  _L3	//double shift (simultaneous) = _L3
+#define _DSL  _L4	//double shift (left first)   = _L4
+#define _DSR  _L5	//double shift (right first)  = _L5
+
 #define _S_L4 _L5b	//shift + layer 4 = layer 5b
 
 const uint8_t layer_leds[] = {
@@ -58,6 +62,9 @@ const uint8_t layer_leds[] = {
 	[_LY] = 0b111,
 };
 const uint8_t layer_leds_length = sizeof(layer_leds) / sizeof(layer_leds[0]);
+
+// maximum delay between key presses to be considered simultaneous
+#define SIMULTANEOUS_TERM 45
 
 enum custom_keycodes {
 	CK_NEQ = SAFE_RANGE,
@@ -212,8 +219,10 @@ bool pru_compose(keyrecord_t *record, const char *s) {
 }
 
 static uint8_t shift_count;
+static uint16_t shift_timer;
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 	bool pressed = record->event.pressed;
+	uint16_t time_since_previous_shift;
 //	dprintf("process_record_user(%d, ..): pressed == %b\n", keycode, pressed);
 	switch (keycode) {
 	case CK_LMRES:	// layer and modifier reset
@@ -240,8 +249,10 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 	case CK_NEQ:
 		if (pressed) { SEND_STRING("!="); }
 		return false;
-	case KC_LSFT:	// double shift => release shift, activate layer _DS
-	case KC_RSFT:
+	case KC_LSFT:	// double shift => release shift, activate layer _DSS, _DSL, or _DSR,
+	case KC_RSFT:	// depending on timing and order
+		time_since_previous_shift = timer_elapsed(shift_timer);
+		shift_timer = timer_read();
 		shift_count += pressed ? 1 : -1;
 		switch (shift_count) {
 		case 0:
@@ -251,13 +262,15 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 			if (pressed) {	// previous shift_count was 0 => normal shift behavior
 				return true;
 			} else {	// previous shift_count was 2 => switch back from layer _DS to shift
+				layer_off(_DSS);
+				layer_off(_DSL);
+				layer_off(_DSR);
 				add_mods(MOD_MASK_SHIFT);
-				layer_off(_DS);
 				return false;
 			}
-		default:	// double shift => release shift, activate layer _DS
+		default:	// double shift => release shift, activate layer _DS..
 			del_mods(MOD_MASK_SHIFT);
-			layer_on(_DS);
+			layer_on(time_since_previous_shift <= SIMULTANEOUS_TERM ? _DSS : keycode == KC_RSFT ? _DSL : _DSR);
 			return false;
 		}
 
