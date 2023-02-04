@@ -415,9 +415,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 // [base]          | U **********| I **********| A **********| E **********| O **********|                             | S **********| N **********| R **********| T **********| D **********|*************
 /*F*/ KC_F1        ,LT(_FS,KC_F2),LT(_FD,KC_F3),LT(_AS,KC_F4),LT(_AD,KC_F5),KC_F6        ,CK_CYLAY       ,SPC          ,KC_F7        ,KC_F8        ,KC_F9        ,KC_F10       ,KC_F11       ,KC_F12
 /* */,DE_CIRC      ,KC_X         ,KC_V         ,LT(_L4,SPC)  ,KC_C         ,KC_W         ,KC_Q           ,LCAG_T(APP)  ,KC_K         ,KC_H         ,LT(_L4,KC_G) ,KC_F         ,DE_Y         ,KC_PGUP
-/*H*/,CK_SB        ,LWIN_T(KC_U) ,LALT_T(KC_I) ,LCTL_T(KC_A) ,LT(_NV,KC_E) ,KC_O                                       ,KC_S         ,LT(_NV,KC_N) ,RCTL_T(KC_R) ,LALT_T(KC_T) ,RWIN_T(KC_D) ,OSL(_L4)
-/* */,LT(_LY,DE_PL),LT(_DW,DE_MI),CK_QX        ,LT(_DC,KC_L) ,KC_P         ,DE_Z         ,KC_INS         ,LT(_NV,DEL)  ,KC_B         ,KC_M         ,DE_COMM      ,DE_DOT       ,KC_J         ,KC_PGDN
-/* */,KC_LWIN      ,KC_LALT      ,KC_LCTL      ,KC_PSCR      ,BSPC                                                                   ,ESC          ,KC_UP        ,KC_DOWN      ,KC_LEFT      ,KC_RGHT
+/*H*/,CK_SB        ,LWIN_T(KC_U) ,LALT_T(KC_I) ,LCTL_T(KC_A) ,LT(_NV,KC_E) ,KC_O                                       ,KC_S         ,LT(_NV,KC_N) ,RCTL_T(KC_R) ,LALT_T(KC_T) ,RWIN_T(KC_D) ,KC_PGDN
+/* */,LT(_LY,DE_PL),LT(_DW,DE_MI),CK_QX        ,LT(_DC,KC_L) ,KC_P         ,DE_Z         ,KC_INS         ,DEL          ,KC_B         ,KC_M         ,DE_COMM      ,DE_DOT       ,KC_J         ,OSL(_L4)
+/* */,KC_LWIN      ,KC_LALT      ,KC_LCTL      ,KC_PSCR      ,BSPC                                                                   ,LT(_NV,ESC)  ,KC_UP        ,KC_DOWN      ,KC_LEFT      ,KC_RGHT
 /*T*/                                                                      ,LT(_BT,DEL)  ,KM_CUT         ,LALT_T(HOME) ,LCTL_T(END)
 /*T*/                                                                                    ,KM_COPY        ,KC_PGUP
 /*T*/                                                        ,KC_LSFT      ,TAB          ,KM_PAST        ,KC_PGDN      ,KC_ENTER     ,KC_RSFT
@@ -446,8 +446,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 // [layer 4]       | U **********| I **********| A **********| E **********| O **********|                             | S **********| N **********| R **********| T **********| D **********|*************
 /*F*/ CKC_SUP1     ,CKC_SUP2     ,CKC_SUP3     ,CKC_SUP4     ,CKC_SUP5     ,CKC_SUP6     ,CK_CYLAY_      ,x______      ,CKC_SUP7     ,CKC_SUP8     ,CKC_SUP9     ,CKC_SUP0     ,CKC_SUPN     ,XXXXXXX
 /* */,CKC_DCIRC    ,x______      ,x______      ,SPC          ,DE_ACUT      ,x______      ,x______        ,x______      ,KC_PSLS      ,KC_7         ,KC_8         ,KC_9         ,DE_COLN      ,KC_HOME
-/*H*/,x______      ,DE_UDIA      ,DE_BSLS      ,DE_ADIA      ,DE_EURO      ,DE_ODIA                                    ,KC_PAST      ,KC_4         ,KC_5         ,KC_6         ,DE_DOT       ,OSL(_L5)
-/* */,DE_PERC      ,KC_PMNS      ,KC_PPLS      ,DE_EQL       ,CKC_POUND    ,DE_SS        ,x______        ,x______      ,KC_0         ,KC_1         ,KC_2         ,KC_3         ,DE_COMM      ,KC_END
+/*H*/,x______      ,DE_UDIA      ,DE_BSLS      ,DE_ADIA      ,DE_EURO      ,DE_ODIA                                    ,KC_PAST      ,KC_4         ,KC_5         ,KC_6         ,DE_DOT       ,KC_END
+/* */,DE_PERC      ,KC_PMNS      ,KC_PPLS      ,DE_EQL       ,CKC_POUND    ,DE_SS        ,x______        ,x______      ,KC_0         ,KC_1         ,KC_2         ,KC_3         ,DE_COMM      ,OSL(_L5)
 /* */,x______      ,x______      ,x______      ,x______      ,x______                                                                ,x______      ,x______      ,x______      ,x______      ,x______
 /*T*/                                                                      ,x______      ,x______        ,x______      ,x______
 /*T*/                                                                                    ,x______        ,x______
