@@ -64,7 +64,7 @@ const uint8_t layer_leds[] = {
 const uint8_t layer_leds_length = sizeof(layer_leds) / sizeof(layer_leds[0]);
 
 // maximum delay between key presses to be considered simultaneous
-#define SIMULTANEOUS_TERM 45
+#define SIMULTANEOUS_TERM 250
 
 enum custom_keycodes {
 	CK_NEQ = SAFE_RANGE,
