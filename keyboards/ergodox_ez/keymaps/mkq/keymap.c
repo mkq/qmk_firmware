@@ -64,7 +64,7 @@ const uint8_t layer_leds[] = {
 const uint8_t layer_leds_length = sizeof(layer_leds) / sizeof(layer_leds[0]);
 
 // maximum delay between key presses to be considered simultaneous
-#define SIMULTANEOUS_TERM 250
+#define SIMULTANEOUS_TERM 180
 
 enum custom_keycodes {
 	CK_NEQ = SAFE_RANGE,
@@ -218,11 +218,12 @@ bool pru_compose(keyrecord_t *record, const char *s) {
 	return false;
 }
 
+static uint16_t previous_keycode;
+static uint16_t previous_key_timer;
+static uint16_t time_since_previous_key;
 static uint8_t shift_count;
-static uint16_t shift_timer;
-bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+bool process_record_user_impl(uint16_t keycode, keyrecord_t *record) {
 	bool pressed = record->event.pressed;
-	uint16_t time_since_previous_shift;
 //	dprintf("process_record_user(%d, ..): pressed == %b\n", keycode, pressed);
 	switch (keycode) {
 	case CK_LMRES:	// layer and modifier reset
@@ -251,8 +252,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 		return false;
 	case KC_LSFT:	// double shift => release shift, activate layer _DSS, _DSL, or _DSR,
 	case KC_RSFT:	// depending on timing and order
-		time_since_previous_shift = timer_elapsed(shift_timer);
-		shift_timer = timer_read();
 		shift_count += pressed ? 1 : -1;
 		switch (shift_count) {
 		case 0:
@@ -270,7 +269,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 			}
 		default:	// double shift => release shift, activate layer _DS..
 			del_mods(MOD_MASK_SHIFT);
-			layer_on(time_since_previous_shift <= SIMULTANEOUS_TERM ? _DSS : keycode == KC_RSFT ? _DSL : _DSR);
+			layer_on(
+				(previous_keycode == KC_LSFT || previous_keycode == KC_RSFT)
+				? (time_since_previous_key > SIMULTANEOUS_TERM
+					? (keycode == KC_RSFT ? _DSL : _DSR)
+					: _DSS)
+				: _DSS);
 			return false;
 		}
 
@@ -372,6 +376,14 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 	}
 
 	return true;
+}
+
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+	time_since_previous_key = timer_elapsed(previous_key_timer);
+	previous_key_timer = timer_read();
+	bool result = process_record_user_impl(keycode, record);
+	previous_keycode = keycode;
+	return result;
 }
 
 // keycode aliases
