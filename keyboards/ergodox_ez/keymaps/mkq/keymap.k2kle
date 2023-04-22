@@ -4,6 +4,19 @@ $KLE_LAYOUT_ID = '<KLE>';
 return 1;
 
 __DATA__
+=== todo: notes ===
+legend:
+```
+  base layer            | shift                | layer 3
+  layer 4               | layer 5              | arrow layer
+  ---                   | box drawing          | ---
+  layer selection layer | hold (in base layer) | navigation layer
+```
+
+Letters inspired by Neo 2 [https://neo-layout.org/]
+
+Source code: https://github.com/mkq/qmk_firmware/blob/master/keyboards/ergodox_ez/keymaps/mkq/
+
 === cap format ===
  _BA +_BA  _L3
  _L4  _L5  _AS

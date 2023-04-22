@@ -223,4 +223,4 @@ sub keycodeToLabel {
 warn sprintf("unused labels: %s\n", join(', ', keys %unusedLabels)) if %unusedLabels > 0;
 printf STDERR "=====================================================================================\n\n";
 printf "%s\n", $output;
-printf STDERR "\nPaste this into \"Raw data\" tab on http://www.keyboard-layout-editor.com\n";
+printf STDERR "\nPaste this into \"Raw data\" tab on http://www.keyboard-layout-editor.com\n\n";
