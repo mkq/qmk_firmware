@@ -273,8 +273,12 @@ SPC	<font size="+1"><sup>␣</sup></font>
 TAB	⭾
 TO(_AD)	⇐
 TO(_AS)	←
-TO(_DC)	#<sup>c</sup>
-TO(_DW)	#<sup>w</sup>
+TO(_DC)	8<sup>c</sup>
+TO(_DA)	8<sup>a</sup>
+TO(_DW)	8<sup>w</sup>
+_DC	8<sup>c</sup>
+_DA	8<sup>a</sup>
+_DW	8<sup>w</sup>
 TO(_FD)	╔
 TO(_FS)	┌
 WHOM	⌂
@@ -283,8 +287,6 @@ _AD	⇐
 _AS	←
 _BA	<b>1</b>
 _BT	<b>1'</b>
-_DC	#<sup>c</sup>
-_DW	#<sup>w</sup>
 _FD	╬
 _FS	┼
 _L3	<b>3</b>

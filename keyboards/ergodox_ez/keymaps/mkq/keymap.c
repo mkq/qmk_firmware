@@ -32,6 +32,7 @@ enum custom_layers {
 	_AD,	//double arrows
 	_NV,	//navigation
 	_DC,	//LCTL + digits
+	_DA,	//LALT + digits
 	_DW,	//LWIN + digits
 	_LY,	//layer selection
 
@@ -102,23 +103,22 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
     }
 }
 
+// set or reset modifiers if a given layer is entered or exited
 static layer_state_t prev_layer_state;
-layer_state_t layer_state_set_user_impl(layer_state_t state) {
+void set_mods_for_layer(layer_state_t state, uint8_t layer, uint16_t mods) {
 	// add LCTL modifier when layer _DC is active
-	layer_state_t dc_mask = (layer_state_t) 1 << _DC;
-	if ((state & dc_mask) == dc_mask) {
-		add_mods(MOD_LCTL);
-	} else if ((prev_layer_state & dc_mask) == dc_mask) {
-		del_mods(MOD_LCTL);
+	layer_state_t layer_mask = (layer_state_t) 1 << layer;
+	if ((state & layer_mask) == layer_mask) {
+		add_mods(mods);
+	} else if ((prev_layer_state & layer_mask) == layer_mask) {
+		del_mods(mods);
 	}
+}
 
-	// add LWIN modifier when layer _DW is active
-	layer_state_t dw_mask = (layer_state_t) 1 << _DW;
-	if ((state & dw_mask) == dw_mask) {
-		add_mods(MOD_LGUI);
-	} else if ((prev_layer_state & dw_mask) == dw_mask) {
-		del_mods(MOD_LGUI);
-	}
+layer_state_t layer_state_set_user_impl(layer_state_t state) {
+	set_mods_for_layer(state, _DC, MOD_LCTL);
+	set_mods_for_layer(state, _DA, MOD_LALT);
+	set_mods_for_layer(state, _DW, MOD_LGUI);
 
 	// shift + layer _L4 => layer _S_L4
 	// TODO Only works if shift is held before LT(_L4,..). When fixed, remove the two MO(_L5) from layer _L4.
@@ -245,6 +245,9 @@ bool process_record_user_impl(uint16_t keycode, keyrecord_t *record) {
 		return pru_mod_sensitive_key(record, MOD_MASK_SHIFT, DE_SLSH, RALT(DE_BSLS));
 	case CK_QX:	// DE question mark; with shift: DE exclamation mark
 		return pru_mod_sensitive_key(record, MOD_MASK_SHIFT, S(DE_QUES), DE_EXLM);
+	case LT(_DA, CK_QX):	// LT with non-basic tap keycode [https://docs.qmk.fm/#/mod_tap?id=intercepting-mod-taps]
+		if (pressed && record->tap.count) { tap_code16(CK_QX); return false; }
+		break;
 //	case CK_O4S:	// OSL(_L4); with shift: DE slash
 //		return pru_mod_sensitive_key(record, MOD_MASK_SHIFT, OSL(_L4), DE_SLSH);
 	case CK_NEQ:
@@ -419,6 +422,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 	[_L5b] = TRANS_LAYOUT,
 	[_NV] = _NV_LAYOUT,
 	[_DC] = _DI_LAYOUT,
+	[_DA] = _DI_LAYOUT,
 	[_DW] = _DI_LAYOUT,
 	[_AS] = _AS_LAYOUT,
 	[_AD] = _AD_LAYOUT,
