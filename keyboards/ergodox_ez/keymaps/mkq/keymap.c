@@ -455,9 +455,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 ), [_L4] = LAYOUT_ergodox_pretty(
 // [layer 4]       | U **********| I **********| A **********| E **********| O **********|                             | S **********| N **********| R **********| T **********| D **********|*************
 /*F*/ CKC_SUP1     ,CKC_SUP2     ,CKC_SUP3     ,CKC_SUP4     ,CKC_SUP5     ,CKC_SUP6     ,CK_CYLAY_      ,_______      ,CKC_SUP7     ,CKC_SUP8     ,CKC_SUP9     ,CKC_SUP0     ,CKC_SUPN     ,_______
-/* */,CKC_DCIRC    ,_______      ,_______      ,SPC          ,DE_ACUT      ,_______      ,_______        ,_______      ,KC_PSLS      ,KC_7         ,KC_8         ,KC_9         ,DE_COLN      ,KC_HOME
-/*H*/,_______      ,DE_UDIA      ,DE_BSLS      ,DE_ADIA      ,DE_EURO      ,DE_ODIA                                    ,KC_PAST      ,KC_4         ,KC_5         ,KC_6         ,DE_DOT       ,KC_END
-/* */,DE_PERC      ,KC_PMNS      ,KC_PPLS      ,DE_EQL       ,CKC_POUND    ,DE_SS        ,_______        ,_______      ,KC_0         ,KC_1         ,KC_2         ,KC_3         ,DE_COMM      ,OSL(_L5)
+/* */,CKC_DCIRC    ,_______      ,_______      ,SPC          ,DE_ACUT      ,_______      ,_______        ,DE_PERC      ,KC_PSLS      ,KC_7         ,KC_8         ,KC_9         ,DE_COLN      ,KC_HOME
+/*H*/,KC_PSLS      ,DE_UDIA      ,DE_BSLS      ,DE_ADIA      ,DE_EURO      ,DE_ODIA                                    ,KC_PAST      ,KC_4         ,KC_5         ,KC_6         ,DE_DOT       ,KC_END
+/* */,KC_PPLS      ,KC_PMNS      ,KC_PAST      ,DE_EQL       ,CKC_POUND    ,DE_SS        ,_______        ,_______      ,KC_0         ,KC_1         ,KC_2         ,KC_3         ,DE_COMM      ,OSL(_L5)
 /* */,_______      ,_______      ,_______      ,_______      ,_______                                                                ,_______      ,_______      ,_______      ,_______      ,_______
 /*T*/                                                                      ,_______      ,_______        ,_______      ,_______
 /*T*/                                                                                    ,_______        ,_______
