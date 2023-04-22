@@ -1,25 +1,10 @@
 #!/usr/bin/env perl
 use strict;
+use Fcntl;
 $^W = 1;
 
-# === read config ===
-# try basename of $ARGV[0] + ".k2kle":
-my $cfgFound = 0;
-if (@ARGV > 0) {
-	(my $cfgFile = $ARGV[0]) =~ s{\.[^.]+$}{};
-	$cfgFile .= '.k2kle';
-	printf STDERR "checking config %s\n", $cfgFile;
-	if (-e $cfgFile) {
-		require($cfgFile) or die;
-		printf STDERR "read config %s\n", $cfgFile;
-		$cfgFound = 1;
-	}
-}
-# try this program's name + ".k2kle":
-require(sprintf "%s.cfg", $0) unless $cfgFound;
-
 # === config defaults ===
-my $LAYER_SRC_START_PATTERN = qr{\[(.+?)\]\s*=\s*\w*layout}i;
+my $LAYER_SRC_START_PATTERN = qr{ \[(.+?)\] \s* = \s* \w*layout }ix;
 my $LAYER_SRC_END_PATTERN = qr{^\s*\)};
 my $KLE_LAYOUT_NAME = '<KLE>';
 my $KEY_SEP = ',';
@@ -28,6 +13,29 @@ my $LABEL_SEP = qr{\t}o;
 my $EMPTY_CAP_LAYER_PATTERN = qr/^-*$/o;
 my $SHIFT_CAP_LAYER_PREFIX = '+';
 my $HOLD_CAP_LAYER_PREFIX = '^';
+
+# === read config ===
+# try basename of $ARGV[0] + ".k2kle":
+my $cfgFile;
+if (@ARGV > 0) {
+	($cfgFile = $ARGV[0]) =~ s{\.[^.]+$}{};
+	$cfgFile .= '.k2kle';
+	printf STDERR "checking config %s\n", $cfgFile;
+}
+unless (-e $cfgFile) {
+	# try this program's name + ".k2kle":
+	my $cfgFile2 = sprintf "%s.cfg", $0;
+	printf STDERR "checking config %s\n", $cfgFile2;
+	if (-e $cfgFile2) {
+		$cfgFile = $cfgFile2;
+	} else {
+		die "neither $cfgFile nor $cfgFile2 found\n";
+	}
+}
+printf STDERR "read config %s\n", $cfgFile;
+# Overriding variables in require'd file does not change them here there.
+# => Overriding is instead done in the settings section below.
+require($cfgFile) or die;
 
 # === util ===
 sub indexOf {
@@ -59,7 +67,7 @@ sub splitLayerSrc {
 }
 
 # === read config ===
-my %labels = ();
+my %labels = ( 'XXXXXXX' => '&nbsp;', '_______' => '&nbsp;' );
 my $outputTemplate = '';
 my $dataSection = '';
 my $capLayerNames = '';
@@ -69,6 +77,13 @@ while (<DATA>) {
 	if (m{={2,}\s*(.+?)\s*=+$}) {
 		$dataSection = $1;
 		$dataSection = 'template' if $dataSection =~ m{^output template\b};
+	} elsif ($dataSection eq 'settings') {
+		if (m{^\s*([[:upper:]0-9_]+ \s* =.*)}x) {
+			printf STDERR "config: %s\n", $1;
+			eval "\$$1" or die;	# eval '$' + line (without leading space)
+		} else {
+			die "invalid settings line $_\n";
+		}
 	} elsif ($dataSection eq 'cap format') {
 		$capLayerNames .= $_ . ' ';
 	} elsif ($dataSection eq 'labels') {
@@ -103,7 +118,9 @@ while (<>) {
 	} # no else
 	if (m{$LAYER_SRC_START_PATTERN}) {
 		$currLayerName = $1;
+		printf STDERR "%d: layer found: %s\n", $., $currLayerName;
 	} elsif (defined $currLayerName && !$endPattern && $_ !~ m{^\s*$}) {
+		$_ =~ s{\\$}{};	#strip trailing backslash
 		$layers{$currLayerName} = ($layers{$currLayerName} || '') . $_;
 	}
 }
@@ -111,7 +128,7 @@ while (my($n, $c) = each %layers) { printf STDERR "=== %s ===\n[%s]\n", $n, $c; 
 die "no layer \"$KLE_LAYOUT_NAME\" recognized\n" unless $layers{$KLE_LAYOUT_NAME};
 my @kleLayoutParts = splitLayerSrc($layers{$KLE_LAYOUT_NAME});
 @kleLayoutParts = map { trim($_) } @kleLayoutParts;
-printf STDERR "\@kleLayoutParts:\t%s\n", join("\t", @kleLayoutParts);
+printf STDERR "%d \@kleLayoutParts:\t%s\n", scalar(@kleLayoutParts), join("\t", @kleLayoutParts);
 for my $layerNameRef (grep { $_ !~ $EMPTY_CAP_LAYER_PATTERN } @capLayerNames) {
 	my $layerName = $layerNameRef;
 	if (substr($layerName, 0, length $SHIFT_CAP_LAYER_PREFIX) eq $SHIFT_CAP_LAYER_PREFIX) {
@@ -134,7 +151,9 @@ for my $layerName (keys %layers) {
 	my $src = $layers{$layerName};
 	$src = stripComments($src);
 	my @parts = splitLayerSrc($src);
-	printf STDERR "layer %s parts:\t%s\n", $layerName, join("\t", @parts);
+	printf STDERR "%d layer %s parts:\t%s\n", scalar(@parts), $layerName, join("\t", @parts);
+	die sprintf("layer %s has %d parts, should have %d\n", $layerName, scalar(@parts), scalar(@kleLayoutParts))
+		if (scalar(@parts) ne scalar(@kleLayoutParts));
 	$layers{$layerName} = \@parts;
 }
 

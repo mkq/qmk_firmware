@@ -1,10 +1,14 @@
 # -*- tab-width: 16 -*-
-$KEY_SEP = qr{(?:\s+,|,\s+)}os;
-$KLE_LAYOUT_ID = '<KLE>';
 return 1;
-
 __DATA__
-=== todo: notes ===
+
+=== settings ===
+LAYER_SRC_START_PATTERN = qr{^ \s* \#define \s+ (\w+)_LAYOUT \s+ LAYOUT\w* \s* \( }ix;
+LAYER_SRC_END_PATTERN = qr{^ // \s* _+ \s* $}x;
+KEY_SEP = qr{ (?: \s+, | ,\s+ ) }x;
+KLE_LAYOUT_NAME = '_KLE_';
+
+=== todo: write legend as notes ===
 legend:
 ```
   base layer            | shift                | layer 3
@@ -275,8 +279,6 @@ TO(_FD)	╔
 TO(_FS)	┌
 WHOM	⌂
 WIN	⊞
-XXXXXXX	&nbsp;
-x______	&nbsp;
 _AD	⇐
 _AS	←
 _BA	<b>1</b>
