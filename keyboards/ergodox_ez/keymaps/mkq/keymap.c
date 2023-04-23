@@ -106,7 +106,6 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
 // set or reset modifiers if a given layer is entered or exited
 static layer_state_t prev_layer_state;
 void set_mods_for_layer(layer_state_t state, uint8_t layer, uint16_t mods) {
-	// add LCTL modifier when layer _DC is active
 	layer_state_t layer_mask = (layer_state_t) 1 << layer;
 	if ((state & layer_mask) == layer_mask) {
 		add_mods(mods);
@@ -245,8 +244,11 @@ bool process_record_user_impl(uint16_t keycode, keyrecord_t *record) {
 		return pru_mod_sensitive_key(record, MOD_MASK_SHIFT, DE_SLSH, RALT(DE_BSLS));
 	case CK_QX:	// DE question mark; with shift: DE exclamation mark
 		return pru_mod_sensitive_key(record, MOD_MASK_SHIFT, S(DE_QUES), DE_EXLM);
-	case LT(_DA, CK_QX):	// LT with non-basic tap keycode [https://docs.qmk.fm/#/mod_tap?id=intercepting-mod-taps]
-		if (pressed && record->tap.count) { tap_code16(CK_QX); return false; }
+	case LT(_DA, CK_QX):
+		// LT with non-basic tap keycode: https://docs.qmk.fm/#/mod_tap?id=intercepting-mod-taps
+		if (pressed && record->tap.count) {
+			return pru_mod_sensitive_key(record, MOD_MASK_SHIFT, S(DE_QUES), DE_EXLM);
+		}
 		break;
 //	case CK_O4S:	// OSL(_L4); with shift: DE slash
 //		return pru_mod_sensitive_key(record, MOD_MASK_SHIFT, OSL(_L4), DE_SLSH);
@@ -404,8 +406,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 #define KM_CUT    LSFT(KC_DEL)
 #define KM_COPY   LCTL(KC_INS)
 #define KM_PAST   LSFT(KC_INS)
-// - to treat some codes different in keymap-to-keyboard-layout-editor, although the same in this keymap
-#define CK_CYLAY_ CK_CYLAY
 // - temporary key codes for testing
 //#define TEST_A    KC_A
 //#define TEST_B    KC_B
