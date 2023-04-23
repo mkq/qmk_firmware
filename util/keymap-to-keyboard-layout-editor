@@ -187,7 +187,8 @@ sub placeHolderToLabels {
 		next if $layerName =~ $EMPTY_CAP_LAYER_PATTERN;
 		my @layerKeyCodes = @{$layers{$layerName}};
 		my $kc = $layerKeyCodes[$phIndex];
-		my $label = keycodeToLabel($kc, $useShiftFunction, $useHoldFunction);
+		my $label = keycodeToLabel("${kc}\@${layerName}", $useShiftFunction, $useHoldFunction, 0)
+			|| keycodeToLabel($kc, $useShiftFunction, $useHoldFunction, 1);
 		$label =~ s{(["\\])}{\\$1}g;
 		printf STDERR "→\"%s\"", $label;
 		$labels .= $label;
@@ -200,6 +201,7 @@ sub keycodeToLabel {
 	my $kc = shift @_;
 	my $useShiftFunction = shift @_;
 	my $useHoldFunction = shift @_;
+	my $useDefault = shift @_;
 
 	$kc = trim $kc;
 	my $origKc = $kc;
@@ -223,12 +225,14 @@ sub keycodeToLabel {
 	if (defined($label = $labels{$origKc}) || defined($label = $labels{$kc})) {
 		$unusedLabels{$kc} = undef;
 		$configuredLabel = 1;
-	} else {
+	} elsif ($useDefault) {
 		($label = $kc) =~ s{^[[:upper:][:digit:]]+_}{}; # remove e.g. KC_ prefix
 		$isLetter = 1 if $label =~ m{^[[:alpha:]]$};
+	} else {
+		$label = '';
 	}
 	my $hasShiftLabel = 0;
-	if ($label =~ m{(.+?)${LABEL_SEP}(.+)$}) { # multiple labels: 2nd is for shift
+	if ($label =~ m{(.+?)${LABEL_SEP}(.+)$}) { # optional label columns: label for shift
 		printf STDERR "(sh:%s,%s,%s)", $useShiftFunction, $1, $2;
 		$hasShiftLabel = 1;
 		$label = $useShiftFunction ? $2 : $1;

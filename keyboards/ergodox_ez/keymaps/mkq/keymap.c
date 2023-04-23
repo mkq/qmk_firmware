@@ -73,7 +73,7 @@ enum custom_keycodes {
 //	CK_O4S, // OSL(_L4) / slash
 	CK_QX,
 	CK_LMRES,
-	CK_CYLAY, // cycle layers
+	CK_CYLAY, // cycle more layers
 	CK_DBG, // toggle debug
 
 	// custom keys using (my custom, not UC_WINC) AutoHotkey compose:
@@ -96,6 +96,7 @@ enum custom_keycodes {
 
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
+	case OSL(_L3):
 	case OSL(_L4):
 		return 1;
 	default:
@@ -217,11 +218,32 @@ bool pru_compose(keyrecord_t *record, const char *s) {
 	return false;
 }
 
+// process_record_user implementation for LT(hold_layer, OSL(oneshot_layer)).
+// Adapted from "QMK: Is combining One-Shot-Layers and Layer-Toggles possible?" [https://www.reddit.com/r/olkb/comments/v5zvo4/comment/ibw1wx6]
+static bool osl_other_key_pressed = false;
+bool pru_lt_osl(keyrecord_t *record, uint8_t hold_layer, uint8_t oneshot_layer) {
+	if (record->event.pressed) {
+		layer_on(hold_layer);
+		osl_other_key_pressed = false;
+	} else {
+		layer_off(hold_layer);
+		if (!osl_other_key_pressed) {
+			set_oneshot_layer(oneshot_layer, ONESHOT_OTHER_KEY_PRESSED);
+		}
+	}
+	return true;
+}
+
 static uint16_t previous_keycode;
 static uint16_t previous_key_timer;
 static uint16_t time_since_previous_key;
 static uint8_t shift_count;
 bool process_record_user_impl(uint16_t keycode, keyrecord_t *record) {
+	// see function pru_lt_osl
+	if (keycode != LT(_LY, OSL(_L3)) && keycode != LT(_LY, OSL(_L4)) && keycode != LT(_LY, OSL(_L5))) {
+		osl_other_key_pressed = true;
+	}
+
 	bool pressed = record->event.pressed;
 //	dprintf("process_record_user(%d, ..): pressed == %b\n", keycode, pressed);
 	switch (keycode) {
@@ -235,11 +257,20 @@ bool process_record_user_impl(uint16_t keycode, keyrecord_t *record) {
 		}
 		dprintf("debug_enable == %b\n", debug_enable);
 		return false;
-	case CK_CYLAY:	// cycle layers
+	case CK_CYLAY:	// cycle through some layers (some more with ALT)
 		return pru_cycle_layer(record,
 			((get_mods() & MOD_MASK_ALT) == 0)
 			? ((1<<_BA) | (1<<_BT) | (1<<_L4) | (1<<_NV))
 			: ((1<<_BA) | (1<<_BT) | (1<<_L4) | (1<<_NV) | (1<<_AS) | (1<<_AD) | (1<<_FS) | (1<<_FD)));
+	case LT(_LY, OSL(_L3)):
+		return pru_lt_osl(record, _LY, _L3);
+		break;
+	case LT(_LY, OSL(_L4)):
+		return pru_lt_osl(record, _LY, _L4);
+		break;
+	case LT(_LY, OSL(_L5)):
+		return pru_lt_osl(record, _LY, _L5);
+		break;
 	case CK_SB:	// DE slash; with shift: DE backslash (but without shift (for layouts where that would give a capital sharp s))
 		return pru_mod_sensitive_key(record, MOD_MASK_SHIFT, DE_SLSH, RALT(DE_BSLS));
 	case CK_QX:	// DE question mark; with shift: DE exclamation mark
@@ -406,6 +437,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 #define KM_CUT    LSFT(KC_DEL)
 #define KM_COPY   LCTL(KC_INS)
 #define KM_PAST   LSFT(KC_INS)
+#define OSL3      OSL(_L3)
+#define OSL4      OSL(_L4)
+#define OSL5      OSL(_L5)
 // - temporary key codes for testing
 //#define TEST_A    KC_A
 //#define TEST_B    KC_B

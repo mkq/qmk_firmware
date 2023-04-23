@@ -153,8 +153,8 @@ CKC_TRIO_E	▷
 CKC_TRIO_N	△
 CKC_TRIO_S	▽
 CKC_TRIO_W	◁
-CK_CYLAY	L<sup>→</sup>
-CK_CYLAY_	&nbsp;
+CK_CYLAY	&nbsp;
+CK_CYLAY@_BA	L<sup>→</sup>
 CK_DBG	D!
 CK_LMRES	L0
 CK_NEQ	!=
@@ -294,5 +294,7 @@ _L4	<b>4</b>
 _L5	<b>5</b>
 _LY	<b>L</b>
 _NV	<b>N</b>
-OSL(_L4)	<b>4¹</b>
-OSL(_L5)	<b>5¹</b>
+OSL3	<b>3¹</b>
+OSL4	<b>4¹</b>
+OSL5	<b>5¹</b>
+LT(_LY,TO(_BA))	&nbsp;
