@@ -40,8 +40,8 @@ enum custom_layers {
 };
 
 // double shift layers
-#define _DSS  _L3	//double shift (simultaneous) = _L3
-#define _DSL  _L4	//double shift (left first)   = _L4
+#define _DSS  _L4	//double shift (simultaneous) = _L4
+#define _DSL  _L3	//double shift (left first)   = _L3
 #define _DSR  _L5	//double shift (right first)  = _L5
 
 #define _S_L4 _L5b	//shift + layer 4 = layer 5b
@@ -65,12 +65,11 @@ const uint8_t layer_leds[] = {
 const uint8_t layer_leds_length = sizeof(layer_leds) / sizeof(layer_leds[0]);
 
 // maximum delay between key presses to be considered simultaneous
-#define SIMULTANEOUS_TERM 180
+#define SIMULTANEOUS_TERM 133
 
 enum custom_keycodes {
 	CK_NEQ = SAFE_RANGE,
 	CK_SB, // slash / backslash
-//	CK_O4S, // OSL(_L4) / slash
 	CK_QX,
 	CK_LMRES,
 	CK_CYLAY, // cycle more layers
@@ -218,31 +217,36 @@ bool pru_compose(keyrecord_t *record, const char *s) {
 	return false;
 }
 
-// process_record_user implementation for LT(hold_layer, OSL(oneshot_layer)).
-// Adapted from "QMK: Is combining One-Shot-Layers and Layer-Toggles possible?" [https://www.reddit.com/r/olkb/comments/v5zvo4/comment/ibw1wx6]
-static bool osl_other_key_pressed = false;
-bool pru_lt_osl(keyrecord_t *record, uint8_t hold_layer, uint8_t oneshot_layer) {
-	if (record->event.pressed) {
-		layer_on(hold_layer);
-		osl_other_key_pressed = false;
-	} else {
-		layer_off(hold_layer);
-		if (!osl_other_key_pressed) {
-			set_oneshot_layer(oneshot_layer, ONESHOT_OTHER_KEY_PRESSED);
-		}
-	}
-	return true;
-}
+//	// process_record_user implementation for LT(hold_layer, OSL(oneshot_layer)).
+//	// Adapted from "QMK: Is combining One-Shot-Layers and Layer-Toggles possible?" [https://www.reddit.com/r/olkb/comments/v5zvo4/comment/ibw1wx6]
+//	// Bug: With a chain like
+//	// - base to _L3: pru_lt_osl(.., .., _L3) on base,
+//	// - _L3 to _L4:  pru_lt_osl(.., .., _L4) on _L3,
+//	// - _L4 to _L5:  pru_lt_osl(.., .., _L5) on _L4,
+//	// going to _L5 and pressing a key with base and _L5 assignments, both assigned keycodes are sent (e.g. "aÄ" instead of just "Ä").
+//	static bool osl_other_key_pressed = false;
+//	bool pru_lt_osl(keyrecord_t *record, uint8_t hold_layer, uint8_t oneshot_layer) {
+//		if (record->event.pressed) {
+//			layer_on(hold_layer);
+//			osl_other_key_pressed = false;
+//		} else {
+//			layer_off(hold_layer);
+//			if (!osl_other_key_pressed) {
+//				set_oneshot_layer(oneshot_layer, ONESHOT_OTHER_KEY_PRESSED);
+//			}
+//		}
+//		return true;
+//	}
 
 static uint16_t previous_keycode;
 static uint16_t previous_key_timer;
 static uint16_t time_since_previous_key;
 static uint8_t shift_count;
 bool process_record_user_impl(uint16_t keycode, keyrecord_t *record) {
-	// see function pru_lt_osl
-	if (keycode != LT(_LY, OSL(_L3)) && keycode != LT(_LY, OSL(_L4)) && keycode != LT(_LY, OSL(_L5))) {
-		osl_other_key_pressed = true;
-	}
+//		// see function pru_lt_osl
+//		if (keycode != LT(_LY, OSL(_L3)) && keycode != LT(_LY, OSL(_L4)) && keycode != LT(_LY, OSL(_L5))) {
+//			osl_other_key_pressed = true;
+//		}
 
 	bool pressed = record->event.pressed;
 //	dprintf("process_record_user(%d, ..): pressed == %b\n", keycode, pressed);
@@ -262,14 +266,11 @@ bool process_record_user_impl(uint16_t keycode, keyrecord_t *record) {
 			((get_mods() & MOD_MASK_ALT) == 0)
 			? ((1<<_BA) | (1<<_BT) | (1<<_L4) | (1<<_NV))
 			: ((1<<_BA) | (1<<_BT) | (1<<_L4) | (1<<_NV) | (1<<_AS) | (1<<_AD) | (1<<_FS) | (1<<_FD)));
-	case LT(_LY, OSL(_L3)):
-		return pru_lt_osl(record, _LY, _L3);
-		break;
-	case LT(_LY, OSL(_L4)):
-		return pru_lt_osl(record, _LY, _L4);
-		break;
-	case LT(_LY, OSL(_L5)):
-		return pru_lt_osl(record, _LY, _L5);
+	case LT(_LY, CK_SB):
+		// LT with non-basic tap keycode: https://docs.qmk.fm/#/mod_tap?id=intercepting-mod-taps
+		if (pressed && record->tap.count) {
+			return pru_mod_sensitive_key(record, MOD_MASK_SHIFT, DE_SLSH, RALT(DE_BSLS));
+		}
 		break;
 	case CK_SB:	// DE slash; with shift: DE backslash (but without shift (for layouts where that would give a capital sharp s))
 		return pru_mod_sensitive_key(record, MOD_MASK_SHIFT, DE_SLSH, RALT(DE_BSLS));
@@ -281,8 +282,6 @@ bool process_record_user_impl(uint16_t keycode, keyrecord_t *record) {
 			return pru_mod_sensitive_key(record, MOD_MASK_SHIFT, S(DE_QUES), DE_EXLM);
 		}
 		break;
-//	case CK_O4S:	// OSL(_L4); with shift: DE slash
-//		return pru_mod_sensitive_key(record, MOD_MASK_SHIFT, OSL(_L4), DE_SLSH);
 	case CK_NEQ:
 		if (pressed) { SEND_STRING("!="); }
 		return false;
@@ -434,12 +433,10 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 #define END       KC_END
 #define DE_MI     DE_MINS
 #define DE_PL     DE_PLUS
+#define PSLS      KC_PSLS
 #define KM_CUT    LSFT(KC_DEL)
 #define KM_COPY   LCTL(KC_INS)
 #define KM_PAST   LSFT(KC_INS)
-#define OSL3      OSL(_L3)
-#define OSL4      OSL(_L4)
-#define OSL5      OSL(_L5)
 // - temporary key codes for testing
 //#define TEST_A    KC_A
 //#define TEST_B    KC_B

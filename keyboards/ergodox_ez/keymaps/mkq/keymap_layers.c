@@ -1,9 +1,9 @@
 // [base]      |_U____________|_I____________|_A____________|_E____________|_O____________|                               |_S____________|_N____________|_R____________|_T____________|_D____________|______________
 #define _BA_LAYOUT LAYOUT_ergodox_pretty(                                                                                                                                                                           \
  KC_F1         ,LT(_FS,KC_F2) ,LT(_FD,KC_F3) ,LT(_AS,KC_F4) ,LT(_AD,KC_F5) ,KC_F6         ,CK_CYLAY        ,SPC           ,KC_F7         ,KC_F8         ,KC_F9         ,KC_F10        ,KC_F11        ,KC_F12        \
-,DE_CIRC       ,KC_X          ,KC_V          ,LT(_L4,SPC)   ,KC_C          ,KC_W          ,KC_Q            ,LCAG_T(APP)   ,KC_K          ,KC_H          ,LT(_L4,KC_G)  ,KC_F          ,DE_Y          ,KC_PGUP       \
-,CK_SB         ,LWIN_T(KC_U)  ,LALT_T(KC_I)  ,LCTL_T(KC_A)  ,LT(_NV,KC_E)  ,KC_O                                          ,KC_S          ,LT(_NV,KC_N)  ,RCTL_T(KC_R)  ,LALT_T(KC_T)  ,RWIN_T(KC_D)  ,KC_PGDN       \
-,LT(_LY,OSL3)  ,LT(_DW,DE_MI) ,LT(_DA,CK_QX) ,LT(_DC,KC_L)  ,KC_P          ,DE_Z          ,KC_INS          ,DEL           ,KC_B          ,KC_M          ,DE_COMM       ,DE_DOT        ,KC_J          ,LT(_LY,OSL3)  \
+,DE_CIRC       ,KC_X          ,LT(_L5,KC_V)  ,LT(_L4,SPC)   ,KC_C          ,KC_W          ,KC_Q            ,LCAG_T(APP)   ,KC_K          ,KC_H          ,LT(_L4,KC_G)  ,LT(_L5,KC_F)  ,DE_Y          ,KC_PGUP       \
+,LT(_LY,CK_SB) ,LWIN_T(KC_U)  ,LALT_T(KC_I)  ,LCTL_T(KC_A)  ,LT(_NV,KC_E)  ,KC_O                                          ,KC_S          ,LT(_NV,KC_N)  ,RCTL_T(KC_R)  ,LALT_T(KC_T)  ,RWIN_T(KC_D)  ,KC_PGDN       \
+,OSL(_L3)      ,LT(_DW,DE_MI) ,LT(_DA,CK_QX) ,LT(_DC,KC_L)  ,KC_P          ,DE_Z          ,KC_INS          ,DEL           ,KC_B          ,KC_M          ,DE_COMM       ,DE_DOT        ,KC_J          ,OSL(_L3)      \
 ,KC_LWIN       ,KC_LALT       ,KC_LCTL       ,KC_PSCR       ,BSPC                                                                        ,LT(_NV,ESC)   ,KC_UP         ,KC_DOWN       ,KC_LEFT       ,KC_RGHT       \
                                                                            ,LT(_BT,DEL)   ,KM_CUT          ,LALT_T(HOME)  ,LCTL_T(END)                                                                              \
                                                                                           ,KM_COPY         ,KC_PGUP                                                                                                 \
@@ -14,7 +14,7 @@
  KC_F1         ,KC_F2         ,KC_F3         ,KC_F4         ,KC_F5         ,KC_F6         ,CK_CYLAY        ,_______       ,KC_F7         ,KC_F8         ,KC_F9         ,KC_F10        ,KC_F11        ,KC_F12        \
 ,_______       ,_______       ,_______       ,SPC           ,_______       ,_______       ,_______         ,APP           ,_______       ,_______       ,KC_G          ,_______       ,_______       ,_______       \
 ,_______       ,KC_U          ,KC_I          ,KC_A          ,KC_E          ,_______                                       ,_______       ,KC_N          ,KC_R          ,KC_T          ,KC_D          ,_______       \
-,OSL3          ,DE_MI         ,CK_QX         ,KC_L          ,_______       ,_______       ,_______         ,_______       ,_______       ,_______       ,_______       ,_______       ,_______       ,OSL3          \
+,_______       ,DE_MI         ,CK_QX         ,KC_L          ,_______       ,_______       ,_______         ,_______       ,_______       ,_______       ,_______       ,_______       ,_______       ,_______       \
 ,_______       ,_______       ,_______       ,_______       ,_______                                                                     ,_______       ,_______       ,_______       ,_______       ,_______       \
                                                                            ,DEL           ,_______         ,HOME          ,END                                                                                      \
                                                                                           ,_______         ,_______                                                                                                 \
@@ -25,7 +25,7 @@
  _______       ,_______       ,_______       ,_______       ,_______       ,_______       ,_______         ,_______       ,_______       ,_______       ,_______       ,_______       ,_______       ,_______       \
 ,_______       ,DE_PERC       ,DE_AMPR       ,DE_DQUO       ,DE_QUOT       ,DE_GRV        ,_______         ,_______       ,DE_HASH       ,DE_LCBR       ,DE_RCBR       ,DE_PIPE       ,_______       ,_______       \
 ,_______       ,DE_AT         ,DE_EQL        ,DE_LABK       ,DE_RABK       ,_______                                       ,DE_ASTR       ,DE_LPRN       ,DE_RPRN       ,DE_TILD       ,DE_DLR        ,_______       \
-,LT(_LY,OSL4)  ,_______       ,CK_NEQ        ,_______       ,DE_PLUS       ,_______       ,_______         ,_______       ,_______       ,DE_LBRC       ,DE_RBRC       ,CKC_ELIP      ,DE_SECT       ,LT(_LY,OSL4)  \
+,BSPC          ,_______       ,CK_NEQ        ,_______       ,DE_PLUS       ,_______       ,_______         ,_______       ,_______       ,DE_LBRC       ,DE_RBRC       ,CKC_ELIP      ,DE_SECT       ,ESC           \
 ,_______       ,_______       ,_______       ,_______       ,_______                                                                     ,_______       ,_______       ,_______       ,_______       ,_______       \
                                                                            ,_______       ,_______         ,_______       ,_______                                                                                  \
                                                                                           ,_______         ,_______                                                                                                 \
@@ -35,8 +35,8 @@
 #define _L4_LAYOUT LAYOUT_ergodox_pretty(                                                                                                                                                                           \
  CKC_SUP1      ,CKC_SUP2      ,CKC_SUP3      ,CKC_SUP4      ,CKC_SUP5      ,CKC_SUP6      ,CK_CYLAY        ,_______       ,CKC_SUP7      ,CKC_SUP8      ,CKC_SUP9      ,CKC_SUP0      ,CKC_SUPN      ,_______       \
 ,CKC_DCIRC     ,_______       ,_______       ,SPC           ,DE_ACUT       ,_______       ,_______         ,DE_PERC       ,KC_PSLS       ,KC_7          ,KC_8          ,KC_9          ,DE_COLN       ,KC_HOME       \
-,KC_PSLS       ,DE_UDIA       ,DE_BSLS       ,DE_ADIA       ,DE_EURO       ,DE_ODIA                                       ,KC_PAST       ,KC_4          ,KC_5          ,KC_6          ,DE_DOT        ,KC_END        \
-,LT(_LY,OSL5)  ,KC_PMNS       ,KC_PPLS       ,DE_EQL        ,CKC_POUND     ,DE_SS         ,_______         ,_______       ,KC_0          ,KC_1          ,KC_2          ,KC_3          ,DE_COMM       ,LT(_LY,OSL5)  \
+,LT(_LY,PSLS)  ,DE_UDIA       ,DE_BSLS       ,DE_ADIA       ,DE_EURO       ,DE_ODIA                                       ,KC_PAST       ,KC_4          ,KC_5          ,KC_6          ,DE_DOT        ,KC_END        \
+,KC_PAST       ,KC_PMNS       ,KC_PPLS       ,DE_EQL        ,CKC_POUND     ,DE_SS         ,_______         ,_______       ,KC_0          ,KC_1          ,KC_2          ,KC_3          ,DE_COMM       ,_______       \
 ,_______       ,_______       ,_______       ,_______       ,_______                                                                     ,_______       ,_______       ,_______       ,_______       ,_______       \
                                                                            ,_______       ,_______         ,_______       ,_______                                                                                  \
                                                                                           ,_______         ,_______                                                                                                 \
@@ -47,7 +47,7 @@
  CKC_SUB1      ,CKC_SUB2      ,CKC_SUB3      ,CKC_SUB4      ,CKC_SUB5      ,CKC_SUB6      ,CK_CYLAY        ,_______       ,CKC_SUB7      ,CKC_SUB8      ,CKC_SUB9      ,CKC_SUB0      ,CKC_SUBN      ,_______       \
 ,CKC_DDEGR     ,CKC_DCEDI     ,CKC_DTILD     ,CKC_DDIA      ,CKC_DACUT     ,CKC_DGRV      ,_______         ,_______       ,_______       ,_______       ,_______       ,_______       ,_______       ,_______       \
 ,_______       ,S(DE_UDIA)    ,CKC_AEQ       ,S(DE_ADIA)    ,_______       ,S(DE_ODIA)                                    ,_______       ,CKC_NOT       ,CKC_COPY      ,CKC_TM        ,_______       ,_______       \
-,LT(_LY,TO(_BA)) ,_______     ,CKC_NEQ       ,_______       ,CKC_POO       ,RSA(DE_SS)    ,_______         ,_______       ,_______       ,DE_MICR       ,CKC_BULLET    ,_______       ,_______     ,LT(_LY,TO(_BA)) \
+,_______       ,_______       ,CKC_NEQ       ,_______       ,CKC_POO       ,RSA(DE_SS)    ,_______         ,_______       ,_______       ,DE_MICR       ,CKC_BULLET    ,_______       ,_______       ,_______       \
 ,_______       ,_______       ,_______       ,_______       ,_______                                                                     ,_______       ,_______       ,_______       ,_______       ,_______       \
                                                                            ,_______       ,_______         ,_______       ,_______                                                                                  \
                                                                                           ,_______         ,_______                                                                                                 \
@@ -131,7 +131,7 @@
                                                             ,_______       ,_______       ,_______         ,_______       ,_______       ,_______                                                                   )
 // _________________________________________________________________________________________________________________________________________________________________________________________________________________
 // [transparent]              |_I____________|_A____________|_E____________|_O____________|                               |_S____________|_N____________|_R____________|_T____________|_D____________|______________
-#define TRANS_LAYOUT LAYOUT_ergodox_pretty(                                                                                                                                                                          \
+#define TRANS_LAYOUT LAYOUT_ergodox_pretty(                                                                                                                                                                         \
  _______       ,_______       ,_______       ,_______       ,_______       ,_______       ,_______         ,_______       ,_______       ,_______       ,_______       ,_______       ,_______       ,_______       \
 ,_______       ,_______       ,_______       ,_______       ,_______       ,_______       ,_______         ,_______       ,_______       ,_______       ,_______       ,_______       ,_______       ,_______       \
 ,_______       ,_______       ,_______       ,_______       ,_______       ,_______                                       ,_______       ,_______       ,_______       ,_______       ,_______       ,_______       \
