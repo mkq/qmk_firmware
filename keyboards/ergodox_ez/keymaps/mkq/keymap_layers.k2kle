@@ -5,7 +5,7 @@ __DATA__
 === settings ===
 LAYER_SRC_START_PATTERN = qr{^ \s* \#define \s+ (\w+)_LAYOUT \s+ LAYOUT\w* \s* \( }ix;
 LAYER_SRC_END_PATTERN = qr{^ // \s* _+ \s* $}x;
-KEY_SEP = qr{ (?: \s+, | ,\s+ ) }x;
+KEY_SEP = qr{ (?: \s+, | ,\s+ | \s{8,}\) ) }x;
 KLE_LAYOUT_NAME = '_KLE_';
 
 === todo: write legend as notes ===
