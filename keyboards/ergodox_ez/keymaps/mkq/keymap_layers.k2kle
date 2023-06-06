@@ -64,7 +64,7 @@ C(KC_END)	⭲<sup>c</sup>
 C(KC_HOME)	⭰<sup>c</sup>
 C(KC_LEFT)	⭠<sup>c</sup>
 C(KC_RGHT)	⭢<sup>c</sup>
-CKC_AEQ	≠
+CKC_AEQ	≈
 CKC_ARR_E1	→
 CKC_ARR_E2	⇒
 CKC_ARR_N1	↑
@@ -118,7 +118,7 @@ CKC_FRM_VL2	║
 CKC_FRM_W1	├
 CKC_FRM_W2	╠
 CKC_NEG	¬
-CKC_NEQ	≈
+CKC_NEQ	≠
 CKC_NOT	¬
 CKC_POO	💩
 CKC_POUND	£
