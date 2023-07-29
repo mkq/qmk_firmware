@@ -11,10 +11,10 @@ KLE_LAYOUT_NAME = '_KLE_';
 === todo: write legend as notes ===
 legend:
 ```
-  base layer            | shift                | layer 3
-  layer 4               | layer 5              | arrow layer
-  ---                   | box drawing          | ---
-  layer selection layer | hold (in base layer) | navigation layer
+  base layer            | shift                 | layer 3
+  layer 4               | layer 5               | number layer
+  box drawing           | ---                   | arrow layer
+  hold (in base layer)  | layer selection layer | navigation layer
 ```
 
 Letters inspired by Neo 2 [https://neo-layout.org/]
@@ -23,8 +23,8 @@ Source code: https://github.com/mkq/qmk_firmware/blob/master/keyboards/ergodox_e
 
 === cap format ===
  _BA +_BA  _L3
- _L4  _L5  _AS
- ---  _FS  ---
+ _L4  _L5  _NU
+ _FS  ---  _AS
 ^_BA  _LY  _NV
 
 === output template (copied from http://www.keyboard-layout-editor.com/ using ErgoDox preset) ===
@@ -160,6 +160,7 @@ CK_LMRES	L0
 CK_NEQ	!=
 CK_QX	?	!
 CK_SB	/	\
+CK_DQSQ	"	'
 DE_BSLS	\
 DEL	⌦
 DE_ACUT	´
@@ -170,6 +171,7 @@ DE_AT	@
 DE_CIRC	^	°
 DE_COLN	:
 DE_COMM	,	;
+DE_SCLN	;
 DE_DLR	$
 DE_DOT	.	:
 DE_DQUO	"
@@ -282,6 +284,7 @@ _DA	8<sup>a</sup>
 _DW	8<sup>w</sup>
 TO(_FD)	╔
 TO(_FS)	┌
+TO(_NU)	<b>#</b>
 WHOM	⌂
 WIN	⊞
 _AD	⇐

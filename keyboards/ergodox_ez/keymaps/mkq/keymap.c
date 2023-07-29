@@ -26,6 +26,7 @@ enum custom_layers {
 	_L4,	//layer 4
 	_L5,	//layer 5 (activation: shift + layer 4)
 	_L5b,	//= layer 5, but needed for OSL on _L4 to work (because of my special handling shift + _L4 = _L5?)
+	_NU,	//numbers, navigation
 	_FS,	//frames
 	_FD,	//double frames
 	_AS,	//arrows
@@ -40,8 +41,8 @@ enum custom_layers {
 };
 
 // double shift layers
-#define _DSS  _L4	//double shift (simultaneous) = _L4
-#define _DSL  _L3	//double shift (left first)   = _L3
+#define _DSS  _L3	//double shift (simultaneous) = _L3
+#define _DSL  _L4	//double shift (left first)   = _L4
 #define _DSR  _L5	//double shift (right first)  = _L5
 
 #define _S_L4 _L5b	//shift + layer 4 = layer 5b
@@ -71,6 +72,7 @@ enum custom_keycodes {
 	CK_NEQ = SAFE_RANGE,
 	CK_SB, // slash / backslash
 	CK_QX,
+	CK_DQSQ, // double quote / single quote
 	CK_LMRES,
 	CK_CYLAY, // cycle more layers
 	CK_DBG, // toggle debug
@@ -276,6 +278,8 @@ bool process_record_user_impl(uint16_t keycode, keyrecord_t *record) {
 		return pru_mod_sensitive_key(record, MOD_MASK_SHIFT, DE_SLSH, RALT(DE_BSLS));
 	case CK_QX:	// DE question mark; with shift: DE exclamation mark
 		return pru_mod_sensitive_key(record, MOD_MASK_SHIFT, S(DE_QUES), DE_EXLM);
+	case CK_DQSQ:	// DE double quote; with shift: DE single quote
+		return pru_mod_sensitive_key(record, MOD_MASK_SHIFT, DE_DQUO, DE_QUOT);
 	case LT(_DA, CK_QX):
 		// LT with non-basic tap keycode: https://docs.qmk.fm/#/mod_tap?id=intercepting-mod-taps
 		if (pressed && record->tap.count) {
@@ -452,6 +456,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 	[_L5] = _L5_LAYOUT,
 	[_L5b] = TRANS_LAYOUT,
 	[_NV] = _NV_LAYOUT,
+	[_NU] = _NU_LAYOUT,
 	[_DC] = _DI_LAYOUT,
 	[_DA] = _DI_LAYOUT,
 	[_DW] = _DI_LAYOUT,
