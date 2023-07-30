@@ -51,16 +51,17 @@ const uint8_t layer_leds[] = {
 	// These values (1 = blue, 2 = green, 4 = red) are chosen here for readability in binary literals.
 	// Function layer_state_set_user_led maps them to ergodox_right_led_on calls.
 	//... = ..RGB
-	[_BT] = 0b010,
-	[_L3] = 0b001,
-	[_L4] = 0b001,
-	[_L5] = 0b101,
-	[_L5b]= 0b101,
+	[_BT] = 0b101,
+	[_L3] = 0b010,
+	[_L4] = 0b010,
+	[_L5] = 0b010,
+	[_L5b]= 0b010,
+	[_NU] = 0b001,
+	[_NV] = 0b100,
 	[_AS] = 0b011,
 	[_AD] = 0b011,
 	[_FS] = 0b011,
 	[_FD] = 0b011,
-	[_NV] = 0b100,
 	[_LY] = 0b111,
 };
 const uint8_t layer_leds_length = sizeof(layer_leds) / sizeof(layer_leds[0]);
@@ -94,6 +95,8 @@ enum custom_keycodes {
 	CKC_FRM_N1, CKC_FRM_S1, CKC_FRM_W1, CKC_FRM_E1, CKC_FRM_NW1, CKC_FRM_NE1, CKC_FRM_SE1, CKC_FRM_SW1, CKC_FRM_HL1, CKC_FRM_VL1, CKC_FRM_CR1,
 	CKC_FRM_N2, CKC_FRM_S2, CKC_FRM_W2, CKC_FRM_E2, CKC_FRM_NW2, CKC_FRM_NE2, CKC_FRM_SE2, CKC_FRM_SW2, CKC_FRM_HL2, CKC_FRM_VL2, CKC_FRM_CR2
 };
+
+static uint16_t previous_keycode;
 
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
@@ -146,24 +149,37 @@ void keyboard_post_init_user(void) {
 }
 
 static uint8_t leds_state = 0;
-void layer_state_set_user_led(layer_state_t state) {
-	uint8_t layer = get_highest_layer(state);
+void set_leds_for_layer(uint8_t layer) {
 	uint8_t new_leds_state = 0 <= layer && layer < layer_leds_length ? layer_leds[layer] : 0;
-	uint8_t rgb_mask = 0b100;
+	uint8_t rgb_mask = 0b100; // start with my representation of R (as the following R, G, B for loop)
 	for (uint8_t led_no = 1; led_no <= 3; led_no++) { // args needed for ergodox_right_led_on: R = 1, G = 2, B = 3
 		bool led_state = leds_state & rgb_mask;
 		bool new_led_state = new_leds_state & rgb_mask;
 		if (led_state != new_led_state) {
 			if (new_led_state) { ergodox_right_led_on(led_no); } else { ergodox_right_led_off(led_no); }
 		}
-		rgb_mask /= 2; // iterate: 100, 010, 001
+		rgb_mask /= 2; // iterate: 100, 010, 001 (R, G, B)
 	}
 	leds_state = new_leds_state;
-};
+}
 
 layer_state_t layer_state_set_user(layer_state_t state) {
 	layer_state_t new_layer_state = layer_state_set_user_impl(state);
-	layer_state_set_user_led(new_layer_state);
+
+	// Update LEDs on every layer change (locked (as TO does) or temporary (as MO)).
+	// I don't want that anymore, only on locked layers.
+//	set_leds_for_layer(get_highest_layer(new_layer_state));
+	// Instead, only for base layer ...:
+	uint8_t layer = get_highest_layer(new_layer_state);
+	if (layer == _BA) { set_leds_for_layer(_BA); }
+	// ... or any TO(..) keycode (TODO: handle TG(..) if used):
+	// quantum_keycodes.h: TO(layer) = (QK_TO | (ON_PRESS << 0x4) | ((layer)&0xFF))
+	else if ((previous_keycode & 0xFF00) == (TO(0) & 0xFF00)) {
+		dprintf("keycode %s is a TO(..).\n", previous_keycode);
+		set_leds_for_layer(layer);
+	}
+
+
 	prev_layer_state = new_layer_state;
 	return new_layer_state;
 }
@@ -184,6 +200,7 @@ bool pru_cycle_layer(keyrecord_t *record, layer_state_t cycle_layers_mask) {
 //			tap_code16(TO(layer));
 			layer_clear();
 			layer_on(layer);
+			set_leds_for_layer(layer);
 			return false;
 		}
 	}
@@ -230,6 +247,7 @@ bool pru_compose(keyrecord_t *record, const char *s) {
 //	bool pru_lt_osl(keyrecord_t *record, uint8_t hold_layer, uint8_t oneshot_layer) {
 //		if (record->event.pressed) {
 //			layer_on(hold_layer);
+//			//TODO: set_leds_for_layer
 //			osl_other_key_pressed = false;
 //		} else {
 //			layer_off(hold_layer);
@@ -240,7 +258,6 @@ bool pru_compose(keyrecord_t *record, const char *s) {
 //		return true;
 //	}
 
-static uint16_t previous_keycode;
 static uint16_t previous_key_timer;
 static uint16_t time_since_previous_key;
 static uint8_t shift_count;

@@ -63,7 +63,7 @@
  DM_RSTP       ,DM_REC1       ,DM_REC2       ,DM_PLY1       ,DM_PLY2       ,CK_DBG        ,CK_CYLAY        ,_______       ,RGB_TOG       ,CK_LMRES      ,KC_TAB        ,_______       ,_______       ,KC_WHOM       \
 ,_______       ,_______       ,_______       ,TO(_NU)       ,KC_CAPS       ,_______       ,RESET           ,KM_COPY       ,C(KC_HOME)    ,KC_HOME       ,KC_UP         ,KC_END        ,C(KC_END)     ,KC_VOLU       \
 ,_______       ,KC_LWIN       ,KC_LALT       ,KC_LCTL       ,KC_LSFT       ,_______                                       ,KM_CUT        ,KC_LEFT       ,KC_DOWN       ,KC_RGHT       ,KC_PGUP       ,KC_VOLD       \
-,C(DE_PLUS)    ,C(DE_MINS)    ,_______       ,KC_SLCK       ,KC_PAUS       ,_______       ,KC_INS          ,_______       ,KM_COPY       ,C(KC_LEFT)    ,KC_PAST       ,C(KC_RGHT)    ,KC_PGDN       ,KC_MUTE       \
+,C(DE_PLUS)    ,C(DE_MINS)    ,_______       ,KC_SLCK       ,KC_PAUS       ,_______       ,KC_INS          ,_______       ,KM_COPY       ,C(KC_LEFT)    ,KM_PAST       ,C(KC_RGHT)    ,KC_PGDN       ,KC_MUTE       \
 ,_______       ,_______       ,_______       ,_______       ,_______                                                                     ,_______       ,KC_MSEL       ,KC_MPLY       ,KC_MPRV       ,KC_MNXT       \
                                                                            ,KC_WBAK       ,KC_WFWD         ,LALT(KC_LEFT) ,LALT(KC_RGHT)                                                                            \
                                                                                           ,_______         ,_______                                                                                                 \
