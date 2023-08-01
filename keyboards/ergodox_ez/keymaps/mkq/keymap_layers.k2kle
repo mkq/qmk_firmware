@@ -156,7 +156,7 @@ CKC_TRIO_W	◁
 CK_CYLAY	&nbsp;
 CK_CYLAY@_BA	L<sup>→</sup>
 CK_DBG	D!
-CK_LMRES	L0
+CK_LMRES	L✗
 CK_NEQ	!=
 CK_QX	?	!
 CK_SB	/	\
@@ -184,6 +184,7 @@ DE_LBRC	[
 DE_LCBR	{
 DE_LPRN	(
 DE_MI	-	_
+DE_CN	:
 DE_MICR	µ
 DE_ODIA	ö
 DE_PERC	%
@@ -215,6 +216,7 @@ KC_DEL	⌦
 KC_DOWN	⭣
 KC_END	⭲
 KC_ENTER	⮠
+ENTER	⮠
 KC_ESC	Esc
 KC_HOME	⭰
 KC_LALT	<b>Alt</b>

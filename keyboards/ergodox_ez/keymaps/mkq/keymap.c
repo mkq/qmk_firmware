@@ -75,7 +75,7 @@ enum custom_keycodes {
 	CK_QX,
 	CK_DQSQ, // double quote / single quote
 	CK_LMRES,
-	CK_CYLAY, // cycle more layers
+	CK_CYLAY, // cycle some layers
 	CK_DBG, // toggle debug
 
 	// custom keys using (my custom, not UC_WINC) AutoHotkey compose:
@@ -283,8 +283,8 @@ bool process_record_user_impl(uint16_t keycode, keyrecord_t *record) {
 	case CK_CYLAY:	// cycle through some layers (some more with ALT)
 		return pru_cycle_layer(record,
 			((get_mods() & MOD_MASK_ALT) == 0)
-			? ((1<<_BA) | (1<<_BT) | (1<<_L4) | (1<<_NV))
-			: ((1<<_BA) | (1<<_BT) | (1<<_L4) | (1<<_NV) | (1<<_AS) | (1<<_AD) | (1<<_FS) | (1<<_FD)));
+			? ((1<<_BA) | (1<<_BT) | (1<<_L3) | (1<<_NV))
+			: ((1<<_BA) | (1<<_BT) | (1<<_L3) | (1<<_NV) | (1<<_NU) | (1<<_AS) | (1<<_AD) | (1<<_FS) | (1<<_FD)));
 	case LT(_LY, CK_SB):
 		// LT with non-basic tap keycode: https://docs.qmk.fm/#/mod_tap?id=intercepting-mod-taps
 		if (pressed && record->tap.count) {
@@ -293,14 +293,21 @@ bool process_record_user_impl(uint16_t keycode, keyrecord_t *record) {
 		break;
 	case CK_SB:	// DE slash; with shift: DE backslash (but without shift (for layouts where that would give a capital sharp s))
 		return pru_mod_sensitive_key(record, MOD_MASK_SHIFT, DE_SLSH, RALT(DE_BSLS));
-	case CK_QX:	// DE question mark; with shift: DE exclamation mark
-		return pru_mod_sensitive_key(record, MOD_MASK_SHIFT, S(DE_QUES), DE_EXLM);
 	case CK_DQSQ:	// DE double quote; with shift: DE single quote
 		return pru_mod_sensitive_key(record, MOD_MASK_SHIFT, DE_DQUO, DE_QUOT);
+	case CK_QX:	// DE question mark; with shift: DE exclamation mark
+		return pru_mod_sensitive_key(record, MOD_MASK_SHIFT, S(DE_QUES), DE_EXLM);
 	case LT(_DA, CK_QX):
 		// LT with non-basic tap keycode: https://docs.qmk.fm/#/mod_tap?id=intercepting-mod-taps
 		if (pressed && record->tap.count) {
 			return pru_mod_sensitive_key(record, MOD_MASK_SHIFT, S(DE_QUES), DE_EXLM);
+		}
+		break;
+	case LT(_LY, DE_COLN):
+		// LT with non-basic tap keycode: https://docs.qmk.fm/#/mod_tap?id=intercepting-mod-taps
+		if (pressed && record->tap.count) {
+			tap_code16(DE_COLN);
+			return false;
 		}
 		break;
 	case CK_NEQ:
@@ -445,6 +452,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 // keycode aliases
 // - compact (help to keep colums short when used inside tap-hold macros)
 #define SPC       KC_SPC
+#define ENTER     KC_ENTER
 #define ESC       KC_ESC
 #define TAB       KC_TAB
 #define DEL       KC_DEL
@@ -454,6 +462,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 #define END       KC_END
 #define DE_MI     DE_MINS
 #define DE_PL     DE_PLUS
+#define DE_CN     DE_COLN
 #define PSLS      KC_PSLS
 #define KM_CUT    LSFT(KC_DEL)
 #define KM_COPY   LCTL(KC_INS)
