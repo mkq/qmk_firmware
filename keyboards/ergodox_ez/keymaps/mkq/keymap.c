@@ -179,7 +179,6 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 		set_leds_for_layer(layer);
 	}
 
-
 	prev_layer_state = new_layer_state;
 	return new_layer_state;
 }
@@ -229,9 +228,9 @@ bool pru_compose(keyrecord_t *record, const char *s) {
 		SEND_STRING(SS_LSFT("3"));
 		send_string(s);
 
-		// Workaround against locked shift in Microsoft Teams
-		unregister_code(KC_LSFT);
-		unregister_code(KC_RSFT);
+		// Workaround attempt against locked shift
+		tap_code(KC_LSFT);
+		del_mods(MOD_MASK_SHIFT);
 	}
 	return false;
 }
@@ -353,13 +352,13 @@ bool process_record_user_impl(uint16_t keycode, keyrecord_t *record) {
 	case CKC_TM     : return pru_compose(record, "xM");
 	case CKC_COPY   : return pru_compose(record, "xC");
 	// - dead accents
-	case CKC_DGRV   : return pru_compose(record, ";`");
-	case CKC_DACUT  : return pru_compose(record, ";'");
-	case CKC_DCIRC  : return pru_compose(record, ";^");
-	case CKC_DDEGR  : return pru_compose(record, ";°");
-	case CKC_DDIA   : return pru_compose(record, ";\"");
-	case CKC_DTILD  : return pru_compose(record, ";~");
-	case CKC_DCEDI  : return pru_compose(record, ";,");
+	case CKC_DGRV   : return pru_compose(record, ",`");
+	case CKC_DACUT  : return pru_compose(record, ",'");
+	case CKC_DCIRC  : return pru_compose(record, ",^");
+	case CKC_DDEGR  : return pru_compose(record, ",°");
+	case CKC_DDIA   : return pru_compose(record, ",:");
+	case CKC_DTILD  : return pru_compose(record, ",~");
+	case CKC_DCEDI  : return pru_compose(record, ",,");
 	// - superscript and subscript digits (TODO: find a place in the keymap for them)
 	case CKC_SUP0   : return pru_compose(record, "^0");
 	case CKC_SUP1   : return pru_compose(record, "^1");
