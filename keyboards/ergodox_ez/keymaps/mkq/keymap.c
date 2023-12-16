@@ -71,12 +71,13 @@ const uint8_t layer_leds_length = sizeof(layer_leds) / sizeof(layer_leds[0]);
 
 enum custom_keycodes {
 	CK_NEQ = SAFE_RANGE,
-	CK_SB, // slash / backslash
+	CK_SB,	// slash / backslash
 	CK_QX,
-	CK_DQSQ, // double quote / single quote
+	CK_DQSQ,	// double quote / single quote
 	CK_LMRES,
-	CK_CYLAY, // cycle some layers
-	CK_DBG, // toggle debug
+	CK_CYLAY,	// cycle some layers
+	CK_DBG,	// toggle debug
+	CK_DEADQ,	// dead Q
 
 	// custom keys using (my custom, not UC_WINC) AutoHotkey compose:
 	// - misc
@@ -96,16 +97,26 @@ enum custom_keycodes {
 	CKC_FRM_N2, CKC_FRM_S2, CKC_FRM_W2, CKC_FRM_E2, CKC_FRM_NW2, CKC_FRM_NE2, CKC_FRM_SE2, CKC_FRM_SW2, CKC_FRM_HL2, CKC_FRM_VL2, CKC_FRM_CR2
 };
 
+// dead key maps
+// format: [0] fallback key, [1] number of mappings; [2],[3] mapping 1, [4],[5] mapping 2, ...
+const uint16_t DEAD_MAP_Q[] = {
+	KC_Q,	4,
+	KC_A,	DE_ADIA,
+	KC_O,	DE_ODIA,
+	KC_U,	DE_UDIA,
+	DE_Z,	DE_SS
+};
+
 static uint16_t previous_keycode;
 
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
-    switch (keycode) {
+	switch (keycode) {
 	case OSL(_L3):
 	case OSL(_L4):
 		return 1;
 	default:
 		return TAPPING_TERM;
-    }
+	}
 }
 
 // set or reset modifiers if a given layer is entered or exited
@@ -183,6 +194,8 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 	return new_layer_state;
 }
 
+bool process_record_user_impl(uint16_t keycode, keyrecord_t *record);
+
 // process_record_user implementation: cycle layer
 bool pru_cycle_layer(keyrecord_t *record, layer_state_t cycle_layers_mask) {
 	if (!record->event.pressed) { return false; }
@@ -257,6 +270,30 @@ bool pru_compose(keyrecord_t *record, const char *s) {
 //		return true;
 //	}
 
+static const uint16_t *active_dead_key_array;
+bool pru_dead_key_start(const uint16_t *dead_key_array, keyrecord_t *record) {
+	if (get_mods() != 0) {	// do not treat as dead key with mods
+		return process_record_user_impl(dead_key_array[0], record);
+	}
+	active_dead_key_array = dead_key_array;
+	return false;
+}
+
+bool pru_dead_key_continue(uint16_t keycode, keyrecord_t *record) {
+	const uint16_t count = active_dead_key_array[1];
+	for (uint16_t c = 0; c < count; c++) {
+		uint16_t from_key = active_dead_key_array[3 + 2 * c];
+		if (keycode == from_key) {
+			uint16_t to_key = active_dead_key_array[2 + 2 * c];
+			active_dead_key_array = NULL;
+			return process_record_user_impl(to_key, record);
+		}
+	}
+	// fallback
+	active_dead_key_array = NULL;
+	return process_record_user_impl(active_dead_key_array[0], record);
+}
+
 static uint16_t previous_key_timer;
 static uint16_t time_since_previous_key;
 static uint8_t shift_count;
@@ -312,6 +349,8 @@ bool process_record_user_impl(uint16_t keycode, keyrecord_t *record) {
 	case CK_NEQ:
 		if (pressed) { SEND_STRING("!="); }
 		return false;
+	case CK_DEADQ:
+		return pru_dead_key_start(DEAD_MAP_Q, record);
 	case KC_LSFT:	// double shift => release shift, activate layer _DSS, _DSL, or _DSR,
 	case KC_RSFT:	// depending on timing and order
 		shift_count += pressed ? 1 : -1;
@@ -443,7 +482,9 @@ bool process_record_user_impl(uint16_t keycode, keyrecord_t *record) {
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 	time_since_previous_key = timer_elapsed(previous_key_timer);
 	previous_key_timer = timer_read();
-	bool result = process_record_user_impl(keycode, record);
+	bool result = active_dead_key_array != NULL
+		? pru_dead_key_continue(keycode, record)
+		: process_record_user_impl(keycode, record);
 	previous_keycode = keycode;
 	return result;
 }
