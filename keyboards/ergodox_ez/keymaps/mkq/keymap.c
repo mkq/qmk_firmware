@@ -222,7 +222,7 @@ bool pru_mod_sensitive_key_impl(uint16_t mod_mask, uint16_t keycode, uint16_t mo
 	return false;
 }
 bool pru_mod_sensitive_key(keyrecord_t *record, uint16_t mod_mask, uint16_t keycode, uint16_t mod_keycode) {
-	return record->event.pressed && pru_mod_sensitive_key_impl(record->event.pressed, keycode, mod_keycode);
+	return record->event.pressed && pru_mod_sensitive_key_impl(mod_mask, keycode, mod_keycode);
 }
 
 // process_record_user implementation for (custom AutoHotkey) compose sequences
