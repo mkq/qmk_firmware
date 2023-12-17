@@ -68,6 +68,8 @@ const uint8_t layer_leds_length = sizeof(layer_leds) / sizeof(layer_leds[0]);
 
 // maximum delay between key presses to be considered simultaneous
 #define SIMULTANEOUS_TERM 133
+// maximum delay between a dead key and the next
+#define DEAD_KEY_TIMEOUT 260
 
 enum custom_keycodes {
 	CK_NEQ = SAFE_RANGE,
@@ -77,7 +79,7 @@ enum custom_keycodes {
 	CK_LMRES,
 	CK_CYLAY,	// cycle some layers
 	CK_DBG,	// toggle debug
-	CK_DEADQ,	// dead Q
+	CK_DEADQ,
 
 	// custom keys using (my custom, not UC_WINC) AutoHotkey compose:
 	// - misc
@@ -97,17 +99,8 @@ enum custom_keycodes {
 	CKC_FRM_N2, CKC_FRM_S2, CKC_FRM_W2, CKC_FRM_E2, CKC_FRM_NW2, CKC_FRM_NE2, CKC_FRM_SE2, CKC_FRM_SW2, CKC_FRM_HL2, CKC_FRM_VL2, CKC_FRM_CR2
 };
 
-// dead key maps
-// format: [0] fallback key, [1] number of mappings; [2],[3] mapping 1, [4],[5] mapping 2, ...
-const uint16_t DEAD_MAP_Q[] = {
-	KC_Q,	4,
-	KC_A,	DE_ADIA,
-	KC_O,	DE_ODIA,
-	KC_U,	DE_UDIA,
-	DE_Z,	DE_SS
-};
-
-static uint16_t previous_keycode;
+static uint16_t prev_keycode;
+//static keyrecord_t prev_record;
 
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
 	switch (keycode) {
@@ -185,8 +178,8 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 	if (layer == _BA) { set_leds_for_layer(_BA); }
 	// ... or any TO(..) keycode (TODO: handle TG(..) if used):
 	// quantum_keycodes.h: TO(layer) = (QK_TO | (ON_PRESS << 0x4) | ((layer)&0xFF))
-	else if ((previous_keycode & 0xFF00) == (TO(0) & 0xFF00)) {
-		dprintf("keycode %s is a TO(..).\n", previous_keycode);
+	else if ((prev_keycode & 0xFF00) == (TO(0) & 0xFF00)) {
+		dprintf("keycode %s is a TO(..).\n", prev_keycode);
 		set_leds_for_layer(layer);
 	}
 
@@ -270,32 +263,8 @@ bool pru_compose(keyrecord_t *record, const char *s) {
 //		return true;
 //	}
 
-static const uint16_t *active_dead_key_array;
-bool pru_dead_key_start(const uint16_t *dead_key_array, keyrecord_t *record) {
-	if (get_mods() != 0) {	// do not treat as dead key with mods
-		return process_record_user_impl(dead_key_array[0], record);
-	}
-	active_dead_key_array = dead_key_array;
-	return false;
-}
-
-bool pru_dead_key_continue(uint16_t keycode, keyrecord_t *record) {
-	const uint16_t count = active_dead_key_array[1];
-	for (uint16_t c = 0; c < count; c++) {
-		uint16_t from_key = active_dead_key_array[3 + 2 * c];
-		if (keycode == from_key) {
-			uint16_t to_key = active_dead_key_array[2 + 2 * c];
-			active_dead_key_array = NULL;
-			return process_record_user_impl(to_key, record);
-		}
-	}
-	// fallback
-	active_dead_key_array = NULL;
-	return process_record_user_impl(active_dead_key_array[0], record);
-}
-
-static uint16_t previous_key_timer;
-static uint16_t time_since_previous_key;
+static uint16_t time_since_prev_key;
+static uint16_t prev_key_timer;
 static uint8_t shift_count;
 bool process_record_user_impl(uint16_t keycode, keyrecord_t *record) {
 //		// see function pru_lt_osl
@@ -305,7 +274,43 @@ bool process_record_user_impl(uint16_t keycode, keyrecord_t *record) {
 
 	bool pressed = record->event.pressed;
 //	dprintf("process_record_user(%d, ..): pressed == %b\n", keycode, pressed);
+
+	if (prev_keycode == CK_DEADQ) {
+		bool in_time = time_since_prev_key <= DEAD_KEY_TIMEOUT;
+		time_since_prev_key = DEAD_KEY_TIMEOUT + 1;	// reset dead state
+		if (in_time) {
+			if (keycode == CK_DEADQ) {
+				if (pressed) { tap_code(KC_Q); }	// Q twice fast => single Q
+				return false;
+			}
+
+			// quantum_keycodes.h: #define LT(layer, kc) (QK_LAYER_TAP | (((layer)&0xF) << 8) | ((kc)&0xFF))
+			uint16_t non_lt_keycode = keycode & 0xFF;
+
+			switch (non_lt_keycode) {
+			case KC_A:	if (pressed) { tap_code16(DE_ADIA); }	return false;
+			case KC_O:	if (pressed) { tap_code16(DE_ODIA); }	return false;
+			case KC_U:	if (pressed) { tap_code16(DE_UDIA); }	return false;
+			case DE_Z:
+				// German layout: AltGr + Shift + ß = capital ß. (Shift + ß = ?)
+				if (pressed) { pru_mod_sensitive_key(record, MOD_MASK_SHIFT, DE_SS, RSA(DE_SS)); }
+				return false;
+			}
+		}
+
+		// timeout or current key is not in the dead key map
+		// => send buffered KC_Q; continue with current key
+		if (pressed) { tap_code16(KC_Q); }
+	}
+
 	switch (keycode) {
+	case CK_DEADQ:
+		// Without mods or only shift: Treat as dead key; nothing to do yet. (The dead key is stored as prev_keycode already.)
+		// Else: treat as normal KC_Q.
+		if (!(get_mods() & !MOD_MASK_SHIFT)) {
+			if (pressed) { tap_code16(KC_Q); }
+			return false;
+		}
 	case CK_LMRES:	// layer and modifier reset
 		layer_clear();
 		clear_keyboard();
@@ -349,8 +354,6 @@ bool process_record_user_impl(uint16_t keycode, keyrecord_t *record) {
 	case CK_NEQ:
 		if (pressed) { SEND_STRING("!="); }
 		return false;
-	case CK_DEADQ:
-		return pru_dead_key_start(DEAD_MAP_Q, record);
 	case KC_LSFT:	// double shift => release shift, activate layer _DSS, _DSL, or _DSR,
 	case KC_RSFT:	// depending on timing and order
 		shift_count += pressed ? 1 : -1;
@@ -371,8 +374,8 @@ bool process_record_user_impl(uint16_t keycode, keyrecord_t *record) {
 		default:	// double shift => release shift, activate layer _DS..
 			del_mods(MOD_MASK_SHIFT);
 			layer_on(
-				(previous_keycode == KC_LSFT || previous_keycode == KC_RSFT)
-				? (time_since_previous_key > SIMULTANEOUS_TERM
+				(prev_keycode == KC_LSFT || prev_keycode == KC_RSFT)
+				? (time_since_prev_key > SIMULTANEOUS_TERM
 					? (keycode == KC_RSFT ? _DSL : _DSR)
 					: _DSS)
 				: _DSS);
@@ -479,13 +482,33 @@ bool process_record_user_impl(uint16_t keycode, keyrecord_t *record) {
 	return true;
 }
 
+//void save_prev_record(uint16_t keycode, keyrecord_t *record) {
+//	prev_record = (keyrecord_t){};
+//	prev_record.event.pressed = record->event.pressed;
+//	prev_record.event.time = record->event.time;
+//	prev_record.event.key.col = record->event.key.col;
+//	prev_record.event.key.row = record->event.key.row;
+//#ifndef NO_ACTION_TAPPING
+//	prev_record.tap.count = record->tap.count;
+//	prev_record.tap.interrupted = record->tap.interrupted;
+//	prev_record.tap.reserved0 = record->tap.reserved0;
+//	prev_record.tap.reserved1 = record->tap.reserved1;
+//	prev_record.tap.reserved2 = record->tap.reserved2;
+//#endif
+//#ifdef COMBO_ENABLE
+//	prev_record.keycode = record->keycode;
+//#endif
+//}
+
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-	time_since_previous_key = timer_elapsed(previous_key_timer);
-	previous_key_timer = timer_read();
-	bool result = active_dead_key_array != NULL
-		? pru_dead_key_continue(keycode, record)
-		: process_record_user_impl(keycode, record);
-	previous_keycode = keycode;
+	if (record->event.pressed) {
+		time_since_prev_key = timer_elapsed(prev_key_timer);
+	}
+	prev_key_timer = timer_read();
+	bool result = process_record_user_impl(keycode, record);
+//	if (record->event.pressed) {
+		prev_keycode = keycode;
+//	}
 	return result;
 }
 
