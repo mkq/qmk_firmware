@@ -482,7 +482,10 @@ void matrix_scan_user(void) {
 }
 void leader_end(void) {
 	if (!leader_matched) {
-		tap_code16(KC_Q);
+		// TODO support different leader keys
+		// Something like: LEAD(KC_X) sets a variable leader_key = KC_X, then calls leader behavior;
+		// in leader_end, tap_code16(leader_key) and reset variable.
+		tap_code16(KC_W);
 		for (uint8_t i = 0; i < 5; i++) {
 			if (leader_sequence[i] != 0) { tap_code16(leader_sequence[i]); }
 		}
