@@ -1,9 +1,9 @@
 #define _BA_LAYOUT LAYOUT_ergodox_pretty(/*=======================================================================================================================================================================*/\
 /* base -------|-U------------|-I------------|-A------------|-E------------|-O------------|                               |-S------------|-N------------|-R------------|-T------------|-D------------|------------*/\
  KC_F1         ,LT(_FS,KC_F2) ,LT(_FD,KC_F3) ,LT(_AS,KC_F4) ,LT(_AD,KC_F5) ,KC_F6         ,CK_CYLAY        ,SPC           ,KC_F7         ,KC_F8         ,KC_F9         ,KC_F10        ,KC_F11        ,KC_F12        \
-,DE_CIRC       ,KC_X          ,LT(_L5,KC_V)  ,LT(_L4,SPC)   ,LT(_L3,KC_C)  ,KC_LEAD       ,KC_Q            ,LCAG_T(APP)   ,KC_K          ,LT(_L3,KC_H)  ,LT(_L4,KC_G)  ,LT(_L5,KC_F)  ,DE_Y          ,KC_PGUP       \
+,DE_CIRC       ,KC_X          ,LT(_L5,KC_V)  ,LT(_L4,SPC)   ,LT(_L3,KC_C)  ,KC_W          ,KC_Q            ,LCAG_T(APP)   ,KC_K          ,LT(_L3,KC_H)  ,LT(_L4,KC_G)  ,LT(_L5,KC_F)  ,DE_Y          ,KC_PGUP       \
 ,LT(_LY,CK_SB) ,LWIN_T(KC_U)  ,LALT_T(KC_I)  ,LCTL_T(KC_A)  ,LT(_NV,KC_E)  ,KC_O                                          ,KC_S          ,LT(_NV,KC_N)  ,RCTL_T(KC_R)  ,LALT_T(KC_T)  ,RWIN_T(KC_D)  ,KC_PGDN       \
-,DE_PLUS       ,LT(_DW,DE_MI) ,LT(_DA,CK_QX) ,LT(_DC,KC_L)  ,KC_P          ,DE_Z          ,KC_INS          ,KC_DEL        ,KC_B          ,KC_M          ,DE_COMM       ,DE_DOT        ,KC_J          ,CK_DQSQ       \
+,KC_LEAD       ,LT(_DW,DE_MI) ,LT(_DA,CK_QX) ,LT(_DC,KC_L)  ,KC_P          ,DE_Z          ,KC_INS          ,KC_DEL        ,KC_B          ,KC_M          ,DE_COMM       ,DE_DOT        ,KC_J          ,CK_DQSQ       \
 ,KC_LWIN       ,KC_LALT       ,KC_LCTL       ,KC_PSCR       ,BSPC                                                                        ,LT(_NV,ESC)   ,KC_UP         ,KC_DOWN       ,KC_LEFT       ,KC_RGHT       \
                                                                            ,LT(_BT,DEL)   ,KM_CUT          ,LALT_T(HOME)  ,LCTL_T(END)                                                                              \
                                                                                           ,KM_COPY         ,KC_PGUP                                                                                                 \

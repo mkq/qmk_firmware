@@ -69,6 +69,8 @@ const uint8_t layer_leds_length = sizeof(layer_leds) / sizeof(layer_leds[0]);
 // maximum delay between key presses to be considered simultaneous
 #define SIMULTANEOUS_TERM 133
 
+#define LEADER_FALLBACK_KEYCODE DE_PLUS
+
 enum custom_keycodes {
 	CK_NEQ = SAFE_RANGE,
 	CK_SB,	// slash / backslash
@@ -485,7 +487,14 @@ void leader_end(void) {
 		// TODO support different leader keys
 		// Something like: LEAD(KC_X) sets a variable leader_key = KC_X, then calls leader behavior;
 		// in leader_end, tap_code16(leader_key) and reset variable.
-		tap_code16(KC_W);
+		tap_code16(LEADER_FALLBACK_KEYCODE);
+
+		// send buffered keys
+		// TODO If LEADER_FALLBACK_KEYCODE is Shift-sensitive (and typed fast), this should send the
+		// shifted keycode iff Shift was held when KC_LEAD was tapped. But as it is, it requires
+		// Shift to still be held at LEADER_TIMEOUT. This was very annoying with
+		// LEADER_FALLBACK_KEYCODE == KC_W, but not important with the current choice.
+		// Maybe define LEADER_KEY_STRICT_KEY_PROCESSING?
 		for (uint8_t i = 0; i < 5; i++) {
 			if (leader_sequence[i] != 0) { tap_code16(leader_sequence[i]); }
 		}
