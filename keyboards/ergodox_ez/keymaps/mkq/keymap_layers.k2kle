@@ -161,6 +161,7 @@ CK_NEQ	!=
 CK_QX	?	!
 CK_SB	/	\
 CK_DQSQ	"	'
+CK_DQ	"	'
 DE_BSLS	\
 DEL	⌦
 DE_ACUT	´
@@ -169,6 +170,7 @@ DE_AMPR	&
 DE_ASTR	*
 DE_AT	@
 DE_CIRC	^	°
+DE_CI	^	°
 DE_COLN	:
 DE_COMM	,	;
 DE_SCLN	;
@@ -232,7 +234,9 @@ KC_MUTE	🔇
 KC_PAST	*<sup>p</sup>
 KC_PAUS	Pau
 KC_PGDN	⭳
+PGDN	⭳
 KC_PGUP	⭱
+PGUP	⭱
 KC_PMNS	-<sup>p</sup>
 KC_PPLS	+<sup>p</sup>
 KC_PSCR	PrS
@@ -264,6 +268,9 @@ LT_FD(KC_F3)	F3
 LT_FS(KC_F2)	F2
 LWIN	<b>⊞</b>
 MO(_NV)	<b>N</b>
+MO(_L3)	<b>3</b>
+MO(_L4)	<b>4</b>
+MO(_L5)	<b>5</b>
 PAST	📋!
 RCTL	<b>Ctl</b>
 RESET	R!
@@ -274,7 +281,7 @@ RWIN	<b>⊞</b>
 S(DE_ADIA)	Ä
 S(DE_ODIA)	Ö
 S(DE_UDIA)	Ü
-SPC	<font size="+1"><sup>␣</sup></font>
+KC_SPC	<font size="+1"><sup>␣</sup></font>
 TAB	⭾
 TO(_AD)	⇐
 TO(_AS)	←
@@ -304,4 +311,4 @@ OSL3	<b>3¹</b>
 OSL4	<b>4¹</b>
 OSL5	<b>5¹</b>
 LT(_LY,TO(_BA))	&nbsp;
-KC_LEAD	+<sup>L</sup>
+#KC_LEAD	+<sup>L</sup>

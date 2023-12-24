@@ -69,8 +69,6 @@ const uint8_t layer_leds_length = sizeof(layer_leds) / sizeof(layer_leds[0]);
 // maximum delay between key presses to be considered simultaneous
 #define SIMULTANEOUS_TERM 133
 
-#define LEADER_FALLBACK_KEYCODE DE_PLUS
-
 enum custom_keycodes {
 	CK_NEQ = SAFE_RANGE,
 	CK_SB,	// slash / backslash
@@ -127,8 +125,8 @@ layer_state_t layer_state_set_user_impl(layer_state_t state) {
 	set_mods_for_layer(state, _DW, MOD_LGUI);
 
 	// shift + layer _L4 => layer _S_L4
-	// TODO Only works if shift is held before LT(_L4,..). When fixed, remove the two MO(_L5) from layer _L4.
 	// Inspired by the update_tri_layer_state implementation.
+	// TODO Relies on MO(_L5) on shift keys in _L4; only works if LT(_L4,..) is held before shift.
 	layer_state_t l4_mask = (layer_state_t) 1 << _L4;
 	layer_state_t sh_l4_mask = (layer_state_t) 1 << _S_L4;
 	bool shift = get_mods() & MOD_MASK_SHIFT;
@@ -290,24 +288,24 @@ bool process_record_user_impl(uint16_t keycode, keyrecord_t *record) {
 			((get_mods() & MOD_MASK_ALT) == 0)
 			? ((1<<_BA) | (1<<_BT) | (1<<_L3) | (1<<_NV))
 			: ((1<<_BA) | (1<<_BT) | (1<<_L3) | (1<<_NV) | (1<<_NU) | (1<<_AS) | (1<<_AD) | (1<<_FS) | (1<<_FD)));
-	case LT(_LY, CK_SB):
+	case LT(_L4, CK_SB):
 		// LT with non-basic tap keycode: https://docs.qmk.fm/#/mod_tap?id=intercepting-mod-taps
-		if (pressed && record->tap.count) {
-			return pru_mod_sensitive_key(record, MOD_MASK_SHIFT, DE_SLSH, RALT(DE_BSLS));
-		}
-		break;
+		if (!(pressed && record->tap.count)) { break; }
+		// else (tap): fall through
 	case CK_SB:	// DE slash; with shift: DE backslash (but without shift (for layouts where that would give a capital sharp s))
 		return pru_mod_sensitive_key(record, MOD_MASK_SHIFT, DE_SLSH, RALT(DE_BSLS));
+	case LT(_L5,CK_DQSQ):
+		// LT with non-basic tap keycode: https://docs.qmk.fm/#/mod_tap?id=intercepting-mod-taps
+		if (!(pressed && record->tap.count)) { break; }
+		// else (tap): fall through
 	case CK_DQSQ:	// DE double quote; with shift: DE single quote
 		return pru_mod_sensitive_key(record, MOD_MASK_SHIFT, DE_DQUO, DE_QUOT);
-	case CK_QX:	// DE question mark; with shift: DE exclamation mark
-		return pru_mod_sensitive_key(record, MOD_MASK_SHIFT, S(DE_QUES), DE_EXLM);
 	case LT(_DA, CK_QX):
 		// LT with non-basic tap keycode: https://docs.qmk.fm/#/mod_tap?id=intercepting-mod-taps
-		if (pressed && record->tap.count) {
-			return pru_mod_sensitive_key(record, MOD_MASK_SHIFT, S(DE_QUES), DE_EXLM);
-		}
-		break;
+		if (!(pressed && record->tap.count)) { break; }
+		// else (tap): fall through
+	case CK_QX:	// DE question mark; with shift: DE exclamation mark
+		return pru_mod_sensitive_key(record, MOD_MASK_SHIFT, S(DE_QUES), DE_EXLM);
 	case LT(_LY, DE_COLN):
 		// LT with non-basic tap keycode: https://docs.qmk.fm/#/mod_tap?id=intercepting-mod-taps
 		if (pressed && record->tap.count) {
@@ -456,66 +454,26 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 	return result;
 }
 
-// old leader doc: https://github.com/qmk/qmk_firmware/blob/1646c0f26cfa21a7023d404008e4d0aa4917193d/docs/feature_leader_key.md
-bool leader_matched;
-LEADER_EXTERNS();
-void matrix_scan_user(void) {
-	LEADER_DICTIONARY() {
-		leader_matched = leading = false;
-		SEQ_ONE_KEY(KC_N) {
-			tap_code16(DE_ADIA);
-			leader_matched = true;
-		} else
-		SEQ_ONE_KEY(KC_R) {
-			tap_code16(DE_ODIA);
-			leader_matched = true;
-		} else
-		SEQ_ONE_KEY(KC_T) {
-			tap_code16(DE_UDIA);
-			leader_matched = true;
-		} else
-		SEQ_ONE_KEY(KC_D) {
-			// German layout: AltGr + Shift + ß = capital ß. (Shift + ß = ?)
-			pru_mod_sensitive_key_impl(MOD_MASK_SHIFT, DE_SS, RSA(DE_SS));
-			leader_matched = true;
-		}
-		leader_end();
-	}
-}
-void leader_end(void) {
-	if (!leader_matched) {
-		// TODO support different leader keys
-		// Something like: LEAD(KC_X) sets a variable leader_key = KC_X, then calls leader behavior;
-		// in leader_end, tap_code16(leader_key) and reset variable.
-		tap_code16(LEADER_FALLBACK_KEYCODE);
-
-		// send buffered keys
-		// TODO If LEADER_FALLBACK_KEYCODE is Shift-sensitive (and typed fast), this should send the
-		// shifted keycode iff Shift was held when KC_LEAD was tapped. But as it is, it requires
-		// Shift to still be held at LEADER_TIMEOUT. This was very annoying with
-		// LEADER_FALLBACK_KEYCODE == KC_W, but not important with the current choice.
-		// Maybe define LEADER_KEY_STRICT_KEY_PROCESSING?
-		for (uint8_t i = 0; i < 5; i++) {
-			if (leader_sequence[i] != 0) { tap_code16(leader_sequence[i]); }
-		}
-	}
-}
-
 // keycode aliases
 // - compact (help to keep colums short when used inside tap-hold macros)
+#define ___       _______
 #define SPC       KC_SPC
 #define ENTER     KC_ENTER
 #define ESC       KC_ESC
 #define TAB       KC_TAB
 #define DEL       KC_DEL
 #define BSPC      KC_BSPC
+#define PGDN      KC_PGDN
+#define PGUP      KC_PGUP
 #define APP       KC_APP
 #define HOME      KC_HOME
 #define END       KC_END
 #define DE_MI     DE_MINS
 #define DE_PL     DE_PLUS
 #define DE_CN     DE_COLN
+#define DE_CI     DE_CIRC
 #define PSLS      KC_PSLS
+#define CK_DQ     CK_DQSQ
 #define KM_CUT    LSFT(KC_DEL)
 #define KM_COPY   LCTL(KC_INS)
 #define KM_PAST   LSFT(KC_INS)
