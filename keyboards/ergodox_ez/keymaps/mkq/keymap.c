@@ -17,6 +17,63 @@
 #include "keymap_german.h"
 #include "sendstring_german.h"
 
+// maximum delay between key presses to be considered simultaneous
+#define SIMULTANEOUS_TERM 133
+
+// keycode aliases
+// - compact (help to keep colums short when used inside tap-hold macros)
+#define ___       _______
+#define SPC       KC_SPC
+#define ENTER     KC_ENTER
+#define ESC       KC_ESC
+#define TAB       KC_TAB
+#define DEL       KC_DEL
+#define BSPC      KC_BSPC
+#define PGDN      KC_PGDN
+#define PGUP      KC_PGUP
+#define APP       KC_APP
+#define HOME      KC_HOME
+#define END       KC_END
+#define DE_MI     DE_MINS
+#define DE_PL     DE_PLUS
+#define DE_CN     DE_COLN
+#define DE_CI     DE_CIRC
+#define PSLS      KC_PSLS
+#define CK_DQ     CK_DQSQ
+#define KM_CUT    LSFT(KC_DEL)
+#define KM_COPY   LCTL(KC_INS)
+#define KM_PAST   LSFT(KC_INS)
+// - temporary key codes for testing
+//#define TEST_A    KC_A
+//#define TEST_B    KC_B
+
+enum custom_keycodes {
+	CK_NEQ = SAFE_RANGE,
+	CK_SB,	// slash / backslash
+	CK_QX,
+	CK_DQSQ,	// double quote / single quote
+	CK_LMRES,
+	CK_CYLAY,	// cycle some layers
+	CK_DBG,	// toggle debug
+
+	// custom keys using (my custom, not UC_WINC) AutoHotkey compose:
+	// - misc
+	CKC_NOT, CKC_POO, CKC_ELIP, CKC_BULLET, CKC_TM, CKC_COPY, CKC_POUND, CKC_NEQ, CKC_AEQ,
+	// - dead accents
+	CKC_DGRV, CKC_DACUT, CKC_DCIRC, CKC_DDEGR, CKC_DDIA, CKC_DTILD, CKC_DCEDI,
+	// - superscript and subscript digits
+	CKC_SUP0, CKC_SUP1, CKC_SUP2, CKC_SUP3, CKC_SUP4, CKC_SUP5, CKC_SUP6, CKC_SUP7, CKC_SUP8, CKC_SUP9, CKC_SUPN,
+	CKC_SUB0, CKC_SUB1, CKC_SUB2, CKC_SUB3, CKC_SUB4, CKC_SUB5, CKC_SUB6, CKC_SUB7, CKC_SUB8, CKC_SUB9, CKC_SUBN,
+	// - triangles (outline and filled)
+	CKC_TRIO_N, CKC_TRIO_S, CKC_TRIO_W, CKC_TRIO_E, CKC_TRIF_N, CKC_TRIF_S, CKC_TRIF_W, CKC_TRIF_E,
+	// - arrows and double arrows
+	CKC_ARR_N1, CKC_ARR_S1, CKC_ARR_W1, CKC_ARR_E1, CKC_ARR_NW1, CKC_ARR_NE1, CKC_ARR_SE1, CKC_ARR_SW1, CKC_ARR_WE1, CKC_ARR_NS1,
+	CKC_ARR_N2, CKC_ARR_S2, CKC_ARR_W2, CKC_ARR_E2, CKC_ARR_NW2, CKC_ARR_NE2, CKC_ARR_SE2, CKC_ARR_SW2, CKC_ARR_WE2, CKC_ARR_NS2,
+	// - frames and double frames
+	CKC_FRM_N1, CKC_FRM_S1, CKC_FRM_W1, CKC_FRM_E1, CKC_FRM_NW1, CKC_FRM_NE1, CKC_FRM_SE1, CKC_FRM_SW1, CKC_FRM_HL1, CKC_FRM_VL1, CKC_FRM_CR1,
+	CKC_FRM_N2, CKC_FRM_S2, CKC_FRM_W2, CKC_FRM_E2, CKC_FRM_NW2, CKC_FRM_NE2, CKC_FRM_SE2, CKC_FRM_SW2, CKC_FRM_HL2, CKC_FRM_VL2, CKC_FRM_CR2
+};
+
 // layers
 enum custom_layers {
 	_BA = 0, //base
@@ -47,6 +104,27 @@ enum custom_layers {
 
 #define _S_L4 _L5b	//shift + layer 4 = layer 5b
 
+// layers
+#include "./keymap_layers.c"
+const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
+	[_LY] = _LY_LAYOUT,
+	[_BA] = _BA_LAYOUT,
+	[_BT] = _BT_LAYOUT,
+	[_L3] = _L3_LAYOUT,
+	[_L4] = _L4_LAYOUT,
+	[_L5] = _L5_LAYOUT,
+	[_L5b] = TRANS_LAYOUT,
+	[_NV] = _NV_LAYOUT,
+	[_NU] = _NU_LAYOUT,
+	[_DC] = _DI_LAYOUT,
+	[_DA] = _DI_LAYOUT,
+	[_DW] = _DI_LAYOUT,
+	[_AS] = _AS_LAYOUT,
+	[_AD] = _AD_LAYOUT,
+	[_FS] = _FS_LAYOUT,
+	[_FD] = _FD_LAYOUT
+};
+
 const uint8_t layer_leds[] = {
 	// These values (1 = blue, 2 = green, 4 = red) are chosen here for readability in binary literals.
 	// Function layer_state_set_user_led maps them to ergodox_right_led_on calls.
@@ -65,38 +143,6 @@ const uint8_t layer_leds[] = {
 	[_LY] = 0b111,
 };
 const uint8_t layer_leds_length = sizeof(layer_leds) / sizeof(layer_leds[0]);
-
-// maximum delay between key presses to be considered simultaneous
-#define SIMULTANEOUS_TERM 133
-
-enum custom_keycodes {
-	CK_NEQ = SAFE_RANGE,
-	CK_SB,	// slash / backslash
-	CK_QX,
-	CK_DQSQ,	// double quote / single quote
-	CK_LMRES,
-	CK_CYLAY,	// cycle some layers
-	CK_DBG,	// toggle debug
-
-	// custom keys using (my custom, not UC_WINC) AutoHotkey compose:
-	// - misc
-	CKC_NOT, CKC_POO, CKC_ELIP, CKC_BULLET, CKC_TM, CKC_COPY, CKC_POUND, CKC_NEQ, CKC_AEQ,
-	// - dead accents
-	CKC_DGRV, CKC_DACUT, CKC_DCIRC, CKC_DDEGR, CKC_DDIA, CKC_DTILD, CKC_DCEDI,
-	// - superscript and subscript digits
-	CKC_SUP0, CKC_SUP1, CKC_SUP2, CKC_SUP3, CKC_SUP4, CKC_SUP5, CKC_SUP6, CKC_SUP7, CKC_SUP8, CKC_SUP9, CKC_SUPN,
-	CKC_SUB0, CKC_SUB1, CKC_SUB2, CKC_SUB3, CKC_SUB4, CKC_SUB5, CKC_SUB6, CKC_SUB7, CKC_SUB8, CKC_SUB9, CKC_SUBN,
-	// - triangles (outline and filled)
-	CKC_TRIO_N, CKC_TRIO_S, CKC_TRIO_W, CKC_TRIO_E, CKC_TRIF_N, CKC_TRIF_S, CKC_TRIF_W, CKC_TRIF_E,
-	// - arrows and double arrows
-	CKC_ARR_N1, CKC_ARR_S1, CKC_ARR_W1, CKC_ARR_E1, CKC_ARR_NW1, CKC_ARR_NE1, CKC_ARR_SE1, CKC_ARR_SW1, CKC_ARR_WE1, CKC_ARR_NS1,
-	CKC_ARR_N2, CKC_ARR_S2, CKC_ARR_W2, CKC_ARR_E2, CKC_ARR_NW2, CKC_ARR_NE2, CKC_ARR_SE2, CKC_ARR_SW2, CKC_ARR_WE2, CKC_ARR_NS2,
-	// - frames and double frames
-	CKC_FRM_N1, CKC_FRM_S1, CKC_FRM_W1, CKC_FRM_E1, CKC_FRM_NW1, CKC_FRM_NE1, CKC_FRM_SE1, CKC_FRM_SW1, CKC_FRM_HL1, CKC_FRM_VL1, CKC_FRM_CR1,
-	CKC_FRM_N2, CKC_FRM_S2, CKC_FRM_W2, CKC_FRM_E2, CKC_FRM_NW2, CKC_FRM_NE2, CKC_FRM_SE2, CKC_FRM_SW2, CKC_FRM_HL2, CKC_FRM_VL2, CKC_FRM_CR2
-};
-
-static uint16_t prev_keycode;
 
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
 	switch (keycode) {
@@ -163,6 +209,7 @@ void set_leds_for_layer(uint8_t layer) {
 	leds_state = new_leds_state;
 }
 
+static uint16_t prev_keycode;
 layer_state_t layer_state_set_user(layer_state_t state) {
 	layer_state_t new_layer_state = layer_state_set_user_impl(state);
 
@@ -226,8 +273,8 @@ bool pru_mod_sensitive_key(keyrecord_t *record, uint16_t mod_mask, uint16_t keyc
 }
 
 // process_record_user implementation for (custom AutoHotkey) compose sequences
-bool pru_compose(keyrecord_t *record, const char *s) {
-	if (record->event.pressed) {
+bool pru_compose(bool pressed, const char *s) {
+	if (pressed) {
 		SEND_STRING(SS_LSFT("3"));
 		send_string(s);
 
@@ -262,6 +309,16 @@ bool pru_compose(keyrecord_t *record, const char *s) {
 
 static uint16_t time_since_prev_key;
 static uint16_t prev_key_timer;
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+	if (record->event.pressed) {
+		time_since_prev_key = timer_elapsed(prev_key_timer);
+	}
+	prev_key_timer = timer_read();
+	bool result = process_record_user_impl(keycode, record);
+	prev_keycode = keycode;
+	return result;
+}
+
 static uint8_t shift_count;
 bool process_record_user_impl(uint16_t keycode, keyrecord_t *record) {
 //		// see function pru_lt_osl
@@ -346,158 +403,100 @@ bool process_record_user_impl(uint16_t keycode, keyrecord_t *record) {
 
 	// custom keys using (my custom, not UC_WINC) AutoHotkey compose:
 	// - misc
-	case CKC_NOT    : return pru_compose(record, "bn");
-	case CKC_NEQ    : return pru_compose(record, "=n");
-	case CKC_AEQ    : return pru_compose(record, "=a");
-	case CKC_POO    : return pru_compose(record, "xp");
-	case CKC_BULLET : return pru_compose(record, ".o");
-	case CKC_ELIP   : return pru_compose(record, "...");
-	case CKC_POUND  : return pru_compose(record, "cp");
-	case CKC_TM     : return pru_compose(record, "xM");
-	case CKC_COPY   : return pru_compose(record, "xC");
+	case CKC_NOT    : return pru_compose(pressed, "bn");
+	case CKC_NEQ    : return pru_compose(pressed, "=n");
+	case CKC_AEQ    : return pru_compose(pressed, "=a");
+	case CKC_POO    : return pru_compose(pressed, "xp");
+	case CKC_BULLET : return pru_compose(pressed, ".o");
+	case CKC_ELIP   : return pru_compose(pressed, "...");
+	case CKC_POUND  : return pru_compose(pressed, "cp");
+	case CKC_TM     : return pru_compose(pressed, "xM");
+	case CKC_COPY   : return pru_compose(pressed, "xC");
 	// - dead accents
-	case CKC_DGRV   : return pru_compose(record, ",`");
-	case CKC_DACUT  : return pru_compose(record, ",'");
-	case CKC_DCIRC  : return pru_compose(record, ",^");
-	case CKC_DDEGR  : return pru_compose(record, ",°");
-	case CKC_DDIA   : return pru_compose(record, ",:");
-	case CKC_DTILD  : return pru_compose(record, ",~");
-	case CKC_DCEDI  : return pru_compose(record, ",,");
+	case CKC_DGRV   : return pru_compose(pressed, ",`");
+	case CKC_DACUT  : return pru_compose(pressed, ",'");
+	case CKC_DCIRC  : return pru_compose(pressed, ",^");
+	case CKC_DDEGR  : return pru_compose(pressed, ",°");
+	case CKC_DDIA   : return pru_compose(pressed, ",:");
+	case CKC_DTILD  : return pru_compose(pressed, ",~");
+	case CKC_DCEDI  : return pru_compose(pressed, ",,");
 	// - superscript and subscript digits (TODO: find a place in the keymap for them)
-	case CKC_SUP0   : return pru_compose(record, "^0");
-	case CKC_SUP1   : return pru_compose(record, "^1");
-	case CKC_SUP2   : return pru_compose(record, "^2");
-	case CKC_SUP3   : return pru_compose(record, "^3");
-	case CKC_SUP4   : return pru_compose(record, "^4");
-	case CKC_SUP5   : return pru_compose(record, "^5");
-	case CKC_SUP6   : return pru_compose(record, "^6");
-	case CKC_SUP7   : return pru_compose(record, "^7");
-	case CKC_SUP8   : return pru_compose(record, "^8");
-	case CKC_SUP9   : return pru_compose(record, "^9");
-	case CKC_SUPN   : return pru_compose(record, "^n");
-	case CKC_SUB0   : return pru_compose(record, "_0");
-	case CKC_SUB1   : return pru_compose(record, "_1");
-	case CKC_SUB2   : return pru_compose(record, "_2");
-	case CKC_SUB3   : return pru_compose(record, "_3");
-	case CKC_SUB4   : return pru_compose(record, "_4");
-	case CKC_SUB5   : return pru_compose(record, "_5");
-	case CKC_SUB6   : return pru_compose(record, "_6");
-	case CKC_SUB7   : return pru_compose(record, "_7");
-	case CKC_SUB8   : return pru_compose(record, "_8");
-	case CKC_SUB9   : return pru_compose(record, "_9");
-	case CKC_SUBN   : return pru_compose(record, "_n");
+	case CKC_SUP0   : return pru_compose(pressed, "^0");
+	case CKC_SUP1   : return pru_compose(pressed, "^1");
+	case CKC_SUP2   : return pru_compose(pressed, "^2");
+	case CKC_SUP3   : return pru_compose(pressed, "^3");
+	case CKC_SUP4   : return pru_compose(pressed, "^4");
+	case CKC_SUP5   : return pru_compose(pressed, "^5");
+	case CKC_SUP6   : return pru_compose(pressed, "^6");
+	case CKC_SUP7   : return pru_compose(pressed, "^7");
+	case CKC_SUP8   : return pru_compose(pressed, "^8");
+	case CKC_SUP9   : return pru_compose(pressed, "^9");
+	case CKC_SUPN   : return pru_compose(pressed, "^n");
+	case CKC_SUB0   : return pru_compose(pressed, "_0");
+	case CKC_SUB1   : return pru_compose(pressed, "_1");
+	case CKC_SUB2   : return pru_compose(pressed, "_2");
+	case CKC_SUB3   : return pru_compose(pressed, "_3");
+	case CKC_SUB4   : return pru_compose(pressed, "_4");
+	case CKC_SUB5   : return pru_compose(pressed, "_5");
+	case CKC_SUB6   : return pru_compose(pressed, "_6");
+	case CKC_SUB7   : return pru_compose(pressed, "_7");
+	case CKC_SUB8   : return pru_compose(pressed, "_8");
+	case CKC_SUB9   : return pru_compose(pressed, "_9");
+	case CKC_SUBN   : return pru_compose(pressed, "_n");
 	// - triangles
-	case CKC_TRIO_N : return pru_compose(record, "Tog");
-	case CKC_TRIO_S : return pru_compose(record, "Tor");
-	case CKC_TRIO_W : return pru_compose(record, "Ton");
-	case CKC_TRIO_E : return pru_compose(record, "Tot");
-	case CKC_TRIF_N : return pru_compose(record, "Tfg");
-	case CKC_TRIF_S : return pru_compose(record, "Tfr");
-	case CKC_TRIF_W : return pru_compose(record, "Tfn");
-	case CKC_TRIF_E : return pru_compose(record, "Tft");
+	case CKC_TRIO_N : return pru_compose(pressed, "Tog");
+	case CKC_TRIO_S : return pru_compose(pressed, "Tor");
+	case CKC_TRIO_W : return pru_compose(pressed, "Ton");
+	case CKC_TRIO_E : return pru_compose(pressed, "Tot");
+	case CKC_TRIF_N : return pru_compose(pressed, "Tfg");
+	case CKC_TRIF_S : return pru_compose(pressed, "Tfr");
+	case CKC_TRIF_W : return pru_compose(pressed, "Tfn");
+	case CKC_TRIF_E : return pru_compose(pressed, "Tft");
 	// - arrows and double arrows
-	case CKC_ARR_N1 : return pru_compose(record, "ag");
-	case CKC_ARR_S1 : return pru_compose(record, "ar");
-	case CKC_ARR_W1 : return pru_compose(record, "an");
-	case CKC_ARR_E1 : return pru_compose(record, "at");
-	case CKC_ARR_NW1: return pru_compose(record, "ah");
-	case CKC_ARR_NE1: return pru_compose(record, "af");
-	case CKC_ARR_SE1: return pru_compose(record, "a.");
-	case CKC_ARR_SW1: return pru_compose(record, "am");
-	case CKC_ARR_WE1: return pru_compose(record, "ad");
-	case CKC_ARR_NS1: return pru_compose(record, "a,");
-	case CKC_ARR_N2 : return pru_compose(record, "aag");
-	case CKC_ARR_S2 : return pru_compose(record, "aar");
-	case CKC_ARR_W2 : return pru_compose(record, "aan");
-	case CKC_ARR_E2 : return pru_compose(record, "aat");
-	case CKC_ARR_NW2: return pru_compose(record, "aah");
-	case CKC_ARR_NE2: return pru_compose(record, "aaf");
-	case CKC_ARR_SE2: return pru_compose(record, "aa.");
-	case CKC_ARR_SW2: return pru_compose(record, "aam");
-	case CKC_ARR_WE2: return pru_compose(record, "aad");
-	case CKC_ARR_NS2: return pru_compose(record, "aa,");
+	case CKC_ARR_N1 : return pru_compose(pressed, "ag");
+	case CKC_ARR_S1 : return pru_compose(pressed, "ar");
+	case CKC_ARR_W1 : return pru_compose(pressed, "an");
+	case CKC_ARR_E1 : return pru_compose(pressed, "at");
+	case CKC_ARR_NW1: return pru_compose(pressed, "ah");
+	case CKC_ARR_NE1: return pru_compose(pressed, "af");
+	case CKC_ARR_SE1: return pru_compose(pressed, "a.");
+	case CKC_ARR_SW1: return pru_compose(pressed, "am");
+	case CKC_ARR_WE1: return pru_compose(pressed, "ad");
+	case CKC_ARR_NS1: return pru_compose(pressed, "a,");
+	case CKC_ARR_N2 : return pru_compose(pressed, "aag");
+	case CKC_ARR_S2 : return pru_compose(pressed, "aar");
+	case CKC_ARR_W2 : return pru_compose(pressed, "aan");
+	case CKC_ARR_E2 : return pru_compose(pressed, "aat");
+	case CKC_ARR_NW2: return pru_compose(pressed, "aah");
+	case CKC_ARR_NE2: return pru_compose(pressed, "aaf");
+	case CKC_ARR_SE2: return pru_compose(pressed, "aa.");
+	case CKC_ARR_SW2: return pru_compose(pressed, "aam");
+	case CKC_ARR_WE2: return pru_compose(pressed, "aad");
+	case CKC_ARR_NS2: return pru_compose(pressed, "aa,");
 	// - frames and double frames
-	case CKC_FRM_N1 : return pru_compose(record, "fg");
-	case CKC_FRM_S1 : return pru_compose(record, "f,");
-	case CKC_FRM_W1 : return pru_compose(record, "fn");
-	case CKC_FRM_E1 : return pru_compose(record, "ft");
-	case CKC_FRM_NW1: return pru_compose(record, "fh");
-	case CKC_FRM_NE1: return pru_compose(record, "ff");
-	case CKC_FRM_SE1: return pru_compose(record, "f.");
-	case CKC_FRM_SW1: return pru_compose(record, "fm");
-	case CKC_FRM_HL1: return pru_compose(record, "fd");
-	case CKC_FRM_VL1: return pru_compose(record, "fs");
-	case CKC_FRM_CR1: return pru_compose(record, "fr");
-	case CKC_FRM_N2 : return pru_compose(record, "Fg");
-	case CKC_FRM_S2 : return pru_compose(record, "F,");
-	case CKC_FRM_W2 : return pru_compose(record, "Fn");
-	case CKC_FRM_E2 : return pru_compose(record, "Ft");
-	case CKC_FRM_NW2: return pru_compose(record, "Fh");
-	case CKC_FRM_NE2: return pru_compose(record, "Ff");
-	case CKC_FRM_SE2: return pru_compose(record, "F.");
-	case CKC_FRM_SW2: return pru_compose(record, "Fm");
-	case CKC_FRM_HL2: return pru_compose(record, "Fd");
-	case CKC_FRM_VL2: return pru_compose(record, "Fs");
-	case CKC_FRM_CR2: return pru_compose(record, "Fr");
+	case CKC_FRM_N1 : return pru_compose(pressed, "fg");
+	case CKC_FRM_S1 : return pru_compose(pressed, "f,");
+	case CKC_FRM_W1 : return pru_compose(pressed, "fn");
+	case CKC_FRM_E1 : return pru_compose(pressed, "ft");
+	case CKC_FRM_NW1: return pru_compose(pressed, "fh");
+	case CKC_FRM_NE1: return pru_compose(pressed, "ff");
+	case CKC_FRM_SE1: return pru_compose(pressed, "f.");
+	case CKC_FRM_SW1: return pru_compose(pressed, "fm");
+	case CKC_FRM_HL1: return pru_compose(pressed, "fd");
+	case CKC_FRM_VL1: return pru_compose(pressed, "fs");
+	case CKC_FRM_CR1: return pru_compose(pressed, "fr");
+	case CKC_FRM_N2 : return pru_compose(pressed, "Fg");
+	case CKC_FRM_S2 : return pru_compose(pressed, "F,");
+	case CKC_FRM_W2 : return pru_compose(pressed, "Fn");
+	case CKC_FRM_E2 : return pru_compose(pressed, "Ft");
+	case CKC_FRM_NW2: return pru_compose(pressed, "Fh");
+	case CKC_FRM_NE2: return pru_compose(pressed, "Ff");
+	case CKC_FRM_SE2: return pru_compose(pressed, "F.");
+	case CKC_FRM_SW2: return pru_compose(pressed, "Fm");
+	case CKC_FRM_HL2: return pru_compose(pressed, "Fd");
+	case CKC_FRM_VL2: return pru_compose(pressed, "Fs");
+	case CKC_FRM_CR2: return pru_compose(pressed, "Fr");
 	}
 
 	return true;
 }
-
-bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-	if (record->event.pressed) {
-		time_since_prev_key = timer_elapsed(prev_key_timer);
-	}
-	prev_key_timer = timer_read();
-	bool result = process_record_user_impl(keycode, record);
-	prev_keycode = keycode;
-	return result;
-}
-
-// keycode aliases
-// - compact (help to keep colums short when used inside tap-hold macros)
-#define ___       _______
-#define SPC       KC_SPC
-#define ENTER     KC_ENTER
-#define ESC       KC_ESC
-#define TAB       KC_TAB
-#define DEL       KC_DEL
-#define BSPC      KC_BSPC
-#define PGDN      KC_PGDN
-#define PGUP      KC_PGUP
-#define APP       KC_APP
-#define HOME      KC_HOME
-#define END       KC_END
-#define DE_MI     DE_MINS
-#define DE_PL     DE_PLUS
-#define DE_CN     DE_COLN
-#define DE_CI     DE_CIRC
-#define PSLS      KC_PSLS
-#define CK_DQ     CK_DQSQ
-#define KM_CUT    LSFT(KC_DEL)
-#define KM_COPY   LCTL(KC_INS)
-#define KM_PAST   LSFT(KC_INS)
-// - temporary key codes for testing
-//#define TEST_A    KC_A
-//#define TEST_B    KC_B
-
-// layers
-#include "./keymap_layers.c"
-const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-	[_LY] = _LY_LAYOUT,
-	[_BA] = _BA_LAYOUT,
-	[_BT] = _BT_LAYOUT,
-	[_L3] = _L3_LAYOUT,
-	[_L4] = _L4_LAYOUT,
-	[_L5] = _L5_LAYOUT,
-	[_L5b] = TRANS_LAYOUT,
-	[_NV] = _NV_LAYOUT,
-	[_NU] = _NU_LAYOUT,
-	[_DC] = _DI_LAYOUT,
-	[_DA] = _DI_LAYOUT,
-	[_DW] = _DI_LAYOUT,
-	[_AS] = _AS_LAYOUT,
-	[_AD] = _AD_LAYOUT,
-	[_FS] = _FS_LAYOUT,
-	[_FD] = _FD_LAYOUT
-};
