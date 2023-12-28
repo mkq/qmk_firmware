@@ -56,6 +56,8 @@ Source code: https://github.com/mkq/qmk_firmware/blob/master/keyboards/ergodox_e
 [{x:-3,a:0},"TR6"]
 
 === labels ===
+___	&nbsp;
+____	&nbsp;
 APP	≣
 BSPC	⌫
 C(DE_MINS)	-<sup>c</sup>
