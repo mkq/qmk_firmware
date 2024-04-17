@@ -210,5 +210,5 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define NO_ACTION_MACRO
 #define NO_ACTION_FUNCTION
 //#define DEBUG_MATRIX_SCAN_RATE
-#define ONESHOT_TIMEOUT 5000
+#define ONESHOT_TIMEOUT 700
 //#define ONESHOT_TAP_TOGGLE 3

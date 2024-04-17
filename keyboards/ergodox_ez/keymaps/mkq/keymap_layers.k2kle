@@ -227,6 +227,8 @@ KC_LALT	<b>Alt</b>
 KC_LCTL	<b>Ctl</b>
 KC_LEFT	⭠
 KC_LSFT	⇧
+OSM(MOD_RSFT)	⇧
+LT(_L3,OSMSH)	⇧
 KC_LWIN	<b>⊞</b>
 KC_MNXT	⏭
 KC_MPLY	⏯

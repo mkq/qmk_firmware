@@ -44,6 +44,7 @@
 #define KM_CUT    LSFT(KC_DEL)
 #define KM_COPY   LCTL(KC_INS)
 #define KM_PAST   LSFT(KC_INS)
+#define OSMSH     OSM(MOD_LSFT)
 // - temporary key codes for testing
 //#define TEST_A    KC_A
 //#define TEST_B    KC_B
@@ -99,7 +100,7 @@ enum custom_layers {
 };
 
 // double shift layers
-#define _DSS  _L3	//double shift (simultaneous) = _L3
+#define _DSS  _L4	//double shift (simultaneous) = _L4
 #define _DSL  _L4	//double shift (left first)   = _L4
 #define _DSR  _L5	//double shift (right first)  = _L5
 
@@ -145,6 +146,10 @@ const uint8_t layer_leds[] = {
 };
 const uint8_t layer_leds_length = sizeof(layer_leds) / sizeof(layer_leds[0]);
 
+uint8_t get_mods_all(void) {
+	return get_mods() | get_oneshot_mods();
+}
+
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
 	switch (keycode) {
 	case OSL(_L3):
@@ -176,7 +181,7 @@ layer_state_t layer_state_set_user_impl(layer_state_t state) {
 	// TODO Relies on MO(_L5) on shift keys in _L4; only works if LT(_L4,..) is held before shift.
 	layer_state_t l4_mask = (layer_state_t) 1 << _L4;
 	layer_state_t sh_l4_mask = (layer_state_t) 1 << _S_L4;
-	bool shift = get_mods() & MOD_MASK_SHIFT;
+	bool shift = get_mods() & MOD_MASK_SHIFT; // TODO (.. | get_oneshot_mods())?
 	bool l4 = (state & l4_mask) == l4_mask;
 	if (l4 && shift) {
 		del_mods(MOD_MASK_SHIFT);
@@ -258,11 +263,16 @@ bool pru_cycle_layer(keyrecord_t *record, layer_state_t cycle_layers_mask) {
 }
 
 // process_record_user implementation for a mod-sensitive custom key
+// TODO: detect one shot modifier
 bool pru_mod_sensitive_key_impl(uint16_t mod_mask, uint16_t keycode, uint16_t mod_keycode) {
 	uint16_t mods = get_mods();
 	if (!(mods & mod_mask)) {	// without modifier
 		tap_code16(keycode);
-	} else {	// with modifier
+//	} else if ((oneshotMods = get_oneshot_mods()) & mod_mask) {	// TODO one shot modifier
+//		clear_oneshot_mods();
+//		tap_code16(mod_keycode);
+//		set_oneshot_mods(oneshotMods);
+	} else {	// with normal modifier
 		del_mods(mod_mask);
 		tap_code16(mod_keycode);
 		set_mods(mods);
@@ -346,6 +356,16 @@ bool process_record_user_impl(uint16_t keycode, keyrecord_t *record) {
 			((get_mods() & MOD_MASK_ALT) == 0)
 			? ((1<<_BA) | (1<<_BT) | (1<<_L3) | (1<<_NV))
 			: ((1<<_BA) | (1<<_BT) | (1<<_L3) | (1<<_NV) | (1<<_NU) | (1<<_AS) | (1<<_AD) | (1<<_FS) | (1<<_FD)));
+	case LT(_L3, OSM(MOD_LSFT)):
+		// LT with non-basic tap keycode: https://docs.qmk.fm/#/mod_tap?id=intercepting-mod-taps
+		if (pressed && record->tap.count) { // tap: one shot shift
+			set_oneshot_mods(MOD_BIT(KC_LSFT));
+			return false;
+		} else if ((get_mods() & ~MOD_MASK_SHIFT) != 0) { // with other modifiers: shift
+			return process_record_user_impl(KC_LSFT, record);
+		} else { // default LT(_L3) behavior (_L3)
+			return true;
+		}
 	case LT(_L5, CK_SB):
 		// LT with non-basic tap keycode: https://docs.qmk.fm/#/mod_tap?id=intercepting-mod-taps
 		if (!(pressed && record->tap.count)) { break; }
@@ -376,6 +396,8 @@ bool process_record_user_impl(uint16_t keycode, keyrecord_t *record) {
 		return false;
 	case KC_LSFT:	// double shift => release shift, activate layer _DSS, _DSL, or _DSR,
 	case KC_RSFT:	// depending on timing and order
+	case OSM(MOD_RSFT):
+		// TODO no longer works after switching from basic keycodes to OSM(MOD_RSFT) etc.
 		shift_count += pressed ? 1 : -1;
 		switch (shift_count) {
 		case 0:
@@ -392,6 +414,7 @@ bool process_record_user_impl(uint16_t keycode, keyrecord_t *record) {
 				return false;
 			}
 		default:	// double shift => release shift, activate layer _DS..
+			// TODO no longer works si
 			del_mods(MOD_MASK_SHIFT);
 			layer_on(
 				(prev_keycode == KC_LSFT || prev_keycode == KC_RSFT)
@@ -429,7 +452,7 @@ bool pru_compose_k(bool pressed, uint16_t keycode) {
 	case CKC_DDIA   : return pru_compose(pressed, ",:");
 	case CKC_DTILD  : return pru_compose(pressed, ",~");
 	case CKC_DCEDI  : return pru_compose(pressed, ",,");
-	// - superscript and subscript digits (TODO: find a place in the keymap for them)
+	// - superscript and subscript digits
 	case CKC_SUP0   : return pru_compose(pressed, "^0");
 	case CKC_SUP1   : return pru_compose(pressed, "^1");
 	case CKC_SUP2   : return pru_compose(pressed, "^2");
