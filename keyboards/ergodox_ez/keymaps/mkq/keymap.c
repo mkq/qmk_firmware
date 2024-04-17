@@ -426,7 +426,7 @@ bool process_record_user_impl(uint16_t keycode, keyrecord_t *record) {
 		}
 	}
 
-	if (!pru_compose_k(keycode, pressed)) { return false; }
+	if (!pru_compose_k(pressed, keycode)) { return false; }
 
 	return true;
 }
