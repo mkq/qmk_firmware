@@ -286,6 +286,8 @@ bool pru_compose(bool pressed, const char *s) {
 	return false;
 }
 
+bool pru_compose_k(bool pressed, uint16_t keycode);
+
 //	// process_record_user implementation for LT(hold_layer, OSL(oneshot_layer)).
 //	// Adapted from "QMK: Is combining One-Shot-Layers and Layer-Toggles possible?" [https://www.reddit.com/r/olkb/comments/v5zvo4/comment/ibw1wx6]
 //	// Bug: With a chain like
@@ -322,10 +324,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
 static uint8_t shift_count;
 bool process_record_user_impl(uint16_t keycode, keyrecord_t *record) {
-//		// see function pru_lt_osl
-//		if (keycode != LT(_LY, OSL(_L3)) && keycode != LT(_LY, OSL(_L4)) && keycode != LT(_LY, OSL(_L5))) {
-//			osl_other_key_pressed = true;
-//		}
+//	// see function pru_lt_osl
+//	if (keycode != LT(_LY, OSL(_L3)) && keycode != LT(_LY, OSL(_L4)) && keycode != LT(_LY, OSL(_L5))) { osl_other_key_pressed = true; }
 
 	bool pressed = record->event.pressed;
 //	dprintf("process_record_user(%d, ..): pressed == %b\n", keycode, pressed);
@@ -401,8 +401,16 @@ bool process_record_user_impl(uint16_t keycode, keyrecord_t *record) {
 				: _DSS);
 			return false;
 		}
+	}
 
-	// custom keys using (my custom, not UC_WINC) AutoHotkey compose:
+	if (!pru_compose_k(keycode, pressed)) { return false; }
+
+	return true;
+}
+
+// process_record_user cases for custom keys using (my custom, not UC_WINC) AutoHotkey compose
+bool pru_compose_k(bool pressed, uint16_t keycode) {
+	switch (keycode) {
 	// - misc
 	case CKC_NOT    : return pru_compose(pressed, "bn");
 	case CKC_NEQ    : return pru_compose(pressed, "=n");
