@@ -435,7 +435,7 @@ bool pru_compose_k(bool pressed, uint16_t keycode) {
 	case CKC_DACUT  : return pru_compose(pressed, ",'");
 	case CKC_DCIRC  : return pru_compose(pressed, ",^");
 	case CKC_DDEGR  : return pru_compose(pressed, ",°");
-	case CKC_DDIA   : return pru_compose(pressed, ",:");
+	case CKC_DDIA   : return pru_compose(pressed, ",\"");
 	case CKC_DTILD  : return pru_compose(pressed, ",~");
 	case CKC_DCEDI  : return pru_compose(pressed, ",,");
 	// - superscript and subscript digits (TODO: find a place in the keymap for them)
