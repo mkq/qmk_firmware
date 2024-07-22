@@ -164,6 +164,7 @@ CK_QX	?	!
 CK_SB	/	\
 CK_DQSQ	"	'
 CK_DQ	"	'
+TD(SQ_DQ_L4)	'	"
 DE_BSLS	\
 DEL	⌦
 DE_ACUT	´

@@ -3,7 +3,7 @@
  KC_F1         ,LT(_FS,KC_F2) ,LT(_FD,KC_F3) ,LT(_AS,KC_F4) ,LT(_AD,KC_F5) ,KC_F6         ,CK_CYLAY        ,KC_SPC        ,KC_F7         ,KC_F8         ,KC_F9         ,KC_F10        ,KC_F11        ,KC_F12        \
 ,LT(_LY,DE_CI) ,KC_X          ,KC_V          ,KC_SPC        ,KC_C          ,KC_W          ,KC_Q            ,LCAG_T(APP)   ,KC_K          ,KC_H          ,KC_G          ,KC_F          ,DE_Y          ,KC_PGUP       \
 ,LT(_L5,CK_SB) ,LWIN_T(KC_U)  ,LALT_T(KC_I)  ,LCTL_T(KC_A)  ,LT(_NV,KC_E)  ,KC_O                                          ,KC_S          ,LT(_NV,KC_N)  ,RCTL_T(KC_R)  ,LALT_T(KC_T)  ,RWIN_T(KC_D)  ,LT(_L5,PGDN)  \
-,LT(_L4,DE_PL) ,LT(_DW,DE_MI) ,LT(_DA,CK_QX) ,LT(_DC,KC_L)  ,KC_P          ,DE_Z          ,KC_INS          ,KC_DEL        ,KC_B          ,KC_M          ,DE_COMM       ,DE_DOT        ,KC_J          ,LT(_L4,CK_DQ) \
+,LT(_L4,DE_PL) ,LT(_DW,DE_MI) ,LT(_DA,CK_QX) ,LT(_DC,KC_L)  ,KC_P          ,DE_Z          ,KC_INS          ,KC_DEL        ,KC_B          ,KC_M          ,DE_COMM       ,DE_DOT        ,KC_J          ,TD(SQ_DQ_L4)  \
 ,KC_LWIN       ,KC_LALT       ,KC_LCTL       ,KC_PSCR       ,BSPC                                                                        ,LT(_NV,ESC)   ,KC_UP         ,KC_DOWN       ,KC_LEFT       ,KC_RGHT       \
                                                                            ,LT(_BT,DEL)   ,KM_CUT          ,LALT_T(HOME)  ,LCTL_T(END)                                                                              \
                                                                                           ,KM_COPY         ,KC_PGUP                                                                                                 \
@@ -13,7 +13,7 @@
  KC_F1         ,KC_F2         ,KC_F3         ,KC_F4         ,KC_F5         ,KC_F6         ,CK_CYLAY        ,_______       ,KC_F7         ,KC_F8         ,KC_F9         ,KC_F10        ,KC_F11        ,KC_F12        \
 ,_______       ,_______       ,_______       ,_______       ,_______       ,_______       ,_______         ,APP           ,_______       ,_______       ,_______       ,_______       ,_______       ,_______       \
 ,CK_SB         ,KC_U          ,KC_I          ,KC_A          ,KC_E          ,_______                                       ,_______       ,KC_N          ,KC_R          ,KC_T          ,KC_D          ,PGDN          \
-,DE_PL         ,DE_MI         ,CK_QX         ,KC_L          ,_______       ,_______       ,_______         ,_______       ,_______       ,_______       ,_______       ,_______       ,_______       ,CK_DQ         \
+,DE_PL         ,DE_MI         ,CK_QX         ,KC_L          ,_______       ,_______       ,_______         ,_______       ,_______       ,_______       ,_______       ,_______       ,_______       ,DE_QUOT       \
 ,_______       ,_______       ,_______       ,_______       ,_______                                                                     ,_______       ,_______       ,_______       ,_______       ,_______       \
                                                                            ,DEL           ,_______         ,HOME          ,END                                                                                      \
                                                                                           ,_______         ,_______                                                                                                 \

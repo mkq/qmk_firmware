@@ -40,7 +40,7 @@
 #define DE_CN     DE_COLN
 #define DE_CI     DE_CIRC
 #define PSLS      KC_PSLS
-#define CK_DQ     CK_DQSQ
+//#define CK_DQ     CK_DQSQ
 #define KM_CUT    LSFT(KC_DEL)
 #define KM_COPY   LCTL(KC_INS)
 #define KM_PAST   LSFT(KC_INS)
@@ -52,7 +52,7 @@ enum custom_keycodes {
 	CK_NEQ = SAFE_RANGE,
 	CK_SB,	// slash / backslash
 	CK_QX,
-	CK_DQSQ,	// double quote / single quote
+//	CK_DQSQ,	// double quote / single quote
 	CK_LMRES,
 	CK_CYLAY,	// cycle some layers
 	CK_DBG,	// toggle debug
@@ -105,6 +105,11 @@ enum custom_layers {
 
 #define _S_L4 _L5b	//shift + layer 4 = layer 5b
 
+// tap dance keys
+enum {
+    SQ_DQ_L4,
+};
+
 // layers
 #include "./keymap_layers.c"
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -147,6 +152,8 @@ const uint8_t layer_leds_length = sizeof(layer_leds) / sizeof(layer_leds[0]);
 
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
 	switch (keycode) {
+	case QK_TAP_DANCE ... QK_TAP_DANCE_MAX: // https://docs.qmk.fm/features/tap_dance#example-6
+		return 250;
 	case OSL(_L3):
 	case OSL(_L4):
 		return 1;
@@ -256,9 +263,9 @@ bool pru_cycle_layer(keyrecord_t *record, layer_state_t cycle_layers_mask) {
 	dprintf("no new layer found?!\n");
 	return false;
 }
+// }
 
-// process_record_user implementation for a mod-sensitive custom key
-bool pru_mod_sensitive_key_impl(uint16_t mod_mask, uint16_t keycode, uint16_t mod_keycode) {
+bool mod_sensitive_tap_code16(uint16_t mod_mask, uint16_t keycode, uint16_t mod_keycode) {
 	uint16_t mods = get_mods();
 	if (!(mods & mod_mask)) {	// without modifier
 		tap_code16(keycode);
@@ -269,8 +276,10 @@ bool pru_mod_sensitive_key_impl(uint16_t mod_mask, uint16_t keycode, uint16_t mo
 	}
 	return false;
 }
+
+// process_record_user implementation for a mod-sensitive custom key
 bool pru_mod_sensitive_key(keyrecord_t *record, uint16_t mod_mask, uint16_t keycode, uint16_t mod_keycode) {
-	return record->event.pressed && pru_mod_sensitive_key_impl(mod_mask, keycode, mod_keycode);
+	return record->event.pressed && mod_sensitive_tap_code16(mod_mask, keycode, mod_keycode);
 }
 
 // process_record_user implementation for (custom AutoHotkey) compose sequences
@@ -352,12 +361,12 @@ bool process_record_user_impl(uint16_t keycode, keyrecord_t *record) {
 		// else (tap): fall through
 	case CK_SB:	// DE slash; with shift: DE backslash (but without shift (for layouts where that would give a capital sharp s))
 		return pru_mod_sensitive_key(record, MOD_MASK_SHIFT, DE_SLSH, RALT(DE_BSLS));
-	case LT(_L4,CK_DQSQ):
-		// LT with non-basic tap keycode: https://docs.qmk.fm/#/mod_tap?id=intercepting-mod-taps
-		if (!(pressed && record->tap.count)) { break; }
-		// else (tap): fall through
-	case CK_DQSQ:	// DE double quote; with shift: DE single quote
-		return pru_mod_sensitive_key(record, MOD_MASK_SHIFT, DE_DQUO, DE_QUOT);
+//	case LT(_L4,CK_DQSQ):
+//		// LT with non-basic tap keycode: https://docs.qmk.fm/#/mod_tap?id=intercepting-mod-taps
+//		if (!(pressed && record->tap.count)) { break; }
+//		// else (tap): fall through
+//	case CK_DQSQ:	// DE double quote; with shift: DE single quote
+//		return pru_mod_sensitive_key(record, MOD_MASK_SHIFT, DE_DQUO, DE_QUOT);
 	case LT(_DA, CK_QX):
 		// LT with non-basic tap keycode: https://docs.qmk.fm/#/mod_tap?id=intercepting-mod-taps
 		if (!(pressed && record->tap.count)) { break; }
@@ -509,3 +518,5 @@ bool pru_compose_k(bool pressed, uint16_t keycode) {
 
 	return true;
 }
+
+#include "./keymap_tapdance.c"
