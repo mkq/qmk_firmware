@@ -164,6 +164,7 @@ CK_QX	?	!
 CK_SB	/	\
 CK_DQSQ	"	'
 CK_DQ	"	'
+DE_DQ	"	'
 TD(SQ_DQ_L4)	'	"
 DE_BSLS	\
 DEL	⌦
@@ -216,7 +217,7 @@ DM_RSTP	<sup>m⏹</sup>
 END	⭲
 ESC	Esc
 HOME	⭰
-KC_CAPS	⇧<sup>⭳</sup>
+KC_CAPS	⇪
 KC_DEL	⌦
 KC_DOWN	⭣
 KC_END	⭲

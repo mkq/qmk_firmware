@@ -29,6 +29,7 @@
 #define ESC       KC_ESC
 #define TAB       KC_TAB
 #define DEL       KC_DEL
+#define INS       KC_INS
 #define BSPC      KC_BSPC
 #define PGDN      KC_PGDN
 #define PGUP      KC_PGUP
@@ -39,6 +40,7 @@
 #define DE_PL     DE_PLUS
 #define DE_CN     DE_COLN
 #define DE_CI     DE_CIRC
+#define DE_DQ     DE_DQUO
 #define PSLS      KC_PSLS
 //#define CK_DQ     CK_DQSQ
 #define KM_CUT    LSFT(KC_DEL)
@@ -373,6 +375,13 @@ bool process_record_user_impl(uint16_t keycode, keyrecord_t *record) {
 		// else (tap): fall through
 	case CK_QX:	// DE question mark; with shift: DE exclamation mark
 		return pru_mod_sensitive_key(record, MOD_MASK_SHIFT, S(DE_QUES), DE_EXLM);
+	case LT(_L5, DE_DQUO):
+		// LT with non-basic tap keycode: https://docs.qmk.fm/#/mod_tap?id=intercepting-mod-taps
+		if (pressed && record->tap.count) {
+			tap_code16(DE_DQUO);
+			return false;
+		}
+		break;
 	case LT(_LY, DE_COLN):
 		// LT with non-basic tap keycode: https://docs.qmk.fm/#/mod_tap?id=intercepting-mod-taps
 		if (pressed && record->tap.count) {
