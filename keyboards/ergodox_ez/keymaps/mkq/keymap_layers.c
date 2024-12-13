@@ -6,7 +6,7 @@
 ,LT(_L4,DE_PL) ,LT(_DW,DE_MI) ,LT(_DA,CK_QX) ,LT(_DC,KC_L)  ,KC_P          ,DE_Z          ,KC_DEL          ,KC_PGDN       ,KC_B          ,KC_M          ,DE_COMM       ,DE_DOT        ,KC_J          ,TD(SQ_DQ_L4)  \
 ,KC_LWIN       ,KC_LALT       ,KC_LCTL       ,KC_PSCR       ,BSPC                                                                        ,LT(_NV,ESC)   ,KC_UP         ,KC_DOWN       ,KC_LEFT       ,KC_RGHT       \
                                                                            ,LT(_BT,INS)   ,KM_CUT          ,LALT_T(HOME)  ,LCTL_T(END)                                                                              \
-                                                                                          ,KM_COPY         ,KC_CAPS                                                                                                 \
+                                                                                          ,KM_COPY         ,KC_DEL                                                                                                  \
                                                             ,KC_LSFT       ,KC_TAB        ,KM_PAST         ,LCAG_T(APP)   ,KC_ENTER      ,KC_RSFT                                                                   )
 #define _BT_LAYOUT LAYOUT_ergodox_pretty(/*=======================================================================================================================================================================*/\
 /* base, tap only ------------|-I------------|-A------------|-E------------|-O------------|                               |-S------------|-N------------|-R------------|-T------------|-D------------|------------*/\
