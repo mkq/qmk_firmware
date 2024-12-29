@@ -82,9 +82,13 @@ enum custom_layers {
 	_BA = 0, //base
 	_BT,	//like base, but tap only (no tap-hold) => hold can be used to repeat, when
 	    	//TAPPING_FORCE_HOLD disables (tap, hold) repetition
-	_L3,	//layer 3 (counting base as 1 and shift as 2; activation: both shift keys)
+	_L3,	//layer 3 (counting base as 1 and shift as 2; activation: "odd" or both shift keys)
+		// "odd" shift means using the shift key on the same side of the keyboard as the to-be-combined (tapped) key.
+		// E.g. left shift + A acts as layer 3 instead of shift.
+		// As long as shift is held further, it keeps its role regardless of the side of the next keys;
+		// So holding normal shift is still like CAPS lock.
 	_L4,	//layer 4
-	_L5,	//layer 5 (activation: shift + layer 4)
+	_L5,	//layer 5
 	_L5b,	//= layer 5, but needed for OSL on _L4 to work (because of my special handling shift + _L4 = _L5?)
 	_NU,	//numbers, navigation
 	_FS,	//frames
@@ -101,6 +105,7 @@ enum custom_layers {
 };
 
 // double shift layers
+#define _OSH  _L3	//odd shift = _L3
 #define _DSS  _L3	//double shift (simultaneous) = _L3
 #define _DSL  _L4	//double shift (left first)   = _L4
 #define _DSR  _L5	//double shift (right first)  = _L5
@@ -321,6 +326,15 @@ bool pru_compose_k(bool pressed, uint16_t keycode);
 //		return true;
 //	}
 
+enum shift_state_t { OFF = 0, PENDING, NORMAL, ODD, DOUBLE };
+static shift_state_t shift_state;
+// process_record_user implementation: shift mode (normal, odd, ...)
+bool pru_shift(uint16_t keycode, keyrecord_t *record) {
+	if (shift_state != OFF && record->tap.count) {
+	}
+	return true;
+}
+
 static uint16_t time_since_prev_key;
 static uint16_t prev_key_timer;
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
@@ -333,10 +347,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 	return result;
 }
 
-static uint8_t shift_count;
 bool process_record_user_impl(uint16_t keycode, keyrecord_t *record) {
 //	// see function pru_lt_osl
 //	if (keycode != LT(_LY, OSL(_L3)) && keycode != LT(_LY, OSL(_L4)) && keycode != LT(_LY, OSL(_L5))) { osl_other_key_pressed = true; }
+
+	if (!pru_shift(keycode, record) { return false; }
 
 	bool pressed = record->event.pressed;
 //	dprintf("process_record_user(%d, ..): pressed == %b\n", keycode, pressed);
@@ -394,15 +409,16 @@ bool process_record_user_impl(uint16_t keycode, keyrecord_t *record) {
 		return false;
 	case KC_LSFT:	// double shift => release shift, activate layer _DSS, _DSL, or _DSR,
 	case KC_RSFT:	// depending on timing and order
+		/*
 		shift_count += pressed ? 1 : -1;
 		switch (shift_count) {
 		case 0:
 			del_mods(MOD_MASK_SHIFT);
 			return true;
 		case 1:
-			if (pressed) {	// previous shift_count was 0 => normal shift behavior
+			if (pressed) {	// previous shift_state was 0 => normal shift behavior
 				return true;
-			} else {	// previous shift_count was 2 => switch back from layer _DS to shift
+			} else {	// previous shift_state was 2 => switch back from layer _DS.. to shift
 				layer_off(_DSS);
 				layer_off(_DSL);
 				layer_off(_DSR);
@@ -418,6 +434,20 @@ bool process_record_user_impl(uint16_t keycode, keyrecord_t *record) {
 					: _DSS)
 				: _DSS);
 			return false;
+		}
+		*/
+		switch (shift_state) {
+		case OFF:
+			if (pressed) {
+				shift_state = PENDING;
+			}
+			return true;
+		case PENDING:
+			if (!pressed) { del_mods(MOD_MASK_SHIFT); return true; }
+		case NORMAL:
+			if (!pressed) { del_mods(MOD_MASK_SHIFT); return true; }
+		case ODD:
+		case DOUBLE:
 		}
 	}
 
