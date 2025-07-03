@@ -288,9 +288,10 @@ bool pru_mod_sensitive_key(keyrecord_t *record, uint16_t mod_mask, uint16_t keyc
 bool pru_compose(bool pressed, const char *s) {
 	if (pressed) {
 		SEND_STRING(SS_LSFT("3"));
-		send_string(s);
+		send_string_with_delay(s, 40);
 
 		// Workaround attempt against locked shift
+		tap_code(KC_LSFT);
 		tap_code(KC_LSFT);
 		del_mods(MOD_MASK_SHIFT);
 	}
