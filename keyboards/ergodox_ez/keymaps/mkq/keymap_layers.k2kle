@@ -59,6 +59,7 @@ Source code: https://github.com/mkq/qmk_firmware/blob/master/keyboards/ergodox_e
 ___	&nbsp;
 ____	&nbsp;
 APP	≣
+MEH(APP)	≣<sup>sca</sup>
 BSPC	⌫
 C(DE_MINS)	-<sup>c</sup>
 C(DE_PLUS)	+<sup>c</sup>
