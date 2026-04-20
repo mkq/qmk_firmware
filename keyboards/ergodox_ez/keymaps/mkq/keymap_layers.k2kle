@@ -161,6 +161,8 @@ CK_CYLAY@_BA	L<sup>→</sup>
 CK_DBG	D!
 CK_LMRES	L✗
 CK_NEQ	!=
+CK_BRK0	<font size="-2">[0]</font>
+CK_BRK1	<font size="-2">[1]</font>
 CK_QX	?	!
 CK_SB	/	\
 CK_DQSQ	"	'

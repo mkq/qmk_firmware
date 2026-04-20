@@ -58,6 +58,8 @@ enum custom_keycodes {
 	CK_LMRES,
 	CK_CYLAY,	// cycle some layers
 	CK_DBG,	// toggle debug
+	CK_BRK0,    // "[0]"
+	CK_BRK1,    // "[1]"
 
 	// custom keys using (my custom, not UC_WINC) AutoHotkey compose:
 	// - misc
@@ -118,15 +120,15 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 	[_LY] = _LY_LAYOUT,
 	[_BA] = _BA_LAYOUT,
 	[_BT] = _BT_LAYOUT,
+	[_NU] = _NU_LAYOUT,
+	[_DC] = _NU_LAYOUT,
+	[_DA] = _NU_LAYOUT,
+	[_DW] = _NU_LAYOUT,
 	[_L3] = _L3_LAYOUT,
 	[_L4] = _L4_LAYOUT,
 	[_L5] = _L5_LAYOUT,
 	[_L5b] = TRANS_LAYOUT,
 	[_NV] = _NV_LAYOUT,
-	[_NU] = _NU_LAYOUT,
-	[_DC] = _DI_LAYOUT,
-	[_DA] = _DI_LAYOUT,
-	[_DW] = _DI_LAYOUT,
 	[_AS] = _AS_LAYOUT,
 	[_AD] = _AD_LAYOUT,
 	[_FS] = _FS_LAYOUT,
@@ -390,9 +392,6 @@ bool process_record_user_impl(uint16_t keycode, keyrecord_t *record) {
 			return false;
 		}
 		break;
-	case CK_NEQ:
-		if (pressed) { SEND_STRING("!="); }
-		return false;
 	case KC_LSFT:	// double shift => release shift, activate layer _DSS, _DSL, or _DSR,
 	case KC_RSFT:	// depending on timing and order
 		shift_count += pressed ? 1 : -1;
@@ -420,6 +419,15 @@ bool process_record_user_impl(uint16_t keycode, keyrecord_t *record) {
 				: _DSS);
 			return false;
 		}
+	case CK_NEQ:
+		if (pressed) { SEND_STRING("!="); }
+		return false;
+	case CK_BRK0:
+		if (pressed) { SEND_STRING("[0]"); }
+		return false;
+	case CK_BRK1:
+		if (pressed) { SEND_STRING("[1]"); }
+		return false;
 	}
 
 	if (!pru_compose_k(pressed, keycode)) { return false; }
