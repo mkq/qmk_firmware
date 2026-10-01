@@ -233,9 +233,11 @@ KC_LCTL	<b>Ctl</b>
 KC_LEFT	⭠
 KC_LSFT	⇧
 KC_LWIN	<b>⊞</b>
-KC_MNXT	⏭
 KC_MPLY	⏯
+KC_MNXT	⏭
 KC_MPRV	⏮
+KC_MRWD	⏪
+KC_MFFD	⏩
 KC_MSEL	♫
 KC_MUTE	🔇
 KC_PAST	*<sup>p</sup>

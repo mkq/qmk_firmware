@@ -60,7 +60,7 @@
                                                             ,_______       ,_______       ,_______         ,_______       ,_______       ,KC_SPC                                                                    )
 #define _NV_LAYOUT LAYOUT_ergodox_pretty(/*=======================================================================================================================================================================*/\
 /* navigation & settings -----|-I------------|-A------------|-E------------|-O------------|                               |-S------------|-N------------|-R------------|-T------------|-D------------|------------*/\
- DM_RSTP       ,DM_REC1       ,DM_REC2       ,DM_PLY1       ,DM_PLY2       ,CK_DBG        ,CK_CYLAY        ,RESET         ,RGB_TOG       ,CK_LMRES      ,KC_TAB        ,_______       ,_______       ,KC_WHOM       \
+ DM_RSTP       ,DM_REC1       ,DM_REC2       ,DM_PLY1       ,DM_PLY2       ,CK_DBG        ,CK_CYLAY        ,RESET         ,RGB_TOG       ,CK_LMRES      ,KC_TAB        ,KC_WHOM       ,KC_MRWD       ,KC_MFFD       \
 ,_______       ,_______       ,_______       ,TO(_NU)       ,KC_CAPS       ,_______       ,KC_DEL          ,KM_COPY       ,C(KC_HOME)    ,KC_HOME       ,KC_UP         ,KC_END        ,C(KC_END)     ,KC_VOLU       \
 ,_______       ,KC_LWIN       ,KC_LALT       ,KC_LCTL       ,KC_LSFT       ,_______                                       ,KM_CUT        ,KC_LEFT       ,KC_DOWN       ,KC_RGHT       ,KC_PGUP       ,KC_VOLD       \
 ,C(DE_PLUS)    ,C(DE_MINS)    ,_______       ,KC_SLCK       ,KC_PAUS       ,_______       ,KC_INS          ,_______       ,KM_COPY       ,C(KC_LEFT)    ,KM_PAST       ,C(KC_RGHT)    ,KC_PGDN       ,KC_MUTE       \
